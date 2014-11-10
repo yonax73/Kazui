@@ -6,37 +6,37 @@
 * http://www.kazui.io/purchase/license-agreement/kazui-complete
 * If you do not own a commercial license, this file shall be governed by the trial license terms.
 */
-.navbar-extend .nav, .navbar-extend .dropup, .navbar-extend .dropdown,
-	.navbar-extend .collapse {
+.ui-navbar .nav, .ui-navbar .dropup, .ui-navbar .dropdown,
+	.ui-navbar .collapse {
 	position: static;
 }
 
-.navbar-extend .navbar-inner, .navbar-extend .container {
+.ui-navbar .navbar-inner, .ui-navbar .container {
 	position: relative;
 }
 
-.navbar-extend .dropdown-menu {
+.ui-navbar .dropdown-menu {
 	left: auto;
 }
 
-.navbar-extend .dropdown-menu>li {
+.ui-navbar .dropdown-menu>li {
 	display: block;
 }
 
-.navbar-extend .dropdown-submenu .dropdown-menu {
+.ui-navbar .dropdown-submenu .dropdown-menu {
 	left: 100%;
 }
 
-.navbar-extend .nav.pull-right .dropdown-menu {
+.ui-navbar .nav.pull-right .dropdown-menu {
 	right: 0;
 }
 
-.navbar-extend .navbar-extend-content {
+.ui-navbar .ui-navbar-content {
 	padding: 20px 30px;
 	*zoom: 1;
 }
 
-.navbar-extend .navbar-extend-content:before, .navbar-extend .navbar-extend-content:after
+.ui-navbar .ui-navbar-content:before, .ui-navbar .ui-navbar-content:after
 	{
 	display: table;
 	content: "";
@@ -44,30 +44,30 @@
 	width: 100vh;
 }
 
-.navbar-extend .navbar-extend-content:after {
+.ui-navbar .ui-navbar-content:after {
 	clear: both;
 }
 
-.navbar-extend.navbar .nav>li>.dropdown-menu:after, .navbar-extend.navbar .nav>li>.dropdown-menu:before
+.ui-navbar.navbar .nav>li>.dropdown-menu:after, .ui-navbar.navbar .nav>li>.dropdown-menu:before
 	{
 	display: none;
 }
 
-.navbar-extend .dropdown.navbar-extend-fullwidth .dropdown-menu {
+.ui-navbar .dropdown.ui-navbar-fullwidth .dropdown-menu {
 	width: 100%;
 	left: 0;
 	right: 0;
 }
 
 @media ( max-width : 969px) {
-	.navbar-extend .dropdown.navbar-extend-fullwidth .dropdown-menu {
+	.ui-navbar .dropdown.ui-navbar-fullwidth .dropdown-menu {
 		width: auto;
 	}
-	.navbar-extend .navbar-extend-content {
+	.ui-navbar .ui-navbar-content {
 		padding-left: 0;
 		padding-right: 0;
 	}
-	.navbar-extend .dropdown-menu>li>ul {
+	.ui-navbar .dropdown-menu>li>ul {
 		display: block;
 	}
 }

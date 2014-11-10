@@ -36,9 +36,8 @@ class Toggle {
 	     if(n > 0){
 	         for(var i = 0; i < n; i++){
 	            var element:any =  dropdowns[i];	            
-	            element.onclick = function(e){			         
-	                  Toggle.clearDropDown();  
-			          this.parentNode.classList.toggle('open');
+	            element.onclick = function(e){		                 
+			          this.parentNode.classList.toggle('open');			         
 			          e.stopPropagation(); 
                       return false;			          
                 }
@@ -46,7 +45,7 @@ class Toggle {
 	      }
       }    
       
-      public static clearDropDown(){
+       static clearDropDown(){
          var dropdowns = document.querySelectorAll('.dropdown-toggle[data-toggle="dropdown"]');
 	     var n = dropdowns.length;
 	     if(n > 0){
@@ -58,8 +57,32 @@ class Toggle {
 	        }                    
 	     }	
       }
-
 }
+
+class Utils{      
+           
+       static showActiveLink(element){
+           var anchors = element.querySelectorAll('.ui-link');
+           var n = anchors.length;
+           var url:any= window.location.pathname;
+           url = url.replace(/\//g,'');            
+           for(var i = 0; i<n;i++){
+             var a = anchors[i];
+             var href = a.href.split('/');
+             href = href[href.length-1];
+             if(a.classList.contains('active')){
+                a.parentNode.classList.add('remove'); 
+             }             
+             if(href === url){                 
+                 a.parentNode.classList.add('active');  
+             }
+           }                   
+      }
+      
+    
+}
+
+
 
 Toggle.init();
 

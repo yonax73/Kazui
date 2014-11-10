@@ -13,7 +13,6 @@ var Toggle = (function () {
         this.initNavBar();
         this.initDropDown();
     };
-
     Toggle.initNavBar = function () {
         var navbars = document.querySelectorAll('.navbar-toggle[data-toggle="collapse"]');
         var n = navbars.length;
@@ -28,7 +27,6 @@ var Toggle = (function () {
             }
         }
     };
-
     Toggle.initDropDown = function () {
         var dropdowns = document.querySelectorAll('.dropdown-toggle[data-toggle="dropdown"]');
         var n = dropdowns.length;
@@ -36,7 +34,6 @@ var Toggle = (function () {
             for (var i = 0; i < n; i++) {
                 var element = dropdowns[i];
                 element.onclick = function (e) {
-                    Toggle.clearDropDown();
                     this.parentNode.classList.toggle('open');
                     e.stopPropagation();
                     return false;
@@ -44,7 +41,6 @@ var Toggle = (function () {
             }
         }
     };
-
     Toggle.clearDropDown = function () {
         var dropdowns = document.querySelectorAll('.dropdown-toggle[data-toggle="dropdown"]');
         var n = dropdowns.length;
@@ -59,9 +55,29 @@ var Toggle = (function () {
     };
     return Toggle;
 })();
-
+var Utils = (function () {
+    function Utils() {
+    }
+    Utils.showActiveLink = function (element) {
+        var anchors = element.querySelectorAll('.ui-link');
+        var n = anchors.length;
+        var url = window.location.pathname;
+        url = url.replace(/\//g, '');
+        for (var i = 0; i < n; i++) {
+            var a = anchors[i];
+            var href = a.href.split('/');
+            href = href[href.length - 1];
+            if (a.classList.contains('active')) {
+                a.parentNode.classList.add('remove');
+            }
+            if (href === url) {
+                a.parentNode.classList.add('active');
+            }
+        }
+    };
+    return Utils;
+})();
 Toggle.init();
-
 /*
 * Evento click para el  documento.
 */

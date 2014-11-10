@@ -1,191 +1,227 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,700);
 
-body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+body,h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 	font-family: 'Roboto', sans-serif;
 }
-
+.navbar {    
+    margin-bottom: 0;
+}
 .navbar-default {
-	background-color: #4385f5;
-	border-color: #4385f5;
+	background-color: #fff;
+	border-color: #fff #fff #4385f5 #fff;
+}
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+    background-color: #f9f9f9;
+    color: #555555;
 }
 
 .navbar-default .navbar-brand {
-	color: #fff;
-}
-
-.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover,
-	.navbar-default .navbar-nav>.active>a:focus {
-	background-color: #fff;
-	color: #000;
+	color: #4385f5;
 }
 
 .navbar-default .navbar-nav>li>a {
-	color: #fff;
-}
-
-.navbar-default .navbar-toggle {
-	border-color: #fff;
-}
-
-.navbar-default .navbar-toggle .icon-bar {
-	background-color: #fff;
-}
-
-.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus
-	{
-	background-color: #B0CCFB;
-}
-
-.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover,
-	.navbar-default .navbar-nav>.open>a:focus {
-	background-color: #fff;
 	color: #000;
 }
 
-.navbar-default .navbar-nav .open .dropdown-menu>li>a {
-	color: #000;
+.marquee {
+    background-color: #4385f5;
+    background-image: url("/assets/images/bg.png");
+    padding: 20px 15px;
 }
 
-.dropdown-header {
-	color: #ccc;
+.marquee h1 {
+    font-size: 4.5em;
+}
+
+.pad-12 {
+	padding-top: 12%;
 }
 
 footer {
 	bottom: 0;
+	padding-top: 10px;
 	position: absolute;
+	width: 100%;
 }
 
 .text-indent-6 {
 	padding-left: 6px;
 }
 
+.text-gray {
+	color: rgba(255, 255, 255, .8);
+}
+
+.text-white {
+	color: #fff;
+}
+
 /* Themes */
-.palette{
-    list-style: none;	
+.palette {
+	list-style: none;
 }
-.palette li{
-    cursor: pointer;
-    padding-bottom: 4px;
-    padding-left: 10px;
-    padding-top: 5px;
+
+.palette li {
+	cursor: pointer;
+	padding-bottom: 4px;
+	padding-left: 10px;
+	padding-top: 5px;
 }
-.palette li:hover{
-    box-shadow: 0 6px 12px rgba(67, 133, 245, 0.176);
-    background-color: #4385f5;
-    color:#fff;    
+
+.palette li:hover {
+	box-shadow: 0 6px 12px rgba(67, 133, 245, 0.176);
+	background-color: #4385f5;
+	color: #fff;
 }
+
 .palette div {
-    border: 1px solid #ccc;
-    display: inline;
-    line-height: 1.5;
-    margin: 2px;
-    padding: 1px 12px;
+	border: 1px solid #ccc;
+	display: inline;
+	line-height: 1.5;
+	margin: 2px;
+	padding: 1px 12px;
 }
-.day-primary{
+
+.day-primary {
 	background-color: #4385f5;
 }
-.day-text{
+
+.day-text {
 	background-color: #a26900;
 }
-.day-bg{
+
+.day-bg {
 	background-color: #ffffff;
 }
-.hiroki-primary{
+
+.hiroki-primary {
 	background-color: #5f5448;
 }
-.hiroki-text{
+
+.hiroki-text {
 	background-color: #333333;
 }
-.hiroki-bg{
+
+.hiroki-bg {
 	background-color: #ffffff;
 }
-.holo-dark-primary{
+
+.holo-dark-primary {
 	background-color: #33b5e5;
 }
-.holo-dark-text{
+
+.holo-dark-text {
 	background-color: #cccccc;
 }
-.holo-dark-bg{
+
+.holo-dark-bg {
 	background-color: #1e1e1e;
 }
-.holo-light-primary{
+
+.holo-light-primary {
 	background-color: #33b5e5;
 }
-.holo-light-text{
+
+.holo-light-text {
 	background-color: #333333;
 }
-.holo-light-bg{
+
+.holo-light-bg {
 	background-color: #d0d0d0;
 }
-.ios7-primary{
+
+.ios7-primary {
 	background-color: #007aff;
 }
-.ios7-text{
+
+.ios7-text {
 	background-color: #505050;
 }
-.ios7-bg{
+
+.ios7-bg {
 	background-color: #ffffff;
 }
-.kazui-dark-primary{
+
+.kazui-dark-primary {
 	background-color: #f58780;
 }
-.kazui-dark-text{
+
+.kazui-dark-text {
 	background-color: #878cb0;
 }
-.kazui-dark-bg{
+
+.kazui-dark-bg {
 	background-color: #3f435f;
 }
-.kazui-light-primary{
+
+.kazui-light-primary {
 	background-color: #eb4646;
 }
-.kazui-light-text{
+
+.kazui-light-text {
 	background-color: #0f2874;
 }
-.kazui-light-bg{
+
+.kazui-light-bg {
 	background-color: #ffffff;
 }
-.metro-primary{
+
+.metro-primary {
 	background-color: #1abc9c;
 }
-.metro-text{
+
+.metro-text {
 	background-color: #34495e;
 }
-.metro-bg{
+
+.metro-bg {
 	background-color: #ffffff;
 }
-.monster-primary{
+
+.monster-primary {
 	background-color: #45e500;
 }
-.monster-text{
+
+.monster-text {
 	background-color: #bbbbbb;
 }
-.monster-bg{
+
+.monster-bg {
 	background-color: #222222;
 }
-.nigth-primary{
+
+.nigth-primary {
 	background-color: #ff4800;
 }
-.nigth-text{
+
+.nigth-text {
 	background-color: #aaaaaa;
 }
-.nigth-bg{
+
+.nigth-bg {
 	background-color: #111111;
 }
-.simple-primary{
+
+.simple-primary {
 	background-color: #374a51;
 }
-.simple-text{
+
+.simple-text {
 	background-color: #7787a6;
 }
-.simple-bg{
+
+.simple-bg {
 	background-color: #ffffff;
 }
-.yukiko-primary{
+
+.yukiko-primary {
 	background-color: #64518c;
 }
-.yukiko-text{
+
+.yukiko-text {
 	background-color: #5a728b;
 }
-.yukiko-bg{
+
+.yukiko-bg {
 	background-color: #ffffff;
 }
