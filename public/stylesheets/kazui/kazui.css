@@ -1,0 +1,73 @@
+/*
+* KAZUI v01 (http://www.kazui.io)
+* Copyright 2014 YonaxTics. All rights reserved.
+*
+* KAZUI commercial licenses may be obtained at
+* http://www.kazui.io/purchase/license-agreement/kazui-complete
+* If you do not own a commercial license, this file shall be governed by the trial license terms.
+*/
+.navbar-extend .nav, .navbar-extend .dropup, .navbar-extend .dropdown,
+	.navbar-extend .collapse {
+	position: static;
+}
+
+.navbar-extend .navbar-inner, .navbar-extend .container {
+	position: relative;
+}
+
+.navbar-extend .dropdown-menu {
+	left: auto;
+}
+
+.navbar-extend .dropdown-menu>li {
+	display: block;
+}
+
+.navbar-extend .dropdown-submenu .dropdown-menu {
+	left: 100%;
+}
+
+.navbar-extend .nav.pull-right .dropdown-menu {
+	right: 0;
+}
+
+.navbar-extend .navbar-extend-content {
+	padding: 20px 30px;
+	*zoom: 1;
+}
+
+.navbar-extend .navbar-extend-content:before, .navbar-extend .navbar-extend-content:after
+	{
+	display: table;
+	content: "";
+	line-height: 0;
+	width: 100vh;
+}
+
+.navbar-extend .navbar-extend-content:after {
+	clear: both;
+}
+
+.navbar-extend.navbar .nav>li>.dropdown-menu:after, .navbar-extend.navbar .nav>li>.dropdown-menu:before
+	{
+	display: none;
+}
+
+.navbar-extend .dropdown.navbar-extend-fullwidth .dropdown-menu {
+	width: 100%;
+	left: 0;
+	right: 0;
+}
+
+@media ( max-width : 969px) {
+	.navbar-extend .dropdown.navbar-extend-fullwidth .dropdown-menu {
+		width: auto;
+	}
+	.navbar-extend .navbar-extend-content {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	.navbar-extend .dropdown-menu>li>ul {
+		display: block;
+	}
+}

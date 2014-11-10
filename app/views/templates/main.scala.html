@@ -1,0 +1,159 @@
+@(title: String)(content: Html)
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description"
+	content="Kazumi user interface javascript framework for web and mobile">
+<meta name="author"
+	content="Yonatan Alexis Quintero Rodriguez | yonax73gmail.com /yonaxtics">
+<title>@title</title>
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/day.css")">
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/kazui/kazui.css")">
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/page.css")">
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/hl-github.css")">
+<link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-extend">
+		<div class="container">
+			<div class="navbar-header ">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="navbar">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span> <span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">Kazui</a>
+			</div>
+			<div id="navbar" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+					 <a href="#">Empezando</a>
+					</li>
+					<li>
+					  <a href="#about">Componentes</a>
+					 </li>
+					<li>
+					  <a href="#contact">API</a>
+					</li>
+					<li>
+					  <a href="#contact">Licencia</a>
+					</li>
+					<li>
+					  <a href="#contact">Nosotros</a>
+					</li> 
+					<li class="dropdown">
+					  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Temas<span class="caret"></span></a>
+					  <ul class="dropdown-menu">
+					     <li>
+					       <div class="navbar-extend-content row">
+					         <p><strong>Seleccione tema</strong></p>
+					         <ul class="col-md-4 palette">		                          
+		                          <li>
+	                                <div class="day-primary"></div>
+                                    <div class="day-text"></div>
+                                    <div class="day-bg"></div>
+		                            Tema Day 
+		                          </li>
+		                          <li>
+	                                <div class="hiroki-primary"></div>
+                                    <div class="hiroki-text"></div>
+                                    <div class="hiroki-bg"></div>
+		                            Tema Hiroki
+		                          </li>	
+		                          <li>
+	                                <div class="holo-dark-primary"></div>
+                                    <div class="holo-dark-text"></div>
+                                    <div class="holo-dark-bg"></div>
+		                            Tema Holo dark
+		                          </li>
+		                          <li>
+	                                <div class="holo-light-primary"></div>
+                                    <div class="holo-light-text"></div>
+                                    <div class="holo-light-bg"></div>
+		                            Tema Holo light
+		                          </li>	
+		                        </ul>
+					            <ul class="col-md-4 palette">		                          
+		                          <li>
+	                                <div class="ios7-primary"></div>
+                                    <div class="ios7-text"></div>
+                                    <div class="ios7-bg"></div>
+		                            Tema iOS-7 
+		                          </li>
+		                          <li>
+	                                <div class="kazui-dark-primary"></div>
+                                    <div class="kazui-dark-text"></div>
+                                    <div class="kazui-dark-bg"></div>
+		                            Tema Kazui Dark
+		                          </li>	
+		                          <li>
+	                                <div class="kazui-light-primary"></div>
+                                    <div class="kazui-light-text"></div>
+                                    <div class="kazui-light-bg"></div>
+		                            Tema Kazui Light
+		                          </li>
+		                          <li>
+	                                <div class="metro-primary"></div>
+                                    <div class="metro-text"></div>
+                                    <div class="metro-bg"></div>
+		                            Tema Metro
+		                          </li>	
+		                        </ul>
+					            <ul class="col-md-4 palette">		                          
+		                          <li>
+	                                <div class="monster-primary"></div>
+                                    <div class="monster-text"></div>
+                                    <div class="monster-bg"></div>
+		                            Tema Monster 
+		                          </li>
+		                          <li>
+	                                <div class="nigth-primary"></div>
+                                    <div class="nigth-text"></div>
+                                    <div class="nigth-bg"></div>
+		                            Tema Nigth
+		                          </li>	
+		                          <li>
+	                                <div class="simple-primary"></div>
+                                    <div class="simple-text"></div>
+                                    <div class="simple-bg"></div>
+		                            Tema Simple	
+		                          </li>
+		                          <li>
+	                                <div class="yukiko-primary"></div>
+                                    <div class="yukiko-text"></div>
+                                    <div class="yukiko-bg"></div>
+		                            Tema Yukiko
+		                          </li>	
+		                        </ul>
+					       </div>
+					     </li>
+					  </ul>
+					</li>
+				</ul>
+			</div>		
+		</div>
+	</nav>
+	<section class="container">@content</section>
+	<footer class="hidden-xs hidden-sm">
+		<section class="container">
+			<div class="row">
+				<div class="col-md-12">			    
+					<p>
+						Developed by <a href="www.yonaxtics.com" target="_blank">YonaxTics.com</a>
+						| Copyright &copy; 2014 - All rights Reserved
+					</p>
+				</div>
+			</div>
+		</section>
+	</footer>
+	<script src="@routes.Assets.at("javascripts/kazui/kazui.js")"></script>
+	<script src="@routes.Assets.at("javascripts/highlight.pack.js")"></script>
+	
+	
+</body>
+</html>
