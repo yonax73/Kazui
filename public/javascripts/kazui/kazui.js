@@ -6,6 +6,70 @@
 * http://www.kazui.io/purchase/license-agreement/kazui-complete
 * If you do not own a commercial license, this file shall be governed by the trial license terms.
 */
+var Alert = (function () {
+    function Alert(htmlElement) {
+        this.element = null;
+        this.button = document.createElement('button');
+        this.span = document.createElement('span');
+        this.p = document.createElement('p');
+        this.i = document.createElement('i');
+        this.strong = document.createElement('strong');
+        this.icoSuccess = 'fa-check';
+        this.icoInfo = 'fa-info';
+        this.icoWarning = 'fa-exclamation-triangle';
+        this.icoDanger = 'fa-times';
+        this.icoWait = 'fa-circle-o-notch';
+        this.element = htmlElement;
+        this.close();
+        this.button.className = 'close';
+        this.button.type = 'button';
+        var self = this;
+        this.button.onclick = function () {
+            self.close();
+        };
+        this.span.innerHTML = '&times;';
+        this.button.appendChild(this.span);
+        this.element.appendChild(this.button);
+        this.p.className = 'text-center';
+        this.p.appendChild(this.i);
+        this.p.appendChild(this.strong);
+        this.element.appendChild(this.p);
+    }
+    Alert.prototype.close = function () {
+        this.element.className = 'hidden';
+    };
+    Alert.prototype.success = function (message) {
+        this.i.className = 'fa fa-lg pull-left';
+        this.i.classList.add(this.icoSuccess);
+        this.element.className = 'alert alert-success alert-dismissible';
+        this.strong.textContent = message;
+    };
+    Alert.prototype.info = function (message) {
+        this.i.className = 'fa fa-lg pull-left';
+        this.i.classList.add(this.icoInfo);
+        this.element.className = 'alert alert-info alert-dismissible';
+        this.strong.textContent = message;
+    };
+    Alert.prototype.warning = function (message) {
+        this.i.className = 'fa fa-lg pull-left';
+        this.i.classList.add(this.icoWarning);
+        this.element.className = 'alert alert-warning alert-dismissible';
+        this.strong.textContent = message;
+    };
+    Alert.prototype.danger = function (message) {
+        this.i.className = 'fa fa-lg pull-left';
+        this.i.classList.add(this.icoDanger);
+        this.element.className = 'alert alert-danger alert-dismissible';
+        this.strong.textContent = message;
+    };
+    Alert.prototype.wait = function (message) {
+        this.i.className = 'fa  fa-spin fa-lg pull-left';
+        this.i.classList.add(this.icoWait);
+        this.element.className = 'alert alert-info alert-dismissible';
+        this.strong.textContent = message;
+    };
+    return Alert;
+})();
 var Toggle = (function () {
     function Toggle() {
     }
@@ -77,7 +141,9 @@ var Utils = (function () {
     };
     return Utils;
 })();
-Toggle.init();
+window.onload = function () {
+    Toggle.init();
+};
 /*
 * Evento click para el  documento.
 */

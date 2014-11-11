@@ -1,5 +1,21 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,700);
-
+.bg-white{
+    background-color: #fff;
+    height: auto;
+    margin: 0;
+    padding: 0;
+}
+.text-color{
+	color:#333333;
+}
+.example-header a {
+	color:#333333;    
+    font-size: 1.6em;
+    padding-right: 0.6em;
+}
+.example-header a:hover {
+	color:#333333;
+}
 body,h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 	font-family: 'Roboto', sans-serif;
 }
@@ -21,6 +37,15 @@ body,h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 
 .navbar-default .navbar-nav>li>a {
 	color: #000;
+}
+
+.dropdown-menu {    
+    background-color: #fff;
+    color: #333;
+}
+
+a:hover, a:focus {
+    color: #bbb;    
 }
 
 .marquee {
@@ -54,6 +79,33 @@ footer {
 
 .text-white {
 	color: #fff;
+}
+
+.components h1,.components h3{
+	color: #333;
+}
+.components h3{
+	font-family: monospace;
+}
+.lead {
+	margin-bottom: 20px;
+	font-size: 16px;
+	font-weight: 300;
+	line-height: 1.4;
+}
+.example{
+    border: 1px solid #ddd;
+    border-radius: 4px 4px 0 0;
+    box-shadow: none;
+    margin-left: 0;
+    margin-right: 0;
+    min-height: 8em;
+    padding: 35px;
+}
+.page-header {
+	padding-bottom: 9px;
+	margin: 40px 0 20px;
+	border-bottom: 1px solid #eee;
 }
 
 /* Themes */
@@ -225,3 +277,6 @@ footer {
 .yukiko-bg {
 	background-color: #ffffff;
 }
+
+
+

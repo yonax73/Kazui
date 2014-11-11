@@ -1,0 +1,46 @@
+<h1 class="page-header">Alert</h1>
+<p class="text-color example-header">
+ Example
+ <span class="pull-right text-color">
+	 <a href="#"><i class="fa fa-desktop"></i></a>
+	 <a href="#"><i class="fa fa-mobile"></i></a>
+	 <a href="http://jsfiddle.net/" target="_blank"><i class="fa fa-pencil-square-o"></i></a>
+ </span>
+</p>
+<div class="example">  
+   <div class="row">
+      <div class="col-md-12 col-sm-12" id="alert"></div>
+    </div>   
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+         <button type="button" id="alert-success" class="btn btn-success">Alert Success</button>
+         <button type="button" id="alert-info" class="btn btn-info">Alert Info</button>
+         <button type="button" id="alert-warning" class="btn btn-warning">Alert Warning</button>
+         <button type="button" id="alert-danger" class="btn btn-danger">Alert Danger</button>
+         <button type="button" id="alert-wait" class="btn btn-info">Alert Wait</button>
+         <button type="button" id="alert-close" class="btn btn-primary">Close Alert</button>
+      </div>      
+    </div>
+    <script>
+      var alert = new Alert(document.getElementById('alert'));      
+      alert.success('Alert Success');  
+      document.getElementById('alert-success').onclick = function(){
+    	alert.success('Alert Success');  
+      };
+      document.getElementById('alert-info').onclick = function(){
+    	  alert.info('alert Info');
+      };
+      document.getElementById('alert-warning').onclick = function(){
+    	  alert.warning('Alert Warning');
+      }
+      document.getElementById('alert-danger').onclick = function(){
+    	  alert.danger('Alert Danger');
+      }
+      document.getElementById('alert-wait').onclick = function(){
+    	  alert.wait('Alert Wait');
+      }
+      document.getElementById('alert-close').onclick = function(){
+    	  alert.close();
+      }
+    </script>
+</div>

@@ -7,6 +7,84 @@
 * If you do not own a commercial license, this file shall be governed by the trial license terms.
 */
 
+
+class Alert{
+     
+     private element:HTMLElement = null;
+     private button = document.createElement('button');
+     private span = document.createElement('span');
+     private p =  document.createElement('p');
+     private i =  document.createElement('i');
+     private strong = document.createElement('strong');
+     public icoSuccess = 'fa-check';
+     public icoInfo =  'fa-info';
+     public icoWarning = 'fa-exclamation-triangle';
+     public icoDanger = 'fa-times';
+     public icoWait = 'fa-circle-o-notch';     
+          
+     constructor(htmlElement:HTMLElement){        
+        this.element = htmlElement;
+        this.close();                
+        this.button.className = 'close';
+        this.button.type = 'button';
+        var self = this;
+        this.button.onclick = function(){
+           self.close()
+        }
+        this.span.innerHTML = '&times;';
+        this.button.appendChild(this.span);
+        this.element.appendChild(this.button);
+        this.p.className = 'text-center';
+        this.p.appendChild(this.i);
+        this.p.appendChild(this.strong);
+        this.element.appendChild(this.p);          
+     }     
+     
+     public close(){
+          this.element.className = 'hidden';
+     }
+     
+     public success(message){
+       this.i.className = 'fa fa-lg pull-left';
+       this.i.classList.add(this.icoSuccess);
+       this.element.className = 'alert alert-success alert-dismissible';
+       this.strong.textContent = message;
+     }
+     
+     public info(message){
+       this.i.className = 'fa fa-lg pull-left';
+       this.i.classList.add(this.icoInfo);
+       this.element.className = 'alert alert-info alert-dismissible';
+       this.strong.textContent = message;
+     }
+     
+     public warning(message){
+       this.i.className = 'fa fa-lg pull-left';
+       this.i.classList.add(this.icoWarning);
+       this.element.className = 'alert alert-warning alert-dismissible';
+       this.strong.textContent = message;
+     }
+     
+     public danger(message){
+       this.i.className = 'fa fa-lg pull-left';
+       this.i.classList.add(this.icoDanger);
+       this.element.className = 'alert alert-danger alert-dismissible';
+       this.strong.textContent = message;
+     }
+     
+     public wait(message){
+       this.i.className = 'fa  fa-spin fa-lg pull-left';
+       this.i.classList.add(this.icoWait);
+       this.element.className = 'alert alert-info alert-dismissible';
+       this.strong.textContent = message;
+     }     
+}
+
+
+
+
+
+
 class Toggle {  
 
      static init(){           
@@ -83,8 +161,10 @@ class Utils{
 }
 
 
+window.onload = function(){
+  Toggle.init();
+}
 
-Toggle.init();
 
 /*
 * Evento click para el  documento.

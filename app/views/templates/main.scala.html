@@ -9,13 +9,16 @@
 <meta name="description" content="Kazumi user interface javascript framework for web and mobile">
 <meta name="author" content="Yonatan Alexis Quintero Rodriguez | yonax73gmail.com /yonaxtics.com">
 <title>@title</title>
-<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/day.css")">
+<link id="theme" rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/kazui/themes/monster.css")">
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/kazui/font-awesome.min.css")">
 <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/kazui/kazui.css")">
 <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/page.css")">
 <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/hl-github.css")">
 <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+<script src="@routes.Assets.at("javascripts/kazui/kazui.js")"></script>
 </head>
 <body>
+ <div class="bg-white">
 	<nav class="navbar navbar-default ui-navbar">
 		<div class="container">
 			<div class="navbar-header ">
@@ -47,7 +50,10 @@
 				</ul> 
 				<ul class="nav navbar-nav navbar-right">
 					<li class="dropdown ">
-					  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Temas<span class="caret"></span></a>
+                      <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <i class="fa fa-paint-brush fw">&nbsp;&nbsp;&nbsp;Monster</i>
+                        <span class="caret"></span>
+                       </a>
 					  <ul class="dropdown-menu">
 					     <li>
 					       <div class="ui-navbar-content row">
@@ -151,22 +157,20 @@
      </div>
     </header>	
 	<section class="container">@content</section>
-	<footer class="hidden-xs hidden-sm">
-		<section class="container">
-			<div class="row">
-                 <div class="col-md-12">			    
-					<small class="text-gray pull-right">
-						Developed by <a class="text-gray" target="_blank" href="www.yonaxtics.com">YonaxTics.com</a>
-						| Copyright &copy; 2014 - All rights Reserved
-					</small>
-				</div>
-			</div>
-		</section>
-	</footer>
-	<script src="@routes.Assets.at("javascripts/kazui/kazui.js")"></script>
+</div>
 	<script src="@routes.Assets.at("javascripts/highlight.pack.js")"></script>
-	<script>
+	<script>	   
 	   Utils.showActiveLink(document.getElementById('navbar'));
+	   
+	   var examples = document.getElementsByClassName('example');
+	   var body = document.getElementsByTagName('body')[0];console.log(body);
+	   var bg = window.getComputedStyle(body, false).getPropertyValue('background-color');
+	   console.log(bg);
+	   var n = examples.length;
+	   for(var i = 0; i < n;i++){
+		   var example = examples[i];console.log(example);
+		   example.style.backgroundColor = bg;
+	   }
 	</script>
 	
 	
