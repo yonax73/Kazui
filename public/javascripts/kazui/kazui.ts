@@ -24,7 +24,7 @@ class Alert{
           
      constructor(htmlElement:HTMLElement){        
         this.element = htmlElement;
-        this.close();                
+        /*this.element.className = 'hidden';*/                
         this.button.className = 'close';
         this.button.type = 'button';
         var self = this;
@@ -41,13 +41,15 @@ class Alert{
      }     
      
      public close(){
-          this.element.className = 'hidden';
+          this.element.className = 'ui-ease ui-1s bounce-in-down';
+            var self = this;
+          setTimeout( function(){self.element.classList.add('hidden')}, 1000);	
      }
      
      public success(message){
        this.i.className = 'fa fa-lg pull-left';
        this.i.classList.add(this.icoSuccess);
-       this.element.className = 'alert alert-success alert-dismissible';
+       this.element.className = 'alert alert-success alert-dismissible ui-ease ui-1s bounce-in-up';
        this.strong.textContent = message;
      }
      
@@ -157,6 +159,13 @@ class Utils{
            }                   
       }
       
+      static reloadCSS(element,href){
+         var queryString = '?reload=' + new Date().getTime();
+         element.href = href.replace(/\?.*|$/, queryString);
+         
+      }
+      
+
     
 }
 

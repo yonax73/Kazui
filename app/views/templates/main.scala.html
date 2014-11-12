@@ -17,9 +17,9 @@
 <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
 <script src="@routes.Assets.at("javascripts/kazui/kazui.js")"></script>
 </head>
-<body>
+<body class="ui-ease-in ui-1s ui-fade-in">
  <div class="bg-white">
-	<nav class="navbar navbar-default ui-navbar">
+	<nav class="navbar navbar-default navbar-fixed-top ui-navbar">
 		<div class="container">
 			<div class="navbar-header ">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="navbar">
@@ -49,35 +49,35 @@
 					</li>
 				</ul> 
 				<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown ">
+					<li class="dropdown">
                       <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                        <i class="fa fa-paint-brush fw">&nbsp;&nbsp;&nbsp;Monster</i>
+                        <i class="fa fa-paint-brush fw">&nbsp;&nbsp;&nbsp;<span id="name-theme">Monster</span></i>
                         <span class="caret"></span>
                        </a>
 					  <ul class="dropdown-menu">
-					     <li>
+					     <li id="palette">
 					       <div class="ui-navbar-content row">
 					         <p><strong>Seleccione tema</strong></p>
 					         <ul class="col-md-4 palette">		                          
-		                          <li>
+		                          <li id="theme-day" onclick="changeTheme(this,'day','Day')">
 	                                <div class="day-primary"></div>
                                     <div class="day-text"></div>
                                     <div class="day-bg"></div>
 		                            Tema Day 
 		                          </li>
-		                          <li>
+		                          <li id="theme-hiroki" onclick="changeTheme(this,'hiroki','Hiroki')">
 	                                <div class="hiroki-primary"></div>
                                     <div class="hiroki-text"></div>
                                     <div class="hiroki-bg"></div>
 		                            Tema Hiroki
 		                          </li>	
-		                          <li>
+		                          <li id="theme-holo-dark" onclick="changeTheme(this,'holo-dark','Holo Dark')">
 	                                <div class="holo-dark-primary"></div>
                                     <div class="holo-dark-text"></div>
                                     <div class="holo-dark-bg"></div>
 		                            Tema Holo dark
 		                          </li>
-		                          <li>
+		                          <li id="theme-holo-light" onclick="changeTheme(this,'holo-light','Holo Light')">
 	                                <div class="holo-light-primary"></div>
                                     <div class="holo-light-text"></div>
                                     <div class="holo-light-bg"></div>
@@ -85,25 +85,25 @@
 		                          </li>	
 		                        </ul>
 					            <ul class="col-md-4 palette">		                          
-		                          <li>
+		                          <li id="theme-ios7" onclick="changeTheme(this,'ios7','iOS 7')">
 	                                <div class="ios7-primary"></div>
                                     <div class="ios7-text"></div>
                                     <div class="ios7-bg"></div>
 		                            Tema iOS-7 
 		                          </li>
-		                          <li>
+		                          <li id="theme-kazui-dark" onclick="changeTheme(this,'kazui-dark','Kazui Dark')">
 	                                <div class="kazui-dark-primary"></div>
                                     <div class="kazui-dark-text"></div>
                                     <div class="kazui-dark-bg"></div>
 		                            Tema Kazui Dark
 		                          </li>	
-		                          <li>
+		                          <li id="theme-kazui-light" onclick="changeTheme(this,'kazui-light','Kazui Light')">
 	                                <div class="kazui-light-primary"></div>
                                     <div class="kazui-light-text"></div>
                                     <div class="kazui-light-bg"></div>
 		                            Tema Kazui Light
 		                          </li>
-		                          <li>
+		                          <li id="theme-metro" onclick="changeTheme(this,'metro','Metro')">
 	                                <div class="metro-primary"></div>
                                     <div class="metro-text"></div>
                                     <div class="metro-bg"></div>
@@ -111,25 +111,25 @@
 		                          </li>	
 		                        </ul>
 					            <ul class="col-md-4 palette">		                          
-		                          <li>
+		                          <li id="theme-monster" class="active" onclick="changeTheme(this,'monster','Monster')">
 	                                <div class="monster-primary"></div>
                                     <div class="monster-text"></div>
                                     <div class="monster-bg"></div>
 		                            Tema Monster 
 		                          </li>
-		                          <li>
+		                          <li id="theme-nigth" onclick="changeTheme(this,'nigth','Nigth')">
 	                                <div class="nigth-primary"></div>
                                     <div class="nigth-text"></div>
                                     <div class="nigth-bg"></div>
 		                            Tema Nigth
 		                          </li>	
-		                          <li>
+		                          <li id="theme-simple" onclick="changeTheme(this,'simple','Simple')">
 	                                <div class="simple-primary"></div>
                                     <div class="simple-text"></div>
                                     <div class="simple-bg"></div>
 		                            Tema Simple	
 		                          </li>
-		                          <li>
+		                          <li id="theme-yukiko" onclick="changeTheme(this,'yukiko','Yukiko')">
 	                                <div class="yukiko-primary"></div>
                                     <div class="yukiko-text"></div>
                                     <div class="yukiko-bg"></div>
@@ -161,16 +161,56 @@
 	<script src="@routes.Assets.at("javascripts/highlight.pack.js")"></script>
 	<script>	   
 	   Utils.showActiveLink(document.getElementById('navbar'));
+	   setTheme();
 	   
-	   var examples = document.getElementsByClassName('example');
-	   var body = document.getElementsByTagName('body')[0];console.log(body);
-	   var bg = window.getComputedStyle(body, false).getPropertyValue('background-color');
-	   console.log(bg);
-	   var n = examples.length;
-	   for(var i = 0; i < n;i++){
-		   var example = examples[i];console.log(example);
-		   example.style.backgroundColor = bg;
+	   function changeViewExample(type,strId){
+		   var target = document.getElementById(strId);
+		   if(type === 'mobile'){
+			   if(target.classList.contains('desktop')){
+				   target.classList.remove('desktop');
+				   target.classList.add('mobile');
+			   }
+		   }else{			   
+			   if(target.classList.contains('mobile')){
+				   target.classList.remove('mobile');
+				   target.classList.add('desktop');				   
+			   }
+		   }		   
 	   }
+	   
+	   function setTheme(){
+		   var theme = localStorage.getItem('theme');
+		   if(theme){			   
+			   changeTheme(document.getElementById(localStorage.getItem('theme-id')),theme,localStorage.getItem('theme-name'))			   
+		   }else{
+			   reloadBackgroundExamples();
+		   }
+	   }
+	   
+	   function reloadBackgroundExamples(){		     
+			   var examples = document.getElementsByClassName('example');
+			   var body = document.getElementsByTagName('body')[0];
+			   var bg = window.getComputedStyle(body, false).getPropertyValue('background-color');		   
+			   var n = examples.length;
+			   for(var i = 0; i < n;i++){
+				   var example = examples[i];
+				   example.style.backgroundColor = bg;
+			   }
+		}
+	   
+	   function changeTheme(element,theme,name) {
+		    var href = '/assets/stylesheets/kazui/themes/'+theme+'.css';		    
+		    var body = document.getElementsByTagName('body')[0];		    
+            document.getElementById('theme').href = href;            
+ 		    Utils.reloadCSS(document.getElementById('theme'),href);
+ 		    document.getElementById('name-theme').textContent = name;
+ 		    document.getElementById('palette').querySelector('.active').classList.remove('active');
+ 		    element.classList.add('active'); 	
+ 		    localStorage.setItem('theme',theme);
+ 		    localStorage.setItem('theme-name',name);
+ 		    localStorage.setItem('theme-id',element.id);
+ 		    setTimeout(reloadBackgroundExamples, 400);		   
+		}
 	</script>
 	
 	

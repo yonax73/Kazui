@@ -1,21 +1,5 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,700);
-.bg-white{
-    background-color: #fff;
-    height: auto;
-    margin: 0;
-    padding: 0;
-}
-.text-color{
-	color:#333333;
-}
-.example-header a {
-	color:#333333;    
-    font-size: 1.6em;
-    padding-right: 0.6em;
-}
-.example-header a:hover {
-	color:#333333;
-}
+
 body,h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 	font-family: 'Roboto', sans-serif;
 }
@@ -37,6 +21,11 @@ body,h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 
 .navbar-default .navbar-nav>li>a {
 	color: #000;
+}
+
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+    background-color: #f9f9f9;
+    color: #555555;
 }
 
 .dropdown-menu {    
@@ -93,6 +82,25 @@ footer {
 	font-weight: 300;
 	line-height: 1.4;
 }
+.bg-white{
+    background-color: #fff;
+    height: auto;
+    margin: 0;
+    padding: 0;
+}
+.text-color{
+	color:#333333;
+}
+.example-header i {
+	color:#333333;    
+    font-size: 1.6em;
+    padding-right: 0.6em;
+    cursor: pointer;
+    padding-bottom: 0.5em;
+}
+.example-header a:hover {
+	color:#333333;
+}
 .example{
     border-color: #000000;
     border-radius: 20px 20px 10px 10px;
@@ -100,9 +108,21 @@ footer {
     border-width: 10px 10px 35px;
     box-shadow: none;
     margin-left: 0;
-    margin-right: 0;
-    min-height: 18em;
+    margin-right: 0;    
     padding: 30px;
+}
+.desktop{
+	min-height: 18em;
+	max-height: 18em;
+	height: 18em;	
+}
+.mobile{
+	height: 30em;
+	margin: 0 auto;	
+	max-height: 30em;		
+	max-width: 18em;	
+	min-height: 30em;
+		
 }
 .page-header {
 	padding-bottom: 9px;
@@ -126,6 +146,11 @@ footer {
 	box-shadow: 0 6px 12px rgba(67, 133, 245, 0.176);
 	background-color: #4385f5;
 	color: #fff;
+}
+.palette .active{
+	background-color: #4385f5;
+	color: #fff;
+	border: 1px solid rgba(67, 133, 245, 0.5);
 }
 
 .palette div {

@@ -20,7 +20,7 @@ var Alert = (function () {
         this.icoDanger = 'fa-times';
         this.icoWait = 'fa-circle-o-notch';
         this.element = htmlElement;
-        this.close();
+        /*this.element.className = 'hidden';*/
         this.button.className = 'close';
         this.button.type = 'button';
         var self = this;
@@ -36,12 +36,16 @@ var Alert = (function () {
         this.element.appendChild(this.p);
     }
     Alert.prototype.close = function () {
-        this.element.className = 'hidden';
+        this.element.className = 'ui-ease ui-1s bounce-in-down';
+        var self = this;
+        setTimeout(function () {
+            self.element.classList.add('hidden');
+        }, 1000);
     };
     Alert.prototype.success = function (message) {
         this.i.className = 'fa fa-lg pull-left';
         this.i.classList.add(this.icoSuccess);
-        this.element.className = 'alert alert-success alert-dismissible';
+        this.element.className = 'alert alert-success alert-dismissible ui-ease ui-1s bounce-in-up';
         this.strong.textContent = message;
     };
     Alert.prototype.info = function (message) {
@@ -138,6 +142,10 @@ var Utils = (function () {
                 a.parentNode.classList.add('active');
             }
         }
+    };
+    Utils.reloadCSS = function (element, href) {
+        var queryString = '?reload=' + new Date().getTime();
+        element.href = href.replace(/\?.*|$/, queryString);
     };
     return Utils;
 })();
