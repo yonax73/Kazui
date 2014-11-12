@@ -94,13 +94,15 @@ footer {
 	line-height: 1.4;
 }
 .example{
-    border: 1px solid #ddd;
-    border-radius: 4px 4px 0 0;
+    border-color: #000000;
+    border-radius: 20px 20px 10px 10px;
+    border-style: solid;
+    border-width: 10px 10px 35px;
     box-shadow: none;
     margin-left: 0;
     margin-right: 0;
-    min-height: 8em;
-    padding: 35px;
+    min-height: 18em;
+    padding: 30px;
 }
 .page-header {
 	padding-bottom: 9px;
