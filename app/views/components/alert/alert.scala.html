@@ -10,3 +10,100 @@
 <div id="kazui-example-alert" class="example desktop">  
   @alert_examples.alert_example()
 </div>
+<h2>Uso</h2>
+<p class="text-color">El objeto Alert crea  HTML din&aacute;mico para su propia construcci&oacute;n, 
+   solo es necesario agregar una etiqueta HTML con un <code>id</code> para referenciarlo en javascript.</p>
+<pre>
+	<code  class="language-markup">
+&lt;div id=&quot;alert&quot;&gt;&lt;/div&gt;
+	</code>	
+</pre>
+<h3 class="text-color">Javascript</h3>
+<p class="text-color">Creamos un objeto Alert, que recibe como par&aacute;metro el <code>HTMLElement</code></p>
+<pre>
+	<code  class="language-javascript">
+var alert = new Alert(document.getElementById('alert'));
+	</code>	
+</pre>
+<h3>M&eacute;todos</h3>
+<p class="text-color">
+ Con el objeto ya creado podemos llamar cualquiera de sus m&eacute;todos: <code>alert.danger('message')</code>.
+</p>
+<table class="table text-color">
+   <thead>
+     <tr>
+       <th>Nombre</th>
+       <th>Descripci&oacute;n</th>
+      </tr>
+   </thead>
+   <tbody>
+     <tr>
+      <td>
+       <code>success('message')</code>
+      </td>    
+      <td>
+       Muestra una alerta de tipo success.
+      </td>  
+     </tr>
+     <tr>
+      <td>
+       <code>info('message')</code>
+      </td>    
+      <td>
+       Muestra una alerta de tipo info.
+      </td>  
+     </tr>
+     <tr>
+      <td>
+       <code>warning('message')</code>
+      </td>    
+      <td>
+       Muestra una alerta de tipo warning.
+      </td>  
+     </tr>
+     <tr>
+      <td>
+       <code>danger('message')</code>
+      </td>    
+      <td>
+       Muestra una alerta de tipo danger.
+      </td>  
+     </tr>
+     <tr>
+      <td>
+       <code>wait('message')</code>
+      </td>    
+      <td>
+       Muestra una alerta de tipo wait.
+      </td>  
+     </tr>
+     <tr>
+      <td>
+       <code>close()</code>
+      </td>    
+      <td>
+       Cierra la alerta.
+      </td>  
+     </tr>
+   </tbody>
+</table>
+<h3>Propiedades</h3>
+<p class="text-color">
+ Por medio de las propiedades podemos cambiar los iconos y las animaciones del objeto.
+</p>
+<div class="ui-callout ui-callout-danger">
+    <h4>En los iconos</h4>
+    <p class="text-color">
+         Kazui usa <a class="link-color" href="http://fontawesome.io/" target="_blank">fontawesome</a>.<br/>
+         Se puede acceder a las propiedades y cambiar los iconos del objeto usando la 
+         <code>clase</code> correcta  <code>alert.icoSuccess = 'fa-smile-o'</code>   
+    </p>        
+  </div>
+  <div class="ui-callout ui-callout-danger">
+    <h4>Para las animaciones</h4>
+    <p class="text-color">
+         Kazui cuenta con su propia libreria de <a class="link-color" href="#kazui-animation" target="_blank">animaciones</a>.<br/>
+         Tambien se puede acceder a las propiedades y cambiar los iconos del objeto usando la 
+         <code>clase</code> correcta  <code>alert.animationIn = 'ui-fade-in'</code>   
+    </p>        
+  </div>

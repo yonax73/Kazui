@@ -1,3 +1,34 @@
+code{
+	font-size: 95%;
+}
+pre{
+	padding: 0;
+	 border-color: #ededed;
+}
+
+pre[class*="language-"]:before, pre[class*="language-"]:after {
+    display: flex;
+}
+pre[class*="language-"] {
+	background-image: none;
+    background-origin: content-box;
+    background-size: 3em 3em;
+    border-left: 2px solid #358ccb;
+    box-shadow:none;
+    max-height: 30em;
+    overflow: visible;
+    position: relative;
+}
+code[class*="language"] {
+    display: inline-block;
+}
+.token.function {
+    color: #333;
+}
+.token.keyword{
+	font-weight: bolder;
+}
+
 .navbar {    
     margin-bottom: 0;
 }

@@ -168,13 +168,35 @@ class Toggle {
       }
       
       private static initDropDown(){
-         var dropdowns = document.querySelectorAll('.dropdown-toggle[data-toggle="dropdown"]');
-         var n = dropdowns.length;
+         var dropdownsToggle = document.querySelectorAll('.dropdown-toggle[data-toggle="dropdown"]');
+         var n = dropdownsToggle.length;
 	     if(n > 0){
 	         for(var i = 0; i < n; i++){
-	            var element:any =  dropdowns[i];	            
+	            var element:any =  dropdownsToggle[i];	            
 	            element.onclick = function(e){		                 
-			          this.parentNode.classList.toggle('open');			         
+			         var dropdown =  this.parentNode;
+			         var dropdownMenu = dropdown.getElementsByClassName('dropdown-menu')[0];
+			         if(dropdown.classList.contains('open')){		        
+			          dropdownMenu.classList.add('ui-ease');
+			          dropdownMenu.classList.add('ui-0-5s');
+			          dropdownMenu.classList.add('ui-fade-out-up');			            
+			          setTimeout(function(){
+				          dropdownMenu.classList.remove('ui-ease');
+				          dropdownMenu.classList.remove('ui-0-5s');
+				          dropdownMenu.classList.remove('ui-fade-out-up');
+				          dropdown.classList.remove('open');	  
+				        },500);  			                 
+			         }else{		              
+		              dropdown.classList.add('open');	  
+			          dropdownMenu.classList.add('ui-ease');
+			          dropdownMenu.classList.add('ui-0-5s');
+			          dropdownMenu.classList.add('ui-fade-in-down');			            
+			          setTimeout(function(){
+				          dropdownMenu.classList.remove('ui-ease');
+				          dropdownMenu.classList.remove('ui-0-5s');
+				          dropdownMenu.classList.remove('ui-fade-in-down');				          
+				        },500);     
+			         }        
 			          e.stopPropagation(); 
                       return false;			          
                 }
@@ -183,13 +205,22 @@ class Toggle {
       }    
       
        static clearDropDown(){
-         var dropdowns = document.querySelectorAll('.dropdown-toggle[data-toggle="dropdown"]');
-	     var n = dropdowns.length;
+         var dropdownsToggle = document.querySelectorAll('.dropdown-toggle[data-toggle="dropdown"]');
+	     var n = dropdownsToggle.length;
 	     if(n > 0){
 	       for(var i = 0; i < n; i++){
-	           var element:any =  dropdowns[i].parentNode;
-	           if(element.classList.contains('open')){	               
-	                 element.classList.remove('open');		                     
+	           var dropdown:any =  dropdownsToggle[i].parentNode;
+	           if(dropdown.classList.contains('open')){	                
+	                  var dropdownMenu = dropdown.getElementsByClassName('dropdown-menu')[0];
+			          dropdownMenu.classList.add('ui-ease');
+			          dropdownMenu.classList.add('ui-0-5s');
+			          dropdownMenu.classList.add('ui-fade-out-up');			            
+			          setTimeout(function(){
+				          dropdownMenu.classList.remove('ui-ease');
+				          dropdownMenu.classList.remove('ui-0-5s');
+				          dropdownMenu.classList.remove('ui-fade-out-up');
+				          dropdown.classList.remove('open');	  
+				        },500);     		                     
 	            }
 	        }                    
 	     }	
@@ -218,12 +249,9 @@ class Utils{
       
       static reloadCSS(element,href){
          var queryString = '?reload=' + new Date().getTime();
-         element.href = href.replace(/\?.*|$/, queryString);
-         
+         element.href = href.replace(/\?.*|$/, queryString);         
       }
-      
-
-    
+         
 }
 
 

@@ -1,14 +1,14 @@
-@import url(http://fonts.googleapis.com/css?family=Roboto:400,700);
+@import url(http://fonts.googleapis.com/css?family=Ubuntu:400,700);
 @import url('overwrite-theme.css');
 @import url('palette.css');
 
-body,h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
-	font-family: 'Roboto', sans-serif;
+body,h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {	
+	font-family: 'Ubuntu',Helvetica Neue,Helvetica, sans-serif;
 }
 .marquee {
     background-color: #4385f5;
     background-image: url("/assets/images/bg.png");
-    padding: 20px 15px;
+    padding: 60px 15px 30px;
 }
 
 .marquee h1 {
@@ -31,11 +31,8 @@ body,h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 	color: #fff;
 }
 
-.components h1,.components h3{
+.components h1,.components h2,.components h3{
 	color: #333;
-}
-.components h3{
-	font-family: monospace;
 }
 .lead {
 	margin-bottom: 20px;
@@ -51,6 +48,12 @@ body,h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 }
 .text-color{
 	color:#333333;
+}
+.link-color {
+    color: #4385f5;    
+}
+.link-color:hover{
+	color:#444;
 }
 .example-header i {
 	color:#333333;    
@@ -90,7 +93,17 @@ body,h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 	margin: 40px 0 20px;
 	border-bottom: 1px solid #eee;
 }
+.ui-callout {
+padding: 20px;
+margin: 20px 0;
+border: 1px solid #eee;
+border-left-width: 5px;
+border-radius: 3px;
+}
 
-
-
-
+.ui-callout-danger{
+	border-left-color:#dc4437; 
+}
+.ui-callout-danger h4 {
+  color: #dc4437;
+}

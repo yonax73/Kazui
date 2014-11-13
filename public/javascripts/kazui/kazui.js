@@ -67,7 +67,6 @@ var Alert = (function () {
             }, 1000);
         }
     };
-
     Alert.prototype.success = function (message) {
         this.removeAnimation();
         this.i.className = 'fa fa-lg pull-left';
@@ -77,7 +76,6 @@ var Alert = (function () {
         this.strong.textContent = message;
         this.type = 'success';
     };
-
     Alert.prototype.info = function (message) {
         this.i.className = 'fa fa-lg pull-left';
         this.i.classList.add(this.icoInfo);
@@ -87,7 +85,6 @@ var Alert = (function () {
         this.type = 'info';
         this.removeAnimation();
     };
-
     Alert.prototype.warning = function (message) {
         this.i.className = 'fa fa-lg pull-left';
         this.i.classList.add(this.icoWarning);
@@ -97,7 +94,6 @@ var Alert = (function () {
         this.type = 'warning';
         this.removeAnimation();
     };
-
     Alert.prototype.danger = function (message) {
         this.i.className = 'fa fa-lg pull-left';
         this.i.classList.add(this.icoDanger);
@@ -107,7 +103,6 @@ var Alert = (function () {
         this.type = 'danger';
         this.removeAnimation();
     };
-
     Alert.prototype.wait = function (message) {
         this.i.className = 'fa fa-spin fa-lg pull-left';
         this.i.classList.add(this.icoWait);
@@ -117,13 +112,11 @@ var Alert = (function () {
         this.type = 'wait';
         this.removeAnimation();
     };
-
     Alert.prototype.addAnimation = function () {
         this.element.classList.add(this.typeAnimation);
         this.element.classList.add(this.durationAnimation);
         this.element.classList.add(this.animationIn);
     };
-
     Alert.prototype.removeAnimation = function () {
         var self = this;
         setTimeout(function () {
@@ -134,7 +127,6 @@ var Alert = (function () {
     };
     return Alert;
 })();
-
 var Toggle = (function () {
     function Toggle() {
     }
@@ -142,7 +134,6 @@ var Toggle = (function () {
         this.initNavBar();
         this.initDropDown();
     };
-
     Toggle.initNavBar = function () {
         var navbars = document.querySelectorAll('.navbar-toggle[data-toggle="collapse"]');
         var n = navbars.length;
@@ -157,37 +148,66 @@ var Toggle = (function () {
             }
         }
     };
-
     Toggle.initDropDown = function () {
-        var dropdowns = document.querySelectorAll('.dropdown-toggle[data-toggle="dropdown"]');
-        var n = dropdowns.length;
+        var dropdownsToggle = document.querySelectorAll('.dropdown-toggle[data-toggle="dropdown"]');
+        var n = dropdownsToggle.length;
         if (n > 0) {
             for (var i = 0; i < n; i++) {
-                var element = dropdowns[i];
+                var element = dropdownsToggle[i];
                 element.onclick = function (e) {
-                    this.parentNode.classList.toggle('open');
+                    var dropdown = this.parentNode;
+                    var dropdownMenu = dropdown.getElementsByClassName('dropdown-menu')[0];
+                    if (dropdown.classList.contains('open')) {
+                        dropdownMenu.classList.add('ui-ease');
+                        dropdownMenu.classList.add('ui-0-5s');
+                        dropdownMenu.classList.add('ui-fade-out-up');
+                        setTimeout(function () {
+                            dropdownMenu.classList.remove('ui-ease');
+                            dropdownMenu.classList.remove('ui-0-5s');
+                            dropdownMenu.classList.remove('ui-fade-out-up');
+                            dropdown.classList.remove('open');
+                        }, 500);
+                    }
+                    else {
+                        dropdown.classList.add('open');
+                        dropdownMenu.classList.add('ui-ease');
+                        dropdownMenu.classList.add('ui-0-5s');
+                        dropdownMenu.classList.add('ui-fade-in-down');
+                        setTimeout(function () {
+                            dropdownMenu.classList.remove('ui-ease');
+                            dropdownMenu.classList.remove('ui-0-5s');
+                            dropdownMenu.classList.remove('ui-fade-in-down');
+                        }, 500);
+                    }
                     e.stopPropagation();
                     return false;
                 };
             }
         }
     };
-
     Toggle.clearDropDown = function () {
-        var dropdowns = document.querySelectorAll('.dropdown-toggle[data-toggle="dropdown"]');
-        var n = dropdowns.length;
+        var dropdownsToggle = document.querySelectorAll('.dropdown-toggle[data-toggle="dropdown"]');
+        var n = dropdownsToggle.length;
         if (n > 0) {
             for (var i = 0; i < n; i++) {
-                var element = dropdowns[i].parentNode;
-                if (element.classList.contains('open')) {
-                    element.classList.remove('open');
+                var dropdown = dropdownsToggle[i].parentNode;
+                if (dropdown.classList.contains('open')) {
+                    var dropdownMenu = dropdown.getElementsByClassName('dropdown-menu')[0];
+                    dropdownMenu.classList.add('ui-ease');
+                    dropdownMenu.classList.add('ui-0-5s');
+                    dropdownMenu.classList.add('ui-fade-out-up');
+                    setTimeout(function () {
+                        dropdownMenu.classList.remove('ui-ease');
+                        dropdownMenu.classList.remove('ui-0-5s');
+                        dropdownMenu.classList.remove('ui-fade-out-up');
+                        dropdown.classList.remove('open');
+                    }, 500);
                 }
             }
         }
     };
     return Toggle;
 })();
-
 var Utils = (function () {
     function Utils() {
     }
@@ -208,18 +228,15 @@ var Utils = (function () {
             }
         }
     };
-
     Utils.reloadCSS = function (element, href) {
         var queryString = '?reload=' + new Date().getTime();
         element.href = href.replace(/\?.*|$/, queryString);
     };
     return Utils;
 })();
-
 window.onload = function () {
     Toggle.init();
 };
-
 /*
 * Evento click para el  documento.
 */

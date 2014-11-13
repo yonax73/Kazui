@@ -11,12 +11,12 @@
 <title>@title</title>
 <link id="theme" rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/kazui/themes/monster.css")">
 <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/kazui/kazui.css")">
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/prism.css")">
 <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/page.css")">
-<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/hl-github.css")">
 <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
 <script src="@routes.Assets.at("javascripts/kazui/kazui.js")"></script>
 </head>
-<body class="ui-ease-in ui-1s ui-fade-in">
+<body  class="ui-ease-in ui-1s ui-fade-in">
  <div class="bg-white">
 	<nav class="navbar navbar-default navbar-fixed-top ui-navbar">
 		<div class="container">
@@ -53,7 +53,7 @@
                         <i class="fa fa-paint-brush fw">&nbsp;&nbsp;&nbsp;<span id="name-theme">Monster</span></i>
                         <span class="caret"></span>
                        </a>
-					  <ul class="dropdown-menu">
+					  <ul class="dropdown-menu ">
 					     <li id="palette">
 					       <div class="ui-navbar-content row">
 					         <p><strong>Seleccione tema</strong></p>
@@ -157,8 +157,9 @@
     </header>	
 	<section class="container">@content</section>
 </div>
-	<script src="@routes.Assets.at("javascripts/highlight.pack.js")"></script>
-	<script>	   
+	<script src="@routes.Assets.at("javascripts/prism.js")"></script>
+	<script>	
+	 //  hljs.initHighlightingOnLoad();
 	   Utils.showActiveLink(document.getElementById('navbar'));
 	   setTheme();
 	   
