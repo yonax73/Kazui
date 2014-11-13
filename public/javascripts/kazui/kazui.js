@@ -19,8 +19,13 @@ var Alert = (function () {
         this.icoWarning = 'fa-exclamation-triangle';
         this.icoDanger = 'fa-times';
         this.icoWait = 'fa-circle-o-notch';
+        this.animationIn = 'ui-bounce-in-up';
+        this.animationOut = 'ui-fade-out';
+        this.typeAnimation = 'ui-ease-in-out';
+        this.type = 'close';
+        this.durationAnimation = 'ui-1s';
         this.element = htmlElement;
-        /*this.element.className = 'hidden';*/
+        this.element.className = 'hidden';
         this.button.className = 'close';
         this.button.type = 'button';
         var self = this;
@@ -36,44 +41,100 @@ var Alert = (function () {
         this.element.appendChild(this.p);
     }
     Alert.prototype.close = function () {
-        this.element.className = 'ui-ease ui-1s bounce-in-down';
-        var self = this;
-        setTimeout(function () {
-            self.element.classList.add('hidden');
-        }, 1000);
+        if (this.type !== 'close') {
+            switch (this.type) {
+                case 'success':
+                    this.element.className = 'alert alert-success alert-dismissible';
+                    break;
+                case 'info':
+                case 'wait':
+                    this.element.className = 'alert alert-info alert-dismissible';
+                    break;
+                case 'warning':
+                    this.element.className = 'alert alert-warning alert-dismissible';
+                    break;
+                case 'danger':
+                    this.element.className = 'alert alert-danger alert-dismissible';
+                    break;
+            }
+            this.type = 'close';
+            this.element.classList.add(this.typeAnimation);
+            this.element.classList.add(this.durationAnimation);
+            this.element.classList.add(this.animationOut);
+            var self = this;
+            setTimeout(function () {
+                self.element.classList.add('hidden');
+            }, 1000);
+        }
     };
+
     Alert.prototype.success = function (message) {
+        this.removeAnimation();
         this.i.className = 'fa fa-lg pull-left';
         this.i.classList.add(this.icoSuccess);
-        this.element.className = 'alert alert-success alert-dismissible ui-ease ui-1s bounce-in-up';
+        this.element.className = 'alert alert-success alert-dismissible';
+        this.addAnimation();
         this.strong.textContent = message;
+        this.type = 'success';
     };
+
     Alert.prototype.info = function (message) {
         this.i.className = 'fa fa-lg pull-left';
         this.i.classList.add(this.icoInfo);
         this.element.className = 'alert alert-info alert-dismissible';
+        this.addAnimation();
         this.strong.textContent = message;
+        this.type = 'info';
+        this.removeAnimation();
     };
+
     Alert.prototype.warning = function (message) {
         this.i.className = 'fa fa-lg pull-left';
         this.i.classList.add(this.icoWarning);
         this.element.className = 'alert alert-warning alert-dismissible';
+        this.addAnimation();
         this.strong.textContent = message;
+        this.type = 'warning';
+        this.removeAnimation();
     };
+
     Alert.prototype.danger = function (message) {
         this.i.className = 'fa fa-lg pull-left';
         this.i.classList.add(this.icoDanger);
         this.element.className = 'alert alert-danger alert-dismissible';
+        this.addAnimation();
         this.strong.textContent = message;
+        this.type = 'danger';
+        this.removeAnimation();
     };
+
     Alert.prototype.wait = function (message) {
-        this.i.className = 'fa  fa-spin fa-lg pull-left';
+        this.i.className = 'fa fa-spin fa-lg pull-left';
         this.i.classList.add(this.icoWait);
         this.element.className = 'alert alert-info alert-dismissible';
+        this.addAnimation();
         this.strong.textContent = message;
+        this.type = 'wait';
+        this.removeAnimation();
+    };
+
+    Alert.prototype.addAnimation = function () {
+        this.element.classList.add(this.typeAnimation);
+        this.element.classList.add(this.durationAnimation);
+        this.element.classList.add(this.animationIn);
+    };
+
+    Alert.prototype.removeAnimation = function () {
+        var self = this;
+        setTimeout(function () {
+            self.element.classList.remove(self.typeAnimation);
+            self.element.classList.remove(self.durationAnimation);
+            self.element.classList.remove(self.animationIn);
+        }, 1000);
     };
     return Alert;
 })();
+
 var Toggle = (function () {
     function Toggle() {
     }
@@ -81,6 +142,7 @@ var Toggle = (function () {
         this.initNavBar();
         this.initDropDown();
     };
+
     Toggle.initNavBar = function () {
         var navbars = document.querySelectorAll('.navbar-toggle[data-toggle="collapse"]');
         var n = navbars.length;
@@ -95,6 +157,7 @@ var Toggle = (function () {
             }
         }
     };
+
     Toggle.initDropDown = function () {
         var dropdowns = document.querySelectorAll('.dropdown-toggle[data-toggle="dropdown"]');
         var n = dropdowns.length;
@@ -109,6 +172,7 @@ var Toggle = (function () {
             }
         }
     };
+
     Toggle.clearDropDown = function () {
         var dropdowns = document.querySelectorAll('.dropdown-toggle[data-toggle="dropdown"]');
         var n = dropdowns.length;
@@ -123,6 +187,7 @@ var Toggle = (function () {
     };
     return Toggle;
 })();
+
 var Utils = (function () {
     function Utils() {
     }
@@ -143,15 +208,18 @@ var Utils = (function () {
             }
         }
     };
+
     Utils.reloadCSS = function (element, href) {
         var queryString = '?reload=' + new Date().getTime();
         element.href = href.replace(/\?.*|$/, queryString);
     };
     return Utils;
 })();
+
 window.onload = function () {
     Toggle.init();
 };
+
 /*
 * Evento click para el  documento.
 */

@@ -20,11 +20,16 @@ class Alert{
      public icoInfo =  'fa-info';
      public icoWarning = 'fa-exclamation-triangle';
      public icoDanger = 'fa-times';
-     public icoWait = 'fa-circle-o-notch';     
+     public icoWait = 'fa-circle-o-notch';   
+     public animationIn = 'ui-bounce-in-up';
+     public animationOut = 'ui-fade-out';
+     public typeAnimation = 'ui-ease-in-out';     
+     private type = 'close';
+     private durationAnimation = 'ui-1s';
           
      constructor(htmlElement:HTMLElement){        
         this.element = htmlElement;
-        /*this.element.className = 'hidden';*/                
+        this.element.className = 'hidden';            
         this.button.className = 'close';
         this.button.type = 'button';
         var self = this;
@@ -40,46 +45,98 @@ class Alert{
         this.element.appendChild(this.p);          
      }     
      
-     public close(){
-          this.element.className = 'ui-ease ui-1s bounce-in-down';
-            var self = this;
-          setTimeout( function(){self.element.classList.add('hidden')}, 1000);	
+     public close(){        
+          if(this.type!=='close'){
+	          switch(this.type){
+	              case 'success':
+	               this.element.className = 'alert alert-success alert-dismissible';      
+	              break;
+	              case 'info':
+	              case 'wait':
+	               this.element.className = 'alert alert-info alert-dismissible';
+	              break;
+	              case 'warning':
+	               this.element.className = 'alert alert-warning alert-dismissible';
+	              break;
+	              case 'danger':
+	               this.element.className = 'alert alert-danger alert-dismissible';
+	              break;	               
+	          }	          
+	          this.type = 'close';	          
+	          this.element.classList.add(this.typeAnimation);
+	          this.element.classList.add(this.durationAnimation);
+	          this.element.classList.add(this.animationOut);
+	          var self = this;
+	          setTimeout(function(){self.element.classList.add('hidden')}, 1000);
+          }	
      }
      
      public success(message){
+       this.removeAnimation();         
        this.i.className = 'fa fa-lg pull-left';
        this.i.classList.add(this.icoSuccess);
-       this.element.className = 'alert alert-success alert-dismissible ui-ease ui-1s bounce-in-up';
+       this.element.className = 'alert alert-success alert-dismissible';
+       this.addAnimation();
        this.strong.textContent = message;
+       this.type = 'success';
+      
      }
      
-     public info(message){
+     public info(message){          
        this.i.className = 'fa fa-lg pull-left';
        this.i.classList.add(this.icoInfo);
        this.element.className = 'alert alert-info alert-dismissible';
+       this.addAnimation();
        this.strong.textContent = message;
+       this.type = 'info';
+       this.removeAnimation();   
+       
      }
      
      public warning(message){
        this.i.className = 'fa fa-lg pull-left';
        this.i.classList.add(this.icoWarning);
        this.element.className = 'alert alert-warning alert-dismissible';
+       this.addAnimation();
        this.strong.textContent = message;
+       this.type = 'warning';
+       this.removeAnimation();
      }
      
      public danger(message){
        this.i.className = 'fa fa-lg pull-left';
        this.i.classList.add(this.icoDanger);
        this.element.className = 'alert alert-danger alert-dismissible';
+       this.addAnimation();
        this.strong.textContent = message;
+       this.type = 'danger';
+       this.removeAnimation();
      }
      
-     public wait(message){
-       this.i.className = 'fa  fa-spin fa-lg pull-left';
+     public wait(message){     
+       this.i.className = 'fa fa-spin fa-lg pull-left';
        this.i.classList.add(this.icoWait);
        this.element.className = 'alert alert-info alert-dismissible';
+       this.addAnimation();
        this.strong.textContent = message;
-     }     
+       this.type = 'wait';
+       this.removeAnimation();
+     }
+     
+     private addAnimation(){
+       this.element.classList.add(this.typeAnimation);
+	   this.element.classList.add(this.durationAnimation);
+	   this.element.classList.add(this.animationIn);      
+     }
+     
+     private removeAnimation(){
+        var self = this;
+        setTimeout(function(){
+	       self.element.classList.remove(self.typeAnimation);
+		   self.element.classList.remove(self.durationAnimation);
+		   self.element.classList.remove(self.animationIn);
+        },1000);      
+     }
 }
 
 

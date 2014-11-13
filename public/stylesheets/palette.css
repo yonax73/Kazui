@@ -1,0 +1,176 @@
+.palette {
+	list-style: none;
+}
+
+.palette li {
+	cursor: pointer;
+	padding-bottom: 4px;
+	padding-left: 10px;
+	padding-top: 5px;
+}
+
+.palette li:hover {
+	box-shadow: 0 6px 12px rgba(67, 133, 245, 0.176);
+	background-color: #4385f5;
+	color: #fff;
+}
+.palette .active{
+	background-color: #4385f5;
+	color: #fff;
+	border: 1px solid rgba(67, 133, 245, 0.5);
+}
+
+.palette div {
+	border: 1px solid #ccc;
+	display: inline;
+	line-height: 1.5;
+	margin: 2px;
+	padding: 1px 12px;
+}
+
+.day-primary {
+	background-color: #4385f5;
+}
+
+.day-text {
+	background-color: #a26900;
+}
+
+.day-bg {
+	background-color: #ffffff;
+}
+
+.hiroki-primary {
+	background-color: #5f5448;
+}
+
+.hiroki-text {
+	background-color: #333333;
+}
+
+.hiroki-bg {
+	background-color: #ffffff;
+}
+
+.holo-dark-primary {
+	background-color: #33b5e5;
+}
+
+.holo-dark-text {
+	background-color: #cccccc;
+}
+
+.holo-dark-bg {
+	background-color: #1e1e1e;
+}
+
+.holo-light-primary {
+	background-color: #33b5e5;
+}
+
+.holo-light-text {
+	background-color: #333333;
+}
+
+.holo-light-bg {
+	background-color: #d0d0d0;
+}
+
+.ios7-primary {
+	background-color: #007aff;
+}
+
+.ios7-text {
+	background-color: #505050;
+}
+
+.ios7-bg {
+	background-color: #ffffff;
+}
+
+.kazui-dark-primary {
+	background-color: #f58780;
+}
+
+.kazui-dark-text {
+	background-color: #878cb0;
+}
+
+.kazui-dark-bg {
+	background-color: #3f435f;
+}
+
+.kazui-light-primary {
+	background-color: #eb4646;
+}
+
+.kazui-light-text {
+	background-color: #0f2874;
+}
+
+.kazui-light-bg {
+	background-color: #ffffff;
+}
+
+.metro-primary {
+	background-color: #1abc9c;
+}
+
+.metro-text {
+	background-color: #34495e;
+}
+
+.metro-bg {
+	background-color: #ffffff;
+}
+
+.monster-primary {
+	background-color: #45e500;
+}
+
+.monster-text {
+	background-color: #bbbbbb;
+}
+
+.monster-bg {
+	background-color: #222222;
+}
+
+.nigth-primary {
+	background-color: #ff4800;
+}
+
+.nigth-text {
+	background-color: #aaaaaa;
+}
+
+.nigth-bg {
+	background-color: #111111;
+}
+
+.simple-primary {
+	background-color: #374a51;
+}
+
+.simple-text {
+	background-color: #7787a6;
+}
+
+.simple-bg {
+	background-color: #ffffff;
+}
+
+.yukiko-primary {
+	background-color: #64518c;
+}
+
+.yukiko-text {
+	background-color: #5a728b;
+}
+
+.yukiko-bg {
+	background-color: #ffffff;
+}
+
+
+
