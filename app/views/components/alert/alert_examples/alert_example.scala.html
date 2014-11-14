@@ -12,24 +12,24 @@
      </div>      
    </div>
    <script>
-     var alert = new Alert(document.getElementById('alert'));     
-     alert.success('Alert Success');  
+     var objAlert = new Alert(document.getElementById('alert'));     
+     objAlert.success('Alert Success');  
      document.getElementById('alert-success').onclick = function(){
-    	alert.success('Alert Success');  
+    	objAlert.success('Alert Success');  
      };
      document.getElementById('alert-info').onclick = function(){
-   	  alert.info('alert Info');
+   	  objAlert.info('Alert Info');
      };
      document.getElementById('alert-warning').onclick = function(){
-   	  alert.warning('Alert Warning');
+   	  objAlert.warning('Alert Warning');
      }
      document.getElementById('alert-danger').onclick = function(){
-   	  alert.danger('Alert Danger');
+   	  objAlert.danger('Alert Danger');
      }
      document.getElementById('alert-wait').onclick = function(){
-   	  alert.wait('Alert Wait');
+   	  objAlert.wait('Alert Wait');
      }
      document.getElementById('alert-close').onclick = function(){
-   	  alert.close();
+   	  objAlert.close();
      }
    </script>

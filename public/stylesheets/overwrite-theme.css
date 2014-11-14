@@ -59,4 +59,10 @@ code[class*="language"] {
 a:hover, a:focus {
     color: #bbb;    
 }
+.ow-text-warning{
+	color: #e5a603;
+}
+.ow-text-danger{
+	color: #bf2e21;
+}
 

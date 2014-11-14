@@ -1253,7 +1253,10 @@
     -webkit-animation-timing-function: linear; 
     animation-timing-function: linear;	
 }
-
+.ui-0-2s{
+	-webkit-animation-duration: 0.2s; 
+    animation-duration: 0.2s;	
+}
 .ui-0-5s{
 	-webkit-animation-duration: 0.5s; 
     animation-duration: 0.5s;	

@@ -22,12 +22,13 @@
 <p class="text-color">Creamos un objeto Alert, que recibe como par&aacute;metro el <code>HTMLElement</code></p>
 <pre>
 	<code  class="language-javascript">
-var alert = new Alert(document.getElementById('alert'));
+var objAlert = new Alert(document.getElementById('alert'));
 	</code>	
 </pre>
+<small class="ow-text-danger">*No Crear objeto con nombre <code>alert</code> por que dar&aacute; confilcto con el <code>alert()</code> de javascript.</samll>
 <h3>M&eacute;todos</h3>
 <p class="text-color">
- Con el objeto ya creado podemos llamar cualquiera de sus m&eacute;todos: <code class="ui-method">alert.danger('message')</code>.
+ Con el objeto ya creado podemos llamar cualquiera de sus m&eacute;todos: <code class="ui-method">objAlert.danger('message')</code>.
 </p>
 <table class="table text-color">
    <thead>
@@ -96,7 +97,7 @@ var alert = new Alert(document.getElementById('alert'));
     <p class="text-color">
          Kazui usa <a class="link-color" href="http://fontawesome.io/" target="_blank">fontawesome</a>.<br/>
          Se puede acceder a las propiedades y cambiar los iconos del objeto usando la 
-         <code>clase</code> correcta  <code class="ui-method">alert.icoSuccess = 'fa-smile-o'</code>   
+         <code>clase</code> correcta  <code class="ui-method">objAlert.icoSuccess = 'fa-smile-o'</code>   
     </p>        
   </div>
   <table class="table text-color">
@@ -134,7 +135,7 @@ var alert = new Alert(document.getElementById('alert'));
     <p class="text-color">
          Kazui cuenta con su propia libreria de <a class="link-color" href="#kazui-animation" target="_blank">animaciones</a>.<br/>
          Tambi&eacute;n se puede acceder a las propiedades y cambiar los iconos del objeto usando la 
-         <code>clase</code> correcta  <code class="ui-method">alert.animationIn = 'ui-fade-in'</code>   
+         <code>clase</code> correcta  <code class="ui-method">objAlert.animationIn = 'ui-fade-in'</code>   
     </p>        
   </div>
     <table class="table text-color">

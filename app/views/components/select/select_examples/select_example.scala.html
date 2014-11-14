@@ -1,0 +1,86 @@
+  <style>
+  .ui-select {
+     position: relative;   
+     cursor: default;   
+   }
+    .ui-select .has-feedback .form-control-feedback{
+     top: 0;
+    }    
+/*     .ui-select input.form-control,.ui-select i {     */
+/*      cursor: default;      */
+/*     } */
+
+    .ui-select.disabled,.ui-select.read-only {
+     cursor: not-allowed;
+}
+  .ui-select .form-group {
+     margin-bottom: 0;
+   }
+  .ui-select ul {
+    background: none repeat scroll 0 0 #fff; /*bg input**/
+    border-bottom: 1px solid;   
+    border-left: 1px solid;
+    border-right: 1px solid;
+    border-color: #cccccc;     /**Borde color del input*/
+    display: none;
+    height: auto;
+    list-style: outside none none;
+    margin: 0;
+    min-height: 80px;
+    overflow: auto;
+    padding: 0;
+    position: absolute;
+    text-indent: 0.85em;
+    width: 100%;
+    z-index: 999;
+  }
+    .ui-select ul.open {
+        display: table;
+  }
+  .ui-select li {
+    padding-bottom: 0.15em;
+  }
+  .ui-select li:hover {
+      background-color: #f9f9f9; /*color navabar default active focus**/
+      color: #555555; /*color navabar default active focus**/
+  }
+
+   
+ .ui-mask{
+    background: none repeat scroll 0 0 transparent;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  
+  </style>
+
+<div class="row">
+  <div class="col-md-12 col-sm-12">    
+    <div id="select" class="ui-select"></div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12 col-sm-12">    
+    <div id="select2" class="ui-select"></div>
+  </div>
+</div>
+<script>
+var objSelect = new Select(document.getElementById('select'),[
+                     { option: 1, value: 'Product A' },
+                     { option: 2, value: 'Product B', selected:true },
+                     { option: 3, value: 'Product C' }
+                    ]);
+                    
+var objSelect2 = new Select(document.getElementById('select2'),[
+                                                              { option: 1, value: 'Product A' },
+                                                              { option: 2, value: 'Product B', selected:true },
+                                                              { option: 3, value: 'Product C' }
+                                                             ]);
+
+
+
+</script>
