@@ -27,7 +27,7 @@ var alert = new Alert(document.getElementById('alert'));
 </pre>
 <h3>M&eacute;todos</h3>
 <p class="text-color">
- Con el objeto ya creado podemos llamar cualquiera de sus m&eacute;todos: <code>alert.danger('message')</code>.
+ Con el objeto ya creado podemos llamar cualquiera de sus m&eacute;todos: <code class="ui-method">alert.danger('message')</code>.
 </p>
 <table class="table text-color">
    <thead>
@@ -39,47 +39,47 @@ var alert = new Alert(document.getElementById('alert'));
    <tbody>
      <tr>
       <td>
-       <code>success('message')</code>
+       <code class="ui-method">success('message')</code>
       </td>    
       <td>
-       Muestra una alerta de tipo success.
+       Muestra una alerta de tipo Success.
       </td>  
      </tr>
      <tr>
       <td>
-       <code>info('message')</code>
+       <code class="ui-method">info('message')</code>
       </td>    
       <td>
-       Muestra una alerta de tipo info.
+       Muestra una alerta de tipo Info.
       </td>  
      </tr>
      <tr>
       <td>
-       <code>warning('message')</code>
+       <code class="ui-method">warning('message')</code>
       </td>    
       <td>
-       Muestra una alerta de tipo warning.
+       Muestra una alerta de tipo Warning.
       </td>  
      </tr>
      <tr>
       <td>
-       <code>danger('message')</code>
+       <code class="ui-method">danger('message')</code>
       </td>    
       <td>
-       Muestra una alerta de tipo danger.
+       Muestra una alerta de tipo Danger.
       </td>  
      </tr>
      <tr>
       <td>
-       <code>wait('message')</code>
+       <code class="ui-method">wait('message')</code>
       </td>    
       <td>
-       Muestra una alerta de tipo wait.
+       Muestra una alerta de tipo Wait.
       </td>  
      </tr>
      <tr>
       <td>
-       <code>close()</code>
+       <code class="ui-method">close()</code>
       </td>    
       <td>
        Cierra la alerta.
@@ -96,14 +96,66 @@ var alert = new Alert(document.getElementById('alert'));
     <p class="text-color">
          Kazui usa <a class="link-color" href="http://fontawesome.io/" target="_blank">fontawesome</a>.<br/>
          Se puede acceder a las propiedades y cambiar los iconos del objeto usando la 
-         <code>clase</code> correcta  <code>alert.icoSuccess = 'fa-smile-o'</code>   
+         <code>clase</code> correcta  <code class="ui-method">alert.icoSuccess = 'fa-smile-o'</code>   
     </p>        
   </div>
+  <table class="table text-color">
+    <thead>
+      <tr>    
+        <th>Nombre</th>
+        <th>Descripci&oacute;n</th>
+     </tr>
+    </thead>
+    <tbody>
+     <tr>
+       <td><Code class="ui-method">icoSuccess</Code></td>
+       <td>Icono de alerta tipo Success</td>
+     </tr>
+     <tr>
+       <td><Code class="ui-method">icoInfo</Code></td>
+       <td>Icono de alerta tipo Info</td>
+     </tr>
+     <tr>
+       <td><Code class="ui-method">icoWarning</Code></td>
+       <td>Icono de alerta tipo Warning</td>
+     </tr>
+     <tr>
+       <td><Code class="ui-method">icoDanger</Code></td>
+       <td>Icono de alerta tipo Danger</td>
+     </tr>
+     <tr>
+       <td><Code class="ui-method">icoWait</Code></td>
+       <td>Icono de alerta tipo Wait,usar <a href="http://fontawesome.io/examples/#spinning" class="link-color"  target="_blank">Spinning Icons</a></td>
+     </tr>
+    </tbody>    
+  </table>
   <div class="ui-callout ui-callout-danger">
     <h4>Para las animaciones</h4>
     <p class="text-color">
          Kazui cuenta con su propia libreria de <a class="link-color" href="#kazui-animation" target="_blank">animaciones</a>.<br/>
-         Tambien se puede acceder a las propiedades y cambiar los iconos del objeto usando la 
-         <code>clase</code> correcta  <code>alert.animationIn = 'ui-fade-in'</code>   
+         Tambi&eacute;n se puede acceder a las propiedades y cambiar los iconos del objeto usando la 
+         <code>clase</code> correcta  <code class="ui-method">alert.animationIn = 'ui-fade-in'</code>   
     </p>        
   </div>
+    <table class="table text-color">
+    <thead>
+      <tr>    
+        <th>Nombre</th>
+        <th>Descripci&oacute;n</th>
+     </tr>
+    </thead>
+    <tbody>
+     <tr>
+       <td><Code class="ui-method">typeAnimation</Code></td>
+       <td>Tipo de animaci&oacute;n a usar: <code>ui-ease</code>,<code>ui-ease-in</code>,etc.</td>
+     </tr>
+     <tr>
+       <td><Code class="ui-method">animationIn</Code></td>
+       <td>Animaci&oacute;n cuando se muestra la alerta: <code>ui-fade-in</code>,<code>ui-fade-in-up</code>,etc.</td>
+     </tr>
+     <tr>
+       <td><Code class="ui-method">animationOut</Code></td>
+       <td>Animaci&oacute;n cuando se cierra la alerta: <code>ui-fade-out</code>,<code>ui-fade-out-up</code>,etc.</td>
+     </tr>
+    </tbody>
+  </table>
