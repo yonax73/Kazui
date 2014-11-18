@@ -72,13 +72,13 @@ body,h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
     border-width: 10px 10px 35px;
     box-shadow: none;
     margin-left: 0;
-    margin-right: 0;    
+    margin-right: 0; 
+    overflow:auto;   
     padding: 30px;
 }
 .desktop{
-	min-height: 18em;
-	max-height: 18em;
-	height: 18em;	
+	min-height: 18em;	
+	height: auto;	
 }
 .mobile{
 	height: 30em;
@@ -87,6 +87,11 @@ body,h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 	max-width: 18em;	
 	min-height: 30em;
 		
+}
+#target-animation {    
+    margin: 0 auto;
+    max-width: 8em;
+    padding: 8em;
 }
 .page-header {
 	padding-bottom: 9px;

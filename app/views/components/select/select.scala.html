@@ -1,20 +1,185 @@
 <h1 class="page-header">Select</h1>
 <p class="text-color example-header">
- Example
- <span class="pull-right text-color">
-	<i class="fa fa-desktop" onclick="changeViewExample('desktop','kazui-example-select')"></i>
-	<i class="fa fa-mobile"  onclick="changeViewExample('mobile','kazui-example-select')"></i>
-	 <a href="http://jsfiddle.net/" target="_blank"><i class="fa fa-pencil-square-o"></i></a>
- </span>
+    Example
+    <span class="pull-right text-color">
+        <i class="fa fa-desktop" onclick="changeViewExample('desktop','kazui-example-select')"></i>
+        <i class="fa fa-mobile" onclick="changeViewExample('mobile','kazui-example-select')"></i>
+        <a href="http://jsfiddle.net/" target="_blank"><i class="fa fa-pencil-square-o"></i></a>
+    </span>
 </p>
-<div id="kazui-example-select" class="example desktop">  
-  @select_examples.select_example()
+<div id="kazui-example-select" class="example mobile">
+    @select_examples.select_example()
 </div>
 <h2>Uso</h2>
-<p class="text-color">El objeto Alert crea  HTML din&aacute;mico para su propia construcci&oacute;n, 
-   solo es necesario agregar una etiqueta HTML con un <code>id</code> para referenciarlo en javascript.</p>
+<p class="text-color">Para usar el Select solo tenemos que agregar una etiqueta HTML con un <code>id</code> y la clase <code>ui-select</code> </p>
 <pre>
-	<code  class="language-markup">
-&lt;div id=&quot;alert&quot;&gt;&lt;/div&gt;
+<code class="language-markup">
+&lt;div id=&quot;select&quot; class=&quot;ui-select&quot;&gt;&lt;/div&gt;
 	</code>	
 </pre>
+<h3 class="text-color">Javascript</h3>
+<p class="text-color">Creamos un objeto Select, que recibe como par&aacute;metro el <code>HTMLElement</code> y un <code>array</code> de objetos.</p>
+<pre>
+<code class="language-javascript">
+var items = new Select(document.getElementById('select-items-example'), [
+    {option: 1, value: 'item 1'},
+    {option: 2, value: 'item 2'},
+    {option: 3, value: 'item 3'},
+    {option: 4, value: 'item 4',selected:true},
+    {option: 5, value: 'item 5'}
+]);
+    </code>	
+</pre>
+<h3>M&eacute;todos</h3>
+<p class="text-color">
+    Con el objeto ya creado podemos llamar cualquiera de sus m&eacute;todos: <code class="ui-method">select.getOption()</code>.
+</p>
+<table class="table text-color">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripci&oacute;n</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <code class="ui-method">addItem(option, value)</code>
+            </td>
+            <td>
+                Agrega un nuevo item.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">focus()</code>
+            </td>
+            <td>
+                Enfoca el Select.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">getItem()</code>
+            </td>
+            <td>
+                Retorna el item actual como un objeto. <code>{option:currentOption,value:currentValue}</code>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">getOption()</code>
+            </td>
+            <td>
+                Retorna la opci&oacute;n del item actual.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">getSize()</code>
+            </td>
+            <td>
+                Retorna el total de items que tiene el Select.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">getValue()</code>
+            </td>
+            <td>
+                Retorna el valor del item actual.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">isDisabled()</code>
+            </td>
+            <td>
+                Retorna verdadero si el Select esta inhabilitado
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">isOpen()</code>
+            </td>
+            <td>
+                Retorna verdadero si el Select esta abierto
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">isReadOnly()</code>
+            </td>
+            <td>
+                Retorna verdadero si el Select esta en solo lectura.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">selectItem(option)</code>
+            </td>
+            <td>
+                Selecciona cualquier item por la opcio&oacute;n.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">setDisabled(disabled: boolean)</code>
+            </td>
+            <td>
+                Inhabilitado/habilita el Select
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">setHeight(height: string)</code>
+            </td>
+            <td>
+                Cambia la altura para ver los items, los valores permitidos son por ejemplo: <code>'120px'</code>,<code>'9em'</code>,<code>'45%'</code>.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">setIcono(icono: string)</code>
+            </td>
+            <td>
+                Cambia el icono del Select. Kazui usa <a class="link-color" href="http://fontawesome.io/" target="_blank">fontawesome</a>. <code>setIcono('fa-chevron-down')</code>.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">setReadOnly(readOnly: boolean)</code>
+            </td>
+            <td>
+                Cambia el estado del Select a solo lectura.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">toggle()</code>
+            </td>
+            <td>
+                Muestra/esconde los items.
+            </td>
+        </tr>
+    </tbody>
+</table>
+<h3>Eventos</h3>
+<table class="table text-color">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripci&oacute;n</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <code class="ui-method">onchange(handlerFunction)</code>
+            </td>
+            <td>
+                Este evento se dispara cada vez que hay un cambio en el Select, recibe como parametro una <code>function(){}</code>
+            </td>
+        </tr>
+    </tbody>
+</table>

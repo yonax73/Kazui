@@ -1,19 +1,22 @@
 @import templates._
 @main("Componentes. Kazui","","Componentes","Kazui ofrece la colecci\u00F3n m\u00E1s completa de componentes para crear aplicaciones  modernas  para  dispositivos m\u00F3viles y  web de una forma sencilla y r\u00E1pida."){
 
-   <div>
-    <Section class="components">
-           <div id="kazui-select">
-             @select.select()
-           </div>           
-          <div id="kazui-alert">
+<div>
+    <section class="components">
+        <div id="kazui-alert">
             @alert.alert()
-         </div>
-         <div id="kazui-form">
+        </div>
+        <div id="kazui-animations">
+            @animations.animations()
+        </div>
+        <div id="kazui-select">
+            @select.select()
+        </div>
+        <div id="kazui-form">
             @form.form()
-         </div>         
-    </Section>
+        </div>
+    </section>
     <nav></nav>
-   </div>
+</div>
 
 }

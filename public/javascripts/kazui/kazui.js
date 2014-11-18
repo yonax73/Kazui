@@ -21,21 +21,37 @@ var Select = (function () {
         this.open = false;
         this.disabled = false;
         this.readOnly = false;
-        this.icono = 'fa-angle-down';
-        this.height = 'auto';
         this.data = null;
         this.length = 0;
+        this.icono = 'fa-angle-down';
         this.element = htmlElement;
         this.data = data;
         this.formGroup.className = 'form-group  has-feedback';
         this.hidden.type = 'hidden';
-        if (this.element.dataset.name)
-            this.hidden.name = this.element.dataset.name;
+        if (this.element.getAttribute('data-name'))
+            this.hidden.name = this.element.getAttribute('data-name');
         this.formGroup.appendChild(this.hidden);
         this.input.type = 'text';
         this.input.className = 'form-control';
         this.input.onchange = function () {
             return true;
+        };
+        this.input.onkeyup = function (e) {
+            if (e) {
+                if (e.keyCode == 13)
+                    _this.toggle();
+                if (e.keyCode == 38)
+                    _this.previous();
+                if (e.keyCode == 40)
+                    _this.next();
+            }
+        };
+        this.input.onkeydown = function (e) {
+            if (e) {
+                if (e.keyCode != 9 && e.keyCode != 13 && e.keyCode != 16 && e.keyCode != 17 && !(e.keyCode >= 38 && e.keyCode <= 40)) {
+                    e.preventDefault();
+                }
+            }
         };
         this.formGroup.appendChild(this.input);
         this.mask.className = 'ui-mask';
@@ -69,8 +85,23 @@ var Select = (function () {
             var self = this;
             li.onclick = function (e) {
                 self.changeValue(this);
+                self.toggle();
                 e.stopPropagation();
                 return false;
+            };
+            li.onkeyup = function (e) {
+                if (e) {
+                    if (e.keyCode == 13) {
+                        self.changeValue(self.currentItem);
+                        self.toggle();
+                    }
+                    if (e.keyCode == 38) {
+                        self.previous();
+                    }
+                    if (e.keyCode == 40) {
+                        self.next();
+                    }
+                }
             };
             this.items.appendChild(li);
             if (item.selected) {
@@ -78,6 +109,7 @@ var Select = (function () {
             }
         }
     };
+
     Select.prototype.animationIn = function () {
         var _this = this;
         this.items.classList.add('open');
@@ -90,6 +122,7 @@ var Select = (function () {
             _this.items.classList.remove('ui-fade-in-down');
         }, 200);
     };
+
     Select.prototype.animationOut = function () {
         var _this = this;
         this.items.classList.add('ui-ease-out');
@@ -102,6 +135,7 @@ var Select = (function () {
             _this.items.classList.remove('open');
         }, 200);
     };
+
     Select.prototype.changeValue = function (htmlElement) {
         this.oldItem = this.currentItem;
         this.currentItem = htmlElement;
@@ -109,10 +143,180 @@ var Select = (function () {
         this.input.setAttribute('data-option', this.currentItem.getAttribute('data-option'));
         this.hidden.value = this.input.value;
         this.input.onchange();
-        this.toggle();
-        this.currentItem.classList.add('bg-primary');
         this.oldItem.classList.remove('bg-primary');
+        this.currentItem.classList.add('bg-primary');
+        this.input.focus();
     };
+
+    Select.prototype.next = function () {
+        if (!this.disabled && !this.readOnly && this.currentItem) {
+            var item = this.currentItem.nextElementSibling;
+            if (item) {
+                this.changeValue(item);
+            }
+        }
+    };
+
+    Select.prototype.previous = function () {
+        if (!this.disabled && !this.readOnly && this.currentItem) {
+            var item = this.currentItem.previousSibling;
+            if (item) {
+                this.changeValue(item);
+            }
+        }
+    };
+
+    Select.prototype.toggle = function () {
+        if (!this.readOnly && !this.disabled) {
+            this.open = this.items.classList.contains('open');
+            if (this.open) {
+                this.animationOut();
+                this.open = false;
+            } else {
+                Select.clear();
+                this.animationIn();
+                this.open = true;
+                if (!this.currentItem) {
+                    this.currentItem = this.items.getElementsByTagName('li')[0];
+                    this.currentItem.classList.add('bg-primary');
+                }
+                this.currentItem.focus();
+                this.input.focus();
+            }
+        }
+    };
+
+    Select.prototype.selectItem = function (option) {
+        if (!this.disabled && !this.readOnly) {
+            var lis = this.items.getElementsByTagName('li');
+            if (this.length > 0) {
+                var found = false;
+                var i = 0;
+                do {
+                    var item = lis[i];
+                    i++;
+                    if (item.getAttribute('data-option') == option) {
+                        this.oldItem = this.currentItem;
+                        this.currentItem = item;
+                        found = true;
+                    }
+                } while(!found && i < this.length);
+                if (found) {
+                    this.input.value = this.currentItem.textContent;
+                    this.input.setAttribute('data-option', this.currentItem.getAttribute('data-option'));
+                    this.hidden.value = this.input.value;
+                    this.currentItem.focus();
+                    if (this.oldItem)
+                        this.oldItem.classList.remove('bg-primary');
+                    this.currentItem.classList.add('bg-primary');
+                }
+            }
+        }
+    };
+
+    Select.prototype.addItem = function (option, value) {
+        if (!this.disabled && !this.readOnly) {
+            var li = document.createElement('li');
+            li.textContent = value;
+            li.tabIndex = this.length + 1;
+            li.setAttribute('data-option', option);
+            this.input.setAttribute('data-option', option);
+            var self = this;
+            li.onclick = function (e) {
+                self.changeValue(this);
+                e.stopPropagation();
+                return false;
+            };
+            this.items.appendChild(li);
+            this.length++;
+        }
+    };
+
+    Select.prototype.getItem = function () {
+        if (!this.disabled && !this.readOnly) {
+            return {
+                value: this.input.value,
+                option: this.input.getAttribute('data-option')
+            };
+        }
+    };
+
+    Select.prototype.getValue = function () {
+        if (!this.disabled && !this.readOnly) {
+            return this.input.value;
+        }
+    };
+
+    Select.prototype.getOption = function () {
+        if (!this.disabled && !this.readOnly) {
+            return this.input.getAttribute('data-option');
+        }
+    };
+
+    Select.prototype.isOpen = function () {
+        if (!this.disabled && !this.readOnly) {
+            return this.open;
+        }
+    };
+
+    Select.prototype.isDisabled = function () {
+        return this.disabled;
+    };
+
+    Select.prototype.setDisabled = function (disabled) {
+        this.disabled = disabled;
+        this.input.disabled = this.disabled;
+        if (this.disabled) {
+            this.element.classList.add('disabled');
+        } else {
+            this.element.classList.remove('disabled');
+        }
+    };
+
+    Select.prototype.isReadOnly = function () {
+        return this.readOnly;
+    };
+
+    Select.prototype.setReadOnly = function (readOnly) {
+        this.readOnly = readOnly;
+        this.input.readOnly = this.readOnly;
+        if (this.readOnly) {
+            this.element.classList.add('read-only');
+        } else {
+            this.element.classList.remove('read-only');
+        }
+    };
+
+    Select.prototype.setHeight = function (height) {
+        if (!this.disabled && !this.readOnly) {
+            this.items.style.height = height;
+        }
+    };
+
+    Select.prototype.getSize = function () {
+        if (!this.disabled || !this.readOnly) {
+            return this.length;
+        }
+    };
+
+    Select.prototype.setIcono = function (icono) {
+        if (!this.disabled && !this.readOnly) {
+            this.ico.classList.remove(this.icono);
+            this.icono = icono;
+            this.ico.classList.add(this.icono);
+        }
+    };
+
+    Select.prototype.focus = function () {
+        if (!this.disabled && !this.readOnly) {
+            this.input.focus();
+        }
+    };
+
+    Select.prototype.onchange = function (callback) {
+        this.input.onchange = callback;
+    };
+
     Select.clear = function () {
         var selects = document.getElementsByClassName('ui-select');
         var n = selects.length;
@@ -136,77 +340,9 @@ var Select = (function () {
             }
         }
     };
-    Select.prototype.toggle = function () {
-        this.readOnly = this.input.readOnly;
-        this.disabled = this.input.disabled;
-        if (!this.readOnly && !this.disabled) {
-            this.open = this.items.classList.contains('open');
-            if (this.open) {
-                this.animationOut();
-                this.open = false;
-            }
-            else {
-                Select.clear();
-                this.animationIn();
-                this.open = true;
-            }
-            this.currentItem.focus();
-        }
-    };
-    Select.prototype.selectItem = function (option) {
-        var lis = this.items.getElementsByTagName('li');
-        if (this.length > 0) {
-            var flag = true;
-            var i = 0;
-            do {
-                var item = lis[i];
-                i++;
-                if (item.getAttribute('data-option') == option) {
-                    this.oldItem = this.currentItem;
-                    this.currentItem = item;
-                    flag = false;
-                }
-            } while (flag && i < this.length);
-            this.input.value = this.currentItem.textContent;
-            this.input.setAttribute('data-option', this.currentItem.getAttribute('data-option'));
-            this.hidden.value = this.input.value;
-            this.currentItem.focus();
-            if (this.oldItem)
-                this.oldItem.classList.remove('bg-primary');
-            this.currentItem.classList.add('bg-primary');
-        }
-    };
-    Select.prototype.isOpen = function () {
-        return this.open;
-    };
-    Select.prototype.isDisabled = function () {
-        return this.disabled;
-    };
-    Select.prototype.setDisabled = function (disabled) {
-        this.disabled = disabled;
-        this.input.disabled = this.disabled;
-        if (this.disabled) {
-            this.element.classList.add('disabled');
-        }
-        else {
-            this.element.classList.remove('disabled');
-        }
-    };
-    Select.prototype.isReadOnly = function () {
-        return this.readOnly;
-    };
-    Select.prototype.setReadOnly = function (readOnly) {
-        this.readOnly = readOnly;
-        this.input.readOnly = this.readOnly;
-        if (this.readOnly) {
-            this.element.classList.add('read-only');
-        }
-        else {
-            this.element.classList.remove('read-only');
-        }
-    };
     return Select;
 })();
+
 var Alert = (function () {
     function Alert(htmlElement) {
         this.element = null;
@@ -220,7 +356,7 @@ var Alert = (function () {
         this.icoWarning = 'fa-exclamation-triangle';
         this.icoDanger = 'fa-times';
         this.icoWait = 'fa-circle-o-notch';
-        this.animationIn = 'ui-bounce-in-up';
+        this.animationIn = 'ui-fade-in';
         this.animationOut = 'ui-fade-out';
         this.typeAnimation = 'ui-ease-in-out';
         this.type = 'close';
@@ -268,6 +404,7 @@ var Alert = (function () {
             }, 1000);
         }
     };
+
     Alert.prototype.success = function (message) {
         this.removeAnimation();
         this.i.className = 'fa fa-lg pull-left';
@@ -277,6 +414,7 @@ var Alert = (function () {
         this.strong.textContent = message;
         this.type = 'success';
     };
+
     Alert.prototype.info = function (message) {
         this.i.className = 'fa fa-lg pull-left';
         this.i.classList.add(this.icoInfo);
@@ -286,6 +424,7 @@ var Alert = (function () {
         this.type = 'info';
         this.removeAnimation();
     };
+
     Alert.prototype.warning = function (message) {
         this.i.className = 'fa fa-lg pull-left';
         this.i.classList.add(this.icoWarning);
@@ -295,6 +434,7 @@ var Alert = (function () {
         this.type = 'warning';
         this.removeAnimation();
     };
+
     Alert.prototype.danger = function (message) {
         this.i.className = 'fa fa-lg pull-left';
         this.i.classList.add(this.icoDanger);
@@ -304,6 +444,7 @@ var Alert = (function () {
         this.type = 'danger';
         this.removeAnimation();
     };
+
     Alert.prototype.wait = function (message) {
         this.i.className = 'fa fa-spin fa-lg pull-left';
         this.i.classList.add(this.icoWait);
@@ -313,11 +454,13 @@ var Alert = (function () {
         this.type = 'wait';
         this.removeAnimation();
     };
+
     Alert.prototype.addAnimation = function () {
         this.element.classList.add(this.typeAnimation);
         this.element.classList.add(this.durationAnimation);
         this.element.classList.add(this.animationIn);
     };
+
     Alert.prototype.removeAnimation = function () {
         var self = this;
         setTimeout(function () {
@@ -328,6 +471,7 @@ var Alert = (function () {
     };
     return Alert;
 })();
+
 var Toggle = (function () {
     function Toggle() {
     }
@@ -335,6 +479,7 @@ var Toggle = (function () {
         this.initNavBar();
         this.initDropDown();
     };
+
     Toggle.initNavBar = function () {
         var navbars = document.querySelectorAll('.navbar-toggle[data-toggle="collapse"]');
         var n = navbars.length;
@@ -349,6 +494,7 @@ var Toggle = (function () {
             }
         }
     };
+
     Toggle.initDropDown = function () {
         var dropdownsToggle = document.querySelectorAll('.dropdown-toggle[data-toggle="dropdown"]');
         var n = dropdownsToggle.length;
@@ -368,8 +514,7 @@ var Toggle = (function () {
                             dropdownMenu.classList.remove('ui-fade-out-up');
                             dropdown.classList.remove('open');
                         }, 500);
-                    }
-                    else {
+                    } else {
                         dropdown.classList.add('open');
                         dropdownMenu.classList.add('ui-ease');
                         dropdownMenu.classList.add('ui-0-5s');
@@ -386,6 +531,7 @@ var Toggle = (function () {
             }
         }
     };
+
     Toggle.clearDropDown = function () {
         var dropdownsToggle = document.querySelectorAll('.dropdown-toggle[data-toggle="dropdown"]');
         var n = dropdownsToggle.length;
@@ -409,6 +555,7 @@ var Toggle = (function () {
     };
     return Toggle;
 })();
+
 var Utils = (function () {
     function Utils() {
     }
@@ -429,15 +576,18 @@ var Utils = (function () {
             }
         }
     };
+
     Utils.reloadCSS = function (element, href) {
         var queryString = '?reload=' + new Date().getTime();
         element.href = href.replace(/\?.*|$/, queryString);
     };
     return Utils;
 })();
+
 window.onload = function () {
     Toggle.init();
 };
+
 /*
 * Evento click para el  documento.
 */
@@ -446,6 +596,7 @@ document.onclick = function () {
     * Cerrar los dropdowns
     */
     Toggle.clearDropDown();
+
     /*
     * Cerrar los selects
     */

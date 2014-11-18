@@ -1,86 +1,46 @@
-  <style>
-  .ui-select {
-     position: relative;   
-     cursor: default;   
-   }
-    .ui-select .has-feedback .form-control-feedback{
-     top: 0;
-    }    
-/*     .ui-select input.form-control,.ui-select i {     */
-/*      cursor: default;      */
-/*     } */
-
-    .ui-select.disabled,.ui-select.read-only {
-     cursor: not-allowed;
-}
-  .ui-select .form-group {
-     margin-bottom: 0;
-   }
-  .ui-select ul {
-    background: none repeat scroll 0 0 #fff; /*bg input**/
-    border-bottom: 1px solid;   
-    border-left: 1px solid;
-    border-right: 1px solid;
-    border-color: #cccccc;     /**Borde color del input*/
-    display: none;
-    height: auto;
-    list-style: outside none none;
-    margin: 0;
-    min-height: 80px;
-    overflow: auto;
-    padding: 0;
-    position: absolute;
-    text-indent: 0.85em;
-    width: 100%;
-    z-index: 999;
-  }
-    .ui-select ul.open {
-        display: table;
-  }
-  .ui-select li {
-    padding-bottom: 0.15em;
-  }
-  .ui-select li:hover {
-      background-color: #f9f9f9; /*color navabar default active focus**/
-      color: #555555; /*color navabar default active focus**/
-  }
-
-   
- .ui-mask{
-    background: none repeat scroll 0 0 transparent;
-    bottom: 0;
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
-
-  
-  </style>
-
 <div class="row">
-  <div class="col-md-12 col-sm-12">    
-    <div id="select" class="ui-select"></div>
-  </div>
+    <div class="col-md-12 col-sm-12">
+        <div id="alert-select-example"></div>
+    </div>
 </div>
 <div class="row">
-  <div class="col-md-12 col-sm-12">    
-    <div id="select2" class="ui-select"></div>
-  </div>
+    <div class="col-md-12 col-sm-12">
+        <div id="select-items-example" class="ui-select" ></div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <button type="button" id="btnSelectGetOption" class="btn btn-primary btn-block">Get option</button>
+        <button type="button" id="btnSelectGetValue" class="btn btn-primary btn-block">Get value</button>        
+        <div class="checkbox pull-right" >
+            <label>
+                <input type="checkbox" value="disabled" id="btnSelectDisabled">
+                Disabled
+            </label>        
+        </div>
+    </div>    
 </div>
 <script>
-var objSelect = new Select(document.getElementById('select'),[
-                     { option: 1, value: 'Product A' },
-                     { option: 2, value: 'Product B', selected:true },
-                     { option: 3, value: 'Product C' }
-                    ]);
-                    
-var objSelect2 = new Select(document.getElementById('select2'),[
-                                                              { option: 1, value: 'Product A' },
-                                                              { option: 2, value: 'Product B', selected:true },
-                                                              { option: 3, value: 'Product C' }
-                                                             ]);
+    var alertSelectExample = new Alert(document.getElementById('alert-select-example'));
+    var items = new Select(document.getElementById('select-items-example'), [
+        {option: 1, value: 'item 1'},
+        {option: 2, value: 'item 2'},
+        {option: 3, value: 'item 3'},
+        {option: 4, value: 'item 4',selected:true},
+        {option: 5, value: 'item 5'}
+    ]);
 
-
+    document.getElementById('btnSelectGetOption').onclick = function () {
+        if(!items.isDisabled())
+        alertSelectExample.info('Option is: ' + items.getOption());
+    }
+    document.getElementById('btnSelectGetValue').onclick = function () {
+        if (!items.isDisabled())
+        alertSelectExample.info('Value is: ' + items.getValue());
+    }
+    document.getElementById('btnSelectDisabled').onclick = function () {
+        items.setDisabled(this.checked);
+    }
 
 </script>

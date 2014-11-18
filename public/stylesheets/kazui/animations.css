@@ -1424,7 +1424,7 @@
     backface-visibility: visible !important; 
     animation-name: flipInX; 
 }
-.ui-flip-out-X { 
+.ui-flip-out-x { 
     -webkit-animation-name: flipOutX; 
     -webkit-backface-visibility: visible !important; 
     animation-name: flipOutX; 

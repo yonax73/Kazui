@@ -1,0 +1,128 @@
+<div class="row">
+    <div class="col-md-4 col-sm-4">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <label class="label-control">Tipo:</label>
+                <div id="select-animation-type-class" class="ui-select"></div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <label class="label-control">Funci&oacute;n:</label>
+                <div id="select-animation-function-class" class="ui-select"></div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <label class="label-control">Duraci&oacute;n:</label>
+                <div id="select-animation-duration-class" class="ui-select"></div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <button type="button" id="btn-exec-animation" class="btn btn-primary btn-block">Animar</button>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="col-md-8 col-sm-8">
+        <div id="target-animation" class="bg-primary"></div>
+    </div>
+</div>
+<script>
+    var animationFunctionList = new Select(document.getElementById('select-animation-function-class'), [
+        { option: 1, value: 'ui-bounce', selected: true },
+        { option: 2, value: 'ui-bounce-in' },
+        { option: 3, value: 'ui-bounce-in-up' },
+        { option: 4, value: 'ui-bounce-in-down' },
+        { option: 5, value: 'ui-bounce-in-left' },
+        { option: 6, value: 'ui-bounce-in-right' },
+        { option: 7, value: 'ui-bounce-out' },
+        { option: 8, value: 'ui-bounce-out-up' },
+        { option: 9, value: 'ui-bounce-out-down' },
+        { option: 10, value: 'ui-bounce-out-left' },
+        { option: 11, value: 'ui-bounce-out-right' },
+        { option: 12, value: 'ui-fade-in' },
+        { option: 13, value: 'ui-fade-in-up' },
+        { option: 14, value: 'ui-fade-in-down' },
+        { option: 15, value: 'ui-fade-in-left' },
+        { option: 16, value: 'ui-fade-in-right' },
+        { option: 17, value: 'ui-fade-in-up-big' },
+        { option: 18, value: 'ui-fade-in-down-big' },
+        { option: 19, value: 'ui-fade-in-left-big' },
+        { option: 20, value: 'ui-fade-in-right-big' },
+        { option: 21, value: 'ui-fade-out' },
+        { option: 22, value: 'ui-fade-out-up' },
+        { option: 23, value: 'ui-fade-out-down' },
+        { option: 24, value: 'ui-fade-out-left' },
+        { option: 25, value: 'ui-fade-out-right' },
+        { option: 26, value: 'ui-fade-out-up-big' },
+        { option: 27, value: 'ui-fade-out-down-big' },
+        { option: 28, value: 'ui-fade-out-left-big' },
+        { option: 29, value: 'ui-fade-out-right-big' },
+        { option: 30, value: 'ui-flash' },
+        { option: 31, value: 'ui-flip' },
+        { option: 32, value: 'ui-flip-in-x' },
+        { option: 33, value: 'ui-flip-out-x' },
+        { option: 34, value: 'ui-flip-in-y' },
+        { option: 35, value: 'ui-flip-out-y' },
+        { option: 36, value: 'ui-hinge' },
+        { option: 37, value: 'ui-light-speed-in' },
+        { option: 38, value: 'ui-light-speed-out' },
+        { option: 39, value: 'ui-pulse' },
+        { option: 40, value: 'ui-rotate-in' },
+        { option: 41, value: 'ui-rotate-in-up-left' },
+        { option: 42, value: 'ui-rotate-in-down-left' },
+        { option: 43, value: 'ui-rotate-in-up-right' },
+        { option: 44, value: 'ui-rotate-in-down-right' },
+        { option: 45, value: 'ui-rotate-out' },
+        { option: 46, value: 'ui-rotate-out-up-left' },
+        { option: 47, value: 'ui-rotate-out-down-left' },
+        { option: 48, value: 'ui-rotate-out-up-right' },
+        { option: 49, value: 'ui-rotate-out-down-right' },
+        { option: 50, value: 'ui-roll-in' },
+        { option: 51, value: 'ui-roll-out' },
+        { option: 52, value: 'ui-shake' },
+        { option: 53, value: 'ui-swing' },
+        { option: 54, value: 'ui-tada' },
+        { option: 55, value: 'ui-wiggle' },
+        { option: 56, value: 'ui-wobble' }
+    ]);
+    animationFunctionList.setHeight('120px');
+
+    var animationTypeList = new Select(document.getElementById('select-animation-type-class'), [
+        { option: 1, value: 'ui-ease', selected: true },
+        { option: 2, value: 'ui-ease-in' },
+        { option: 3, value: 'ui-ease-out' },
+        { option: 4, value: 'ui-ease-in-out' },
+        { option: 5, value: 'ui-linear' }
+    ]);
+
+    var animationDurationList = new Select(document.getElementById('select-animation-duration-class'), [
+         { option: 1, value: 'ui-1s', selected: true },
+         { option: 2, value: 'ui-2s' },
+         { option: 3, value: 'ui-3s' },
+         { option: 4, value: 'ui-4s' },
+         { option: 5, value: 'ui-5s' }
+    ]);
+
+    animationDurationList.setHeight('60px');
+
+    document.getElementById('btn-exec-animation').onclick = function () {
+        var target = document.getElementById('target-animation');
+        target.classList.add(animationTypeList.getValue());
+        target.classList.add(animationFunctionList.getValue());
+        target.classList.add(animationDurationList.getValue());
+        this.disabled = true;
+        var _this = this;
+        setTimeout(function () {
+            target.classList.remove(animationTypeList.getValue());
+            target.classList.remove(animationFunctionList.getValue());
+            target.classList.remove(animationDurationList.getValue());
+            _this.disabled = false;
+        }, animationDurationList.getOption() * 1000);
+    }
+</script>
