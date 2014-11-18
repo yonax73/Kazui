@@ -7,11 +7,255 @@
 * If you do not own a commercial license, this file shall be governed by the trial license terms.
 */
 
+class Calendar{
+  
+  
+  
+  private days =  ['Sun','Mon','Tue','Wen','Thu','Fri','Sat'];
+  private abbMonths = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  private yearGregorian = 1582;
+  private today = new Date();
+  private displayDate:Date;
+  private data;
+  private table;
+  private selectedCell;
+  private element:HTMLElement;
+  private options;
+  
+  constructor(element:HTMLElement,options){
+      this.element = element;
+      this.options = options;
+      this.setOptions();
+      this.displayDate = this.today.clone();
+      this.displayDate.setDate(1);
+  }
+  
+  private dataDay(){
+  
+        var dayweek = this.displayDate.getDay();
+        var month = this.displayDate.getMonth();
+        var year = this.displayDate.getFullYear();
+        var totalDays = this.displayDate.getMonthDayCount();
+        this.data.month = {
+            value: month,
+            text: this.displayDate.getMonthName()
+        };
+        this.data.year = year;
+        this.data.currentDay = month === this.today.getMonth() && year === this.today.getFullYear() ? this.today.getDate() : 1;
+        this.data.items = new Array();
+        var previousTotalDays = 0;
+        var day = 0;                                                  //The day to display on the calendar.
+        var isPreviousDay = false;
+        var isCurrentDay = true;
+        var isNextDay = false;
+        /*
+         * If the day week is greater than zero,
+         * necessary known how many days has the previous month.
+         */
+        if (dayweek > 0) {
+            var previousDate = this.displayDate.clone();
+            previousDate.previousMonth();
+            previousTotalDays = previousDate.getMonthDayCount();
+            /*
+             * calculate the first day for display on the calendar
+             */
+            day = previousTotalDays - dayweek;
+            if (day > 30) day--;
+            isPreviousDay = true;
+            isCurrentDay = false;
+        }
+        /*
+         * Fill data.items
+         */
+        for (var i = 0; i < 42; i++) {
+            var item:any = {};
+            day++;
+            item.day = day;
+            if (isPreviousDay) {
+                item.previousDay = true;
+                /*
+                *If the day is equals at  total days the
+                *previous month, is becasuse wiLL start
+                *the current month
+                */
+                if (day === previousTotalDays) {
+                    isPreviousDay = false;
+                    isCurrentDay = true;
+                    day = 0;
+                }
+            } else if (isCurrentDay) {
+                item.currentDay = true;
+                /*
+                *If the day is equals at  total days the
+                *current month, is becasuse wiLL start
+                *the next month.
+                */
+                if (day === totalDays) {
+                    isNextDay = true;
+                    isCurrentDay = false;
+                    day = 0;
+                }
+            } else {
+                item.nextDay = true;
+            }
+            this.data.items.push(item);
+        }
+  }  
+  
+  private createCalendar(){    
+        var row = document.createElement('div');
+        var col = document.createElement('div');
+        var panelDefault = document.createElement('div');
+        var panelBody = document.createElement('div');
+
+        row.className = 'row';
+        col.className = 'col-sm-12 col-md-12';
+        panelDefault.className = 'ui-calendar panel panel-default panel-main';
+        panelBody.className = 'panel-body';
+
+        panelBody.appendChild(createCalendarHeader());
+        panelBody.appendChild(createCalendarBoby());
+        panelDefault.appendChild(panelBody);
+        col.appendChild(panelDefault);
+        row.appendChild(col);
+        /*
+        * add calendar to parent
+        */
+        this.element.appendChild(row);
+        /*
+        * Create calendar header HTML for show by days.        
+        * @returns HTMLElement
+        */
+        function createCalendarHeader() {
+            var row = document.createElement('div');
+            row.className = 'row';
+
+            var colTitle = document.createElement('div');
+            colTitle.className = 'col-sm-6';
+            /*
+            * add the title (month,year)
+            */
+            var title = document.createElement('a');
+            title.className = 'ui-title';
+            title.href = '#';
+            title.text = this.data.month.text + ' ' + this.data.year;
+            /*
+            * add event to change view type by months.
+            */
+            /*title.onclick = function (e) {
+                e.preventDefault();
+                displayDate.setDate(1);
+                fillDataByMonths();
+                HtmlElement.removeChildren();
+                createCalendarByMonths();
+            }*/
+            colTitle.appendChild(title);
+
+            var colButtons = document.createElement('div');
+            colButtons.className = 'ui-calendar col-sm-6';
+            var btnGroupJustified = document.createElement('div');
+            btnGroupJustified.className = 'btn-group btn-group-justified';
+            /*
+            * Create buttons the previous month, current month and next month
+            */
+            for (var j = 0; j < 3; j++) {
+                var btnGroup = document.createElement('div');
+                btnGroup.className = 'btn-group';
+                var button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'btn btn-default';
+                var i = document.createElement('i');
+                /*
+                * Add className and events for buttons
+                */
+                switch (j) {
+                    case 0:
+                        i.className = 'fa fa-chevron-circle-left';
+                        /*button.onclick = function () {
+                            displayDate.setDate(01);
+                            displayDate.previousMonth();
+                            fillDataByDays();
+                            HtmlElement.removeChildren();
+                            createCalendarByDays();
+                        };*/
+                        break;
+                    case 1:
+                        i.className = 'fa fa-circle';
+                       /*
+                          button.onclick = function () {*/
+                             /*
+                            * If not is the current month,
+                            * go to current month.
+                            */
+                          /*  var dMonth = displayDate.getMonth();
+                            var month = today.getMonth();
+                            if (!(dMonth === month && today.getFullYear() === displayDate.getFullYear())) {
+                                displayDate = today.clone();
+                                displayDate.setDate(1);
+                                fillDataByDays();
+                                HtmlElement.removeChildren();
+                                createCalendarByDays();
+                            }
+                        };
+                       */
+                        break;
+                    case 2:
+                        i.className = 'fa fa-chevron-circle-right';
+                     /*
+                        button.onclick = function () {
+                            displayDate.setDate(01);
+                            displayDate.nextMonth();
+                            fillDataByDays();
+                            HtmlElement.removeChildren();
+                            createCalendarByDays();
+                        };*/
+                        break;
+                }
+                button.appendChild(i);
+                btnGroup.appendChild(button);
+                btnGroupJustified.appendChild(btnGroup);
+            }
+            colButtons.appendChild(btnGroupJustified);
+            row.appendChild(colTitle);
+            row.appendChild(colButtons);
+            return row;
+        }
+  }
+  
+  private createBody(){
+  }
+  
+  private createDayTable(){}
+  
+  private createMonthTable(){}
+  
+  private createYearTable(){}
+  
+  private addEventsNavegation(){}
+  
+  private removeEventNavegation(){}
+  
+  private setOptions(){
+     if(this.options){
+          if(this.options.isInput){
+             this.element.className = 'hidden ui-calendar-input';
+          }
+     }     
+  }
+  
+  public open(callback){}
+  
+  public close(callback){}
+  
+  public isOpen(){}
+  
+}
+
 class Select {
 
     private formGroup = document.createElement('div');
     private hidden = document.createElement('input');
-    private input = document.createElement('input');
+    private input:any = document.createElement('input');
     private mask = document.createElement('div');
     private ico = document.createElement('i');
     private items = document.createElement('ul');
@@ -138,7 +382,7 @@ class Select {
         this.input.value = this.currentItem.textContent;
         this.input.setAttribute('data-option', this.currentItem.getAttribute('data-option'));
         this.hidden.value = this.input.value;
-        this.input.onchange();
+        this.input.onchange();        
         this.oldItem.classList.remove('bg-primary');
         this.currentItem.classList.add('bg-primary');
         this.input.focus();
@@ -585,17 +829,334 @@ window.onload = function () {
     Toggle.init();
 }
 
-
-/*
-* Evento click para el  documento.
-*/
 document.onclick = function () {
-    /*
-    * Cerrar los dropdowns
-    */
     Toggle.clearDropDown();
-    /*
-    * Cerrar los selects
-    */
     Select.clear();
 }
+
+interface Date {
+   getMonthName():String;
+   getMonthAbbr():String;
+   getDayFull():String;
+   getDayAbbr():String;
+   getDayOfYear():Number;
+   getDaySuffix():String;
+   getWeekOfYear():Number;
+   getWeekOfMonth():Number;
+   isLeapYear():Boolean;
+   getMonthDayCount():Number;
+   previousMonth();
+   nextMonth();
+   clone():Date;
+   isValid():Boolean;
+   format(format):String;
+   parse(strDate,pattern):Date;
+}
+/*
+* Return name of month
+*/
+Date.prototype.getMonthName = function () {
+    var month_names = [
+                        'January',
+                        'February',
+                        'March',
+                        'April',
+                        'May',
+                        'June',
+                        'July',
+                        'August',
+                        'September',
+                        'October',
+                        'November',
+                        'December'
+    ];
+    return month_names[this.getMonth()];
+}
+/*
+* Return month abbreviation
+*/
+Date.prototype.getMonthAbbr = function () {
+    var month_abbrs = [
+                        'Jan',
+                        'Feb',
+                        'Mar',
+                        'Apr',
+                        'May',
+                        'Jun',
+                        'Jul',
+                        'Aug',
+                        'Sep',
+                        'Oct',
+                        'Nov',
+                        'Dec'
+    ];
+
+    return month_abbrs[this.getMonth()];
+}
+/*
+* Return full day of week name
+*/
+Date.prototype.getDayFull = function () {
+    var days_full = [
+                        'Sunday',
+                        'Monday',
+                        'Tuesday',
+                        'Wednesday',
+                        'Thursday',
+                        'Friday',
+                        'Saturday'
+    ];
+    return days_full[this.getDay()];
+};
+
+/*
+*  Return full day of week name
+*/
+Date.prototype.getDayAbbr = function () {
+    var days_abbr = [
+                        'Sun',
+                        'Mon',
+                        'Tue',
+                        'Wed',
+                        'Thu',
+                        'Fri',
+                        'Sat'
+    ];
+    return days_abbr[this.getDay()];
+};
+/*
+* Return the day of year 1-365
+*/
+Date.prototype.getDayOfYear = function () {
+    var onejan = new Date(this.getFullYear(), 0, 1);
+    return Math.ceil((this.getTime() - onejan.getTime()) / 86400000);
+};
+/*
+* Return the day suffix (st,nd,rd,th)
+*/
+Date.prototype.getDaySuffix = function () {
+    var d = this.getDate();
+    var sfx = ["th", "st", "nd", "rd"];
+    var val = d % 100;
+    return (sfx[(val - 20) % 10] || sfx[val] || sfx[0]);
+};
+/*
+* Return Week of Year
+*/
+Date.prototype.getWeekOfYear = function () {
+    var onejan = new Date(this.getFullYear(), 0, 1);
+    return Math.ceil((((this.getTime() - onejan.getTime()) / 86400000) + onejan.getDay() + 1) / 7);
+}
+/*
+* return week of month
+*/
+Date.prototype.getWeekOfMonth = function () {
+    var firstDayOfMonth = new Date(this.getFullYear(), this.getMonth(), 01).getDay();
+    return Math.ceil((this.getDate() + firstDayOfMonth) / 7);
+}
+
+/*
+* Return if it is a leap year or not
+*/
+Date.prototype.isLeapYear = function () {
+    return (this.getFullYear() % 4 === 0 || (this.getFullYear() % 100 !== 0 && this.getFullYear() % 400 === 0));
+}
+/*
+* Return Number of Days in a given month
+*/
+Date.prototype.getMonthDayCount = function () {
+    var month_day_counts = [
+                                31,
+                                this.isLeapYear() ? 29 : 28,
+                                31,
+                                30,
+                                31,
+                                30,
+                                31,
+                                31,
+                                30,
+                                31,
+                                30,
+                                31
+    ];
+
+    return month_day_counts[this.getMonth()];
+}
+/*
+* back a month 
+*/
+Date.prototype.previousMonth = function () {
+    var month = this.getMonth() - 1;
+    var year = this.getFullYear();
+    if (month < 0 && year > 1582) {
+        month = 11;
+        year--;
+    }
+    var tDays = this.getMonthDayCount();
+    if (this.getDate() > tDays) {
+        this.setDate(tDays);
+    }
+    this.setMonth(month);
+    this.setFullYear(year);
+}
+/*
+* next an month 
+*/
+Date.prototype.nextMonth = function () {
+    var month = this.getMonth() + 1;
+    var year = this.getFullYear();
+    if (month > 11) {
+        month = 0;
+        year++;
+    }
+    var tDays = this.getMonthDayCount();
+    if (this.getDate() > tDays) {
+        this.setDate(tDays);
+    }
+    this.setMonth(month);
+    this.setFullYear(year);
+}
+/*
+* returns clone date
+*/
+Date.prototype.clone = function () {
+    return new Date(this.getFullYear(), this.getMonth(), this.getDate());
+}
+/*
+ * returns true if the date is valid
+ */
+Date.prototype.isValid = function () {
+    return !isNaN(this.getTime());
+}
+/*
+* return Format date
+*/
+Date.prototype.format = function (dateFormat) {
+    /*
+    * break apart format string into array of characters
+    */
+    dateFormat = dateFormat.split("");
+    var date = this.getDate(),
+        month = this.getMonth(),
+        hours = this.getHours(),
+        minutes = this.getMinutes(),
+        seconds = this.getSeconds();
+    /*
+    * get all date properties
+    * ( based on PHP date object functionality )
+    */
+    var date_props = {
+        d: date < 10 ? '0' + date : date,
+        D: this.getDayAbbr(),
+        j: this.getDate(),
+        l: this.getDayFull(),
+        S: this.getDaySuffix(),
+        w: this.getDay(),
+        z: this.getDayOfYear(),
+        W: this.getWeekOfYear(),
+        F: this.getMonthName(),
+        m: month < 9 ? '0' + (month + 1) : month + 1,
+        M: this.getMonthAbbr(),
+        n: month + 1,
+        t: this.getMonthDayCount(),
+        L: this.isLeapYear() ? '1' : '0',
+        Y: this.getFullYear(),
+        y: this.getFullYear() + ''.substring(2, 4),
+        a: hours > 12 ? 'pm' : 'am',
+        A: hours > 12 ? 'PM' : 'AM',
+        g: hours % 12 > 0 ? hours % 12 : 12,
+        G: hours > 0 ? hours : "12",
+        h: hours % 12 > 0 ? hours % 12 : 12,
+        H: hours,
+        i: minutes < 10 ? '0' + minutes : minutes,
+        s: seconds < 10 ? '0' + seconds : seconds
+    };
+    /*
+    * loop through format array of characters and add matching data 
+    * else add the format character (:,/, etc.)
+    */
+    var date_string = "";
+    var n = dateFormat.length;
+    for (var i = 0; i < n; i++) {
+        var f = dateFormat[i];
+        if (f.match(/[a-zA-Z]/g)) {
+            date_string += date_props[f] ? date_props[f] : '';
+        } else {
+            date_string += f;
+        }
+    }
+
+    return date_string;
+};
+/*
+* parse string date to object Date
+* @param string date
+* @param string pattern formmat
+* @returns object Date
+*/
+Date.prototype.parse = function (dateString, pattern) {
+    /*
+    * break apart format string into array paralel of characters
+    */
+    dateString = dateString.split(/\W/);
+    var pattern = pattern.split(/\W/);
+    var n = pattern.length;
+    var date = new Date();
+    for (var i = 0; i < n; i++) {
+        var str = pattern[i];
+        switch (str) {
+            case 'd':
+            case 'j':
+                date.setDate(dateString[i]);
+                break;
+            case 'm':
+            case 'n':
+                date.setMonth(dateString[i] - 1);
+                break;
+            case 'F':
+                var monthNames = [
+                        'January',
+                        'February',
+                        'March',
+                        'April',
+                        'May',
+                        'June',
+                        'July',
+                        'August',
+                        'September',
+                        'October',
+                        'November',
+                        'December'
+                ];
+                date.setMonth(monthNames.indexOf(dateString[i]));
+                break;
+            case 'M':
+                var monthAbbrs = [
+                             'Jan',
+                             'Feb',
+                             'Mar',
+                             'Apr',
+                             'May',
+                             'Jun',
+                             'Jul',
+                             'Aug',
+                             'Sep',
+                             'Oct',
+                             'Nov',
+                             'Dec'
+                ];
+                date.setMonth(monthAbbrs.indexOf(dateString[i]));
+                break;
+            case 'Y':
+                date.setFullYear(dateString[i]);
+                break;
+        }
+    }
+    return date;
+};
+
+
+
+
+var author = 'Yonatan Alexis Quintero Rodriguez';
+var version = '0.1';
