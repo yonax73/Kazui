@@ -6,34 +6,39 @@
 * http://www.kazui.io/purchase/license-agreement/kazui-complete
 * If you do not own a commercial license, this file shall be governed by the trial license terms.
 */
-enum TypeCalendar {
-    DAY,
-    MONTH,
-    YEAR
-}
+
 class Calendar {
 
-
-
     private days = ['Sun', 'Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat'];
+    private abbDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     private abbMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     private yearGregorian = 1582;
     private today = new Date();
     private displayDate: Date;
     private data;
     private table;
+    private tbody: HTMLElement;
+    private btnBack;
+    private btnCurrent;
+    private btnNext;
     private selectedCell;
     private element: HTMLElement;
+    private legend:HTMLElement;
     private options;
-    private title: any;
-    private type = TypeCalendar.DAY;
+    private title;
+
 
     constructor(element: HTMLElement, options) {
         this.element = element;
         this.options = options;
         this.setOptions();
         this.displayDate = this.today.clone();
-        this.displayDate.setDate(1);
+        this.displayDate.setDate(1);     
+        this.data={};   
+        this.dataDay();
+        this.createCalendar();
+        this.calendarDay();
+       this.mediaQuery();
     }
 
     private dataDay() {
@@ -108,8 +113,20 @@ class Calendar {
         }
     }
 
-    private dataMonth() { }
-
+    private dataMonth() {
+         var year = this.displayDate.getFullYear();
+        this.data.year = year;
+        this.data.currentMonth = year === this.today.getFullYear() ? this.today.getMonth() : 0; 
+    }
+   
+    private dataYear(){
+        var year = this.displayDate.getFullYear();
+        var limitYear = year + 11;
+        this.data.year = year;
+        this.data.currentYear = year <= this.today.getFullYear() && limitYear >= this.today.getFullYear() ? this.today.getFullYear() : year;
+        this.data.range = year + ' - ' + limitYear;
+    }
+    
     private createCalendar() {
         var row = document.createElement('div');
         var col = document.createElement('div');
@@ -157,65 +174,45 @@ class Calendar {
         var btnGroupJustified = document.createElement('div');
         btnGroupJustified.className = 'btn-group btn-group-justified';
         /*
-        * Create buttons the previous month, current month and next month
+        * back Button
         */
-        for (var j = 0; j < 3; j++) {
-            var btnGroup = document.createElement('div');
-            btnGroup.className = 'btn-group';
-            var button = document.createElement('button');
-            button.type = 'button';
-            button.className = 'btn btn-default';
-            var i = document.createElement('i');
-            /*
-            * Add className and events for buttons
-            */
-            switch (j) {
-                case 0:
-                    i.className = 'fa fa-chevron-circle-left';
-                    /*button.onclick = function () {
-                        displayDate.setDate(01);
-                        displayDate.previousMonth();
-                        fillDataByDays();
-                        HtmlElement.removeChildren();
-                        createCalendarByDays();
-                    };*/
-                    break;
-                case 1:
-                    i.className = 'fa fa-circle';
-                    /*
-                       button.onclick = function () {*/
-                    /*
-                   * If not is the current month,
-                   * go to current month.
-                   */
-                    /*  var dMonth = displayDate.getMonth();
-                      var month = today.getMonth();
-                      if (!(dMonth === month && today.getFullYear() === displayDate.getFullYear())) {
-                          displayDate = today.clone();
-                          displayDate.setDate(1);
-                          fillDataByDays();
-                          HtmlElement.removeChildren();
-                          createCalendarByDays();
-                      }
-                  };
-                 */
-                    break;
-                case 2:
-                    i.className = 'fa fa-chevron-circle-right';
-                    /*
-                       button.onclick = function () {
-                           displayDate.setDate(01);
-                           displayDate.nextMonth();
-                           fillDataByDays();
-                           HtmlElement.removeChildren();
-                           createCalendarByDays();
-                       };*/
-                    break;
-            }
-            button.appendChild(i);
-            btnGroup.appendChild(button);
-            btnGroupJustified.appendChild(btnGroup);
-        }
+         var btnGroup = document.createElement('div');
+         btnGroup.className = 'btn-group';
+         this.btnBack = document.createElement('button');
+         this.btnBack.type = 'button';
+         this.btnBack.className = 'btn btn-default';
+         var i = document.createElement('i');
+         i.className ='fa fa-chevron-circle-left';
+         this.btnBack.appendChild(i);
+         btnGroup.appendChild(this.btnBack);
+         btnGroupJustified.appendChild(btnGroup);
+        /*
+        * current Button
+        */
+         btnGroup = document.createElement('div');
+         btnGroup.className = 'btn-group';
+         this.btnCurrent = document.createElement('button');
+         this.btnCurrent.type = 'button';
+         this.btnCurrent.className = 'btn btn-default';
+         i = document.createElement('i');
+         i.className ='fa fa-circle';
+         this.btnCurrent.appendChild(i);
+         btnGroup.appendChild(this.btnCurrent);
+         btnGroupJustified.appendChild(btnGroup);
+        /*
+        * next Button
+        */
+         btnGroup = document.createElement('div');
+         btnGroup.className = 'btn-group';
+         this.btnNext = document.createElement('button');
+         this.btnNext.type = 'button';
+         this.btnNext.className = 'btn btn-default';
+         i = document.createElement('i');
+         i.className ='fa fa-chevron-circle-right';
+         this.btnNext.appendChild(i);
+         btnGroup.appendChild(this.btnNext);
+         btnGroupJustified.appendChild(btnGroup);        
+
         colButtons.appendChild(btnGroupJustified);
         row.appendChild(colTitle);
         row.appendChild(colButtons);
@@ -242,23 +239,83 @@ class Calendar {
         */
         this.table = document.createElement('table');
         this.table.className = 'table table-condensed';
-        var thead = document.createElement('thead');
-        var tr = document.createElement('tr');
+        var thead = document.createElement('thead');     
+        this.tbody = document.createElement('tbody');
+        this.table.appendChild(thead);
+        this.table.appendChild(this.tbody);
+        panelBody.appendChild(this.table);
+        panelDefault.appendChild(panelBody);
+        col.appendChild(panelDefault);
+        row.appendChild(col);
+        return row;
+    }
+
+
+    private clearTable(){
+       this.table.classList.add('ui-linear');
+       this.table.classList.add('ui-flip-out-y');
+       this.table.classList.add('ui-1s');
+       this.table.tHead.removeChildren();
+       setTimeout(()=>{
+	       this.table.classList.remove('ui-linear');
+	       this.table.classList.remove('ui-flip-out-y');
+	       this.table.classList.remove('ui-1s');       
+           this.tbody.removeChildren();
+       },1000);
+         
+    }
+    
+    private calendarDay() {  
+        this.title.textContent = this.data.month.text + ' ' + this.data.year;
         /*
-        * Create the legend of the days of week
+        * add event to change view type by months.
         */
-        for (var i = 0; i < 7; i++) {
-            var th = document.createElement('th');
-            th.textContent = this.days[i];
-            tr.appendChild(th);
+        this.title.onclick = (e) => {
+            e.preventDefault();
+            this.displayDate.setDate(1);
+            this.dataMonth();     
+            this.clearTable();     
+            this.calendarMonth();
         }
-        var tbody = document.createElement('tbody');
-        var mod = 1;
-        var axuTr = document.createElement('tr');
         /*
+        * add Event to navigation
+        */        
+        this.btnBack.onclick = ()=>{
+            this.displayDate.setDate(01);
+            this.displayDate.previousMonth();
+            this.dataDay();
+            this.clearTable();
+            this.calendarDay();
+        }        
+        this.btnCurrent.onclick = ()=>{
+	        /*
+	        * If not is the current month,
+	        * go to current month.
+	        */
+	        var dMonth = this.displayDate.getMonth();
+	        var month = this.today.getMonth();
+	        if (!(dMonth === month && this.today.getFullYear() === this.displayDate.getFullYear())) {
+	            this.displayDate = this.today.clone();
+	            this.displayDate.setDate(1);
+	            this.dataDay();
+	            this.clearTable();
+	            this.calendarDay();
+	        }
+        }
+        this.btnNext.onclick =()=>{
+            this.displayDate.setDate(01);
+            this.displayDate.nextMonth();
+            this.dataDay();
+            this.clearTable();
+            this.calendarDay();
+        }         
+        this.loadLegendMatchMedia();
+       /*
         * Create the days of previous month, current month and next month,
         * with a total of 42 days
         */
+        var mod = 1;
+        var axuTr = document.createElement('tr');
         var currentDay = this.data.currentDay;
         for (var j = 0; j < 42; j++) {
             var item = this.data.items[j];
@@ -301,71 +358,193 @@ class Calendar {
                     self.close();
                 }
             }
-                td.textContent = day;
+            td.textContent = day;
             axuTr.appendChild(td);
             /*
             * If mod is greater than zero and is module of 7,
             * is because will start other week on the calendar
             */
             if (mod > 1 && mod % 7 === 0) {
-                tbody.appendChild(axuTr);
+                this.tbody.appendChild(axuTr);
                 axuTr = document.createElement('tr');
             }
             mod++;
+        }    
+     }
+    /*
+    * Load the legend of the days of week
+    */
+     private loadLegend(array){
+        if(this.legend) this.legend.removeChildren();
+        this.legend = document.createElement('tr');
+        this.table.tHead.appendChild(this.legend);
+        for (var i = 0; i < 7; i++) {
+            var th = document.createElement('th');
+            th.textContent =array[i];
+            this.legend.appendChild(th);
+        }        
+     }
+
+    private calendarMonth() {    
+         this.title.text = this.data.year;
+         /*
+         * add event to change view type by range years.
+         */
+         this.title.onclick = (e)=> {
+             e.preventDefault();
+             this.dataYear();
+             this.clearTable();
+             this.calendarYear();
+         }     
+        /*
+        * add Event to navigation
+        */        
+        this.btnBack.onclick = ()=>{
+            var year = this.displayDate.getFullYear() - 1;
+            if (year > this.yearGregorian) {
+                this.displayDate = new Date(year, 0, 01);
+                this.dataMonth();
+                this.clearTable();
+                this.calendarMonth();
+            }
+        }        
+        this.btnCurrent.onclick = ()=>{
+            /*
+            * If not is the current year,
+            * go to current year.
+            */
+            if (this.displayDate.getFullYear() !== this.today.getFullYear()) {
+                this.displayDate = this.today.clone();
+                this.dataMonth();
+                this.clearTable();
+                this.calendarMonth();
+            }
         }
-        thead.appendChild(tr);
-        this.table.appendChild(thead);
-        this.table.appendChild(tbody);
-        panelBody.appendChild(this.table);
-        panelDefault.appendChild(panelBody);
-        col.appendChild(panelDefault);
-        row.appendChild(col);
-        return row;
-    }
-
-    private addTitle() {
-
-        switch (this.type) {
-            case TypeCalendar.DAY:
-                this.title.textContent = this.data.month.text + ' ' + this.data.year;
+        this.btnNext.onclick =()=>{
+            this.displayDate = new Date(this.displayDate.getFullYear() + 1, 0, 01);
+            this.dataMonth();
+            this.clearTable();
+            this.calendarMonth();
+        }
+         
+            /*
+            * Create all months of a year.            
+            */
+            var tr = document.createElement('tr');
+            var mod = 1;
+            var currentMonth = this.data.currentMonth;
+            for (var j = 0; j < 12; j++) {
+                var td = document.createElement('td');
                 /*
-                * add event to change view type by months.
+                * If the j is the current day,
+                * make the background darker.
                 */
-                this.title.onclick = (e) => {
-                    e.preventDefault();
-                    this.displayDate.setDate(1);
-                    this.dataMonth();
-                    this.element.removeChildren();
-                    this.calendarMonth();
+                if (j === currentMonth) {
+                    td.className = 'bg-primary';
                 }
-
-                break;
-            case TypeCalendar.MONTH:
-                break;
-
+                td.textContent = this.abbMonths[j];
+                tr.appendChild(td);
+                /*
+                * add event to go to month selected.
+                */
+                var self = this;
+                td.onclick = function () {
+                    self.displayDate.setMonth(self.abbMonths.indexOf(this.textContent));
+                    self.displayDate.setDate(1);
+                    self.dataDay();
+                    self.clearTable();
+                    self.calendarDay();
+                }
+                /*
+                * If mod is greater than zero and is module of 3,
+                * add new row.
+                */
+                if (mod > 1 && mod % 3 === 0) {
+                    this.tbody.appendChild(tr);
+                    tr = document.createElement('tr');
+                }
+                mod++;
+            }
+                 
+    }
+    
+    
+    private calendarYear() {
+	      this.title.text = this.data.range;
+	      this.title.onclick = (e) =>{
+	          e.preventDefault();
+	     }
+        /*
+        * add Event to navigation
+        */        
+        this.btnBack.onclick = ()=>{
+            var year = this.displayDate.getFullYear() - 12;
+            if (year <= this.yearGregorian) {
+                year = this.yearGregorian;
+            }
+            this.displayDate = new Date(year, 0, 01);
+            this.dataYear();
+            this.clearTable();
+            this.calendarYear();
+        }        
+        this.btnCurrent.onclick = ()=>{
+             /*
+            * If not is the current year,
+            * go to current range year.
+            */
+            if (this.displayDate.getFullYear() !== this.today.getFullYear()) {
+                this.displayDate = this.today.clone();
+                this.dataYear();
+                this.clearTable();
+                this.calendarYear();
+            }
         }
-    }
+        this.btnNext.onclick =()=>{
+            this.displayDate = new Date(this.displayDate.getFullYear() + 12, 0, 01);
+            this.dataYear();
+            this.clearTable();
+            this.calendarYear();
+        }
 
-
-    private createDayTable() { }
-
-    private createMonthTable() { }
-
-    private createYearTable() { }
-
-    private calendarDay() { }
-
-    private calendarMonth() {
-
-    }
-
-    private calendarYear() { }    
-
-    private addEventsNavegation() {
-
-    }
-
-    private removeEventNavegation() { }
+            /*
+            * Create range year.            
+            */
+            var tr = document.createElement('tr');
+            var mod = 1;
+            var year = this.data.year;
+            var currentYear = this.data.currentYear;
+            for (var j = 0; j < 12; j++) {
+                var td = document.createElement('td');
+                /*
+                * If the j is the current day,
+                * make the background darker.
+                */
+                if (year === currentYear) {
+                    td.className = 'bg-primary';
+                }
+                td.textContent = (year++).toString();
+                tr.appendChild(td);
+                /*
+                * add event to go to year selected.
+                */
+                var self = this;
+                td.onclick = function () {
+                    self.displayDate.setFullYear(this.textContent);
+                    self.dataMonth();
+                    self.clearTable();
+                    self.calendarMonth();
+                }
+                /*
+                * If mod is greater than zero and is module of 3,
+                * add new row.
+                */
+                if (mod > 1 && mod % 3 === 0) {
+                    this.tbody.appendChild(tr);
+                    tr = document.createElement('tr');
+                }
+                mod++;
+            }	       
+     }
 
     private setOptions() {
         if (this.options) {
@@ -374,12 +553,66 @@ class Calendar {
             }
         }
     }
+    
+    private displayDateFromValue(){
+            if (this.options && this.options.isInput) {
+            var input = this.options.input;
+            var value = input.value;
+            if (!value.isEmpty()) {
+                this.displayDate = new Date().parse(value, input.dataset.date);
+                this.displayDate = this.displayDate.isValid() ? this.displayDate : new Date();
+                var col = this.displayDate.getDay();
+                var row = this.displayDate.getWeekOfMonth();
+                this.displayDate.setDate(01);
+                this.dataDay();
+                this.clearTable();
+                this.calendarDay();
+                var cell = this.table.rows[row].cells[col];
+                this.selectedCell.classList.remove('bg-primary');
+                cell.classList.add('bg-primary');
+                this.selectedCell = cell;
+            }
+        }
+    }
+    
+    /* JavaScript Media Queries */
+    private mediaQuery(){		
+		if (matchMedia) {
+			var mq = window.matchMedia("(max-width: 969px)");
+			var self = this;
+			mq.addListener(function(){
+		      	if(mq.matches){
+		    	   self.loadLegend(self.abbDays);
+		    	}else{
+		    	  self.loadLegend(self.days);
+		    	}	
+			});					
+		}
+    }
+    
+    private loadLegendMatchMedia(){
+        var mq = window.matchMedia("(max-width: 969px)");
+    	if(mq.matches){
+    	   this.loadLegend(this.abbDays);
+    	}else{
+    	  this.loadLegend(this.days);
+    	}		
+    }
 
-    public open(callback) { }
+    public open(callback) {
+        this.element.classList.remove('hidden');
+        this.displayDateFromValue();
+        if (callback) callback();        
+     }
 
-    public close(callback?) { }
+    public close(callback?) {
+        this.element.classList.add('hidden');
+        if (callback) callback();
+     }
 
-    public isOpen() { }
+    public isOpen() {
+       return !this.element.classList.contains('hidden');
+    }
 
 }
 
