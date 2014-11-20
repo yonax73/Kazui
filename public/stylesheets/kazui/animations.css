@@ -1540,3 +1540,38 @@
     -webkit-animation-name: wobble; 
     animation-name: wobble; 
 }
+
+
+
+@-webkit-keyframes translate-x { 
+   0% { 
+        
+        -webkit-transform: translateX(-2000px); 
+    } 
+    100% { 
+        
+        -webkit-transform: translateX(30px); 
+    } 
+    100% { 
+        -webkit-transform: translateX(0); 
+    } 
+} 
+
+@keyframes  translate-x{ 
+   0% { 
+        
+        -webkit-transform: translateX(-2000px); 
+    } 
+    60% { 
+        
+        -webkit-transform: translateX(30px); 
+    } 
+    100% { 
+        -webkit-transform: translateX(0); 
+    } 
+} 
+
+.ui-translate-x { 
+    -webkit-animation-name: translate-x; 
+    animation-name: translate-x; 
+}

@@ -251,16 +251,17 @@ class Calendar {
     }
 
 
-    private clearTable(){
-       this.table.classList.add('ui-linear');
-       this.table.classList.add('ui-flip-out-y');
+    private clearTable(callback){
+       this.table.classList.add('ui-ease');
+        this.table.classList.add('ui-fade-out');
        this.table.classList.add('ui-1s');
        this.table.tHead.removeChildren();
        setTimeout(()=>{
-	       this.table.classList.remove('ui-linear');
-	       this.table.classList.remove('ui-flip-out-y');
+	       this.table.classList.remove('ui-ease');
+           this.table.classList.remove('ui-fade-out');
 	       this.table.classList.remove('ui-1s');       
            this.tbody.removeChildren();
+           callback();
        },1000);
          
     }
@@ -274,14 +275,14 @@ class Calendar {
             e.preventDefault();
             this.displayDate.setDate(1);
             this.dataMonth();     
-            this.clearTable();     
-            this.calendarMonth();
+            this.clearTable(this.calendarMonth);     
+            
         }
         /*
         * add Event to navigation
         */        
         this.btnBack.onclick = ()=>{
-            this.displayDate.setDate(01);
+            this.displayDate.setDate(1);
             this.displayDate.previousMonth();
             this.dataDay();
             this.clearTable();
@@ -303,7 +304,7 @@ class Calendar {
 	        }
         }
         this.btnNext.onclick =()=>{
-            this.displayDate.setDate(01);
+            this.displayDate.setDate(1);
             this.displayDate.nextMonth();
             this.dataDay();
             this.clearTable();
@@ -402,7 +403,7 @@ class Calendar {
         this.btnBack.onclick = ()=>{
             var year = this.displayDate.getFullYear() - 1;
             if (year > this.yearGregorian) {
-                this.displayDate = new Date(year, 0, 01);
+                this.displayDate = new Date(year, 0, 1);
                 this.dataMonth();
                 this.clearTable();
                 this.calendarMonth();
@@ -421,7 +422,7 @@ class Calendar {
             }
         }
         this.btnNext.onclick =()=>{
-            this.displayDate = new Date(this.displayDate.getFullYear() + 1, 0, 01);
+            this.displayDate = new Date(this.displayDate.getFullYear() + 1, 0, 1);
             this.dataMonth();
             this.clearTable();
             this.calendarMonth();
@@ -482,7 +483,7 @@ class Calendar {
             if (year <= this.yearGregorian) {
                 year = this.yearGregorian;
             }
-            this.displayDate = new Date(year, 0, 01);
+            this.displayDate = new Date(year, 0, 1);
             this.dataYear();
             this.clearTable();
             this.calendarYear();
@@ -500,7 +501,7 @@ class Calendar {
             }
         }
         this.btnNext.onclick =()=>{
-            this.displayDate = new Date(this.displayDate.getFullYear() + 12, 0, 01);
+            this.displayDate = new Date(this.displayDate.getFullYear() + 12, 0, 1);
             this.dataYear();
             this.clearTable();
             this.calendarYear();
@@ -563,7 +564,7 @@ class Calendar {
                 this.displayDate = this.displayDate.isValid() ? this.displayDate : new Date();
                 var col = this.displayDate.getDay();
                 var row = this.displayDate.getWeekOfMonth();
-                this.displayDate.setDate(01);
+                this.displayDate.setDate(1);
                 this.dataDay();
                 this.clearTable();
                 this.calendarDay();
