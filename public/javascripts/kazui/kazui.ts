@@ -6,6 +6,19 @@
 * http://www.kazui.io/purchase/license-agreement/kazui-complete
 * If you do not own a commercial license, this file shall be governed by the trial license terms.
 */
+class Animation {
+
+  public type;
+  public fn;
+  public time;
+  
+  constructor(type,fn,time){
+     this.type = type;
+     this.fn = fn;
+     this.time = time;
+  }
+    
+}
 
 class Calendar {
 
@@ -18,6 +31,8 @@ class Calendar {
     private data;
     private table;
     private tbody: HTMLElement;
+    private contentTable:HTMLElement;
+    private panelBody:HTMLElement;
     private btnBack;
     private btnCurrent;
     private btnNext;
@@ -26,11 +41,14 @@ class Calendar {
     private legend:HTMLElement;
     private options;
     private title;
+    private animationOut:Animation;
+    
 
 
     constructor(element: HTMLElement, options) {
         this.element = element;
         this.options = options;
+        this.animationOut = new Animation('ui-ease','ui-flip-out-y','ui-0-2s');
         this.setOptions();
         this.displayDate = this.today.clone();
         this.displayDate.setDate(1);     
@@ -38,7 +56,7 @@ class Calendar {
         this.dataDay();
         this.createCalendar();
         this.calendarDay();
-       this.mediaQuery();
+        this.mediaQuery();
     }
 
     private dataDay() {
@@ -232,8 +250,11 @@ class Calendar {
         var panelDefault = document.createElement('div');
         panelDefault.className = 'ui-calendar panel panel-default';
 
-        var panelBody = document.createElement('div');
-        panelBody.className = 'panel-body';
+        this.panelBody = document.createElement('div');
+        this.panelBody.className = 'panel-body';
+        
+        this.contentTable = document.createElement('div');
+        this.contentTable.className = 'ui-calendar-content-table';
         /*
         * Create the table
         */
@@ -243,8 +264,9 @@ class Calendar {
         this.tbody = document.createElement('tbody');
         this.table.appendChild(thead);
         this.table.appendChild(this.tbody);
-        panelBody.appendChild(this.table);
-        panelDefault.appendChild(panelBody);
+        this.contentTable.appendChild(this.table);
+        this.panelBody.appendChild(this.contentTable);
+        panelDefault.appendChild(this.panelBody);
         col.appendChild(panelDefault);
         row.appendChild(col);
         return row;
@@ -252,74 +274,86 @@ class Calendar {
 
 
     private clearTable(callback){
-       this.table.classList.add('ui-ease');
-        this.table.classList.add('ui-fade-out');
-       this.table.classList.add('ui-1s');
-       this.table.tHead.removeChildren();
+    var oldTable = this.table.cloneNode(true);
+    var oldContent = document.createElement('div');
+    oldContent.className = 'ui-calendar-content-table';
+    oldContent.appendChild(oldTable);
+    this.panelBody.insertBefore(oldContent,this.panelBody.childNodes[0]);        
+    this.table.tHead.removeChildren();   
+    this.tbody.removeChildren();
+    callback(this);     
+       oldContent.classList.add(this.animationOut.type);
+        oldContent.classList.add(this.animationOut.fn);
+        oldContent.classList.add(this.animationOut.time);   
+      
+      // this.table.classList.add('ui-below');
+      var self = this;
        setTimeout(()=>{
-	       this.table.classList.remove('ui-ease');
-           this.table.classList.remove('ui-fade-out');
-	       this.table.classList.remove('ui-1s');       
-           this.tbody.removeChildren();
-           callback();
-       },1000);
+	       oldContent.classList.remove(self.animationOut.type);
+           oldContent.classList.remove(self.animationOut.fn);
+	        oldContent.classList.remove(self.animationOut.time);  
+	       //this.table.classList.remove('ui-below');  
+	      //oldTable.tHead.removeChildren();   
+          // oldContent.removeChildren();
+          // callback(this);
+       },200);
          
     }
     
-    private calendarDay() {  
-        this.title.textContent = this.data.month.text + ' ' + this.data.year;
+    private calendarDay(self?) { 
+       if(!self) self = this; 
+        self.title.textContent = self.data.month.text + ' ' + self.data.year;
         /*
         * add event to change view type by months.
         */
-        this.title.onclick = (e) => {
+        self.title.onclick = (e) => {
             e.preventDefault();
-            this.displayDate.setDate(1);
-            this.dataMonth();     
-            this.clearTable(this.calendarMonth);     
+            self.displayDate.setDate(1);
+            self.dataMonth();     
+            self.clearTable(self.calendarMonth);     
             
         }
         /*
         * add Event to navigation
         */        
-        this.btnBack.onclick = ()=>{
-            this.displayDate.setDate(1);
-            this.displayDate.previousMonth();
-            this.dataDay();
-            this.clearTable();
-            this.calendarDay();
+        self.btnBack.onclick = ()=>{
+            self.displayDate.setDate(1);
+            self.displayDate.previousMonth();
+            self.dataDay();
+            //self.clearTable();
+            self.calendarDay();
         }        
-        this.btnCurrent.onclick = ()=>{
+        self.btnCurrent.onclick = ()=>{
 	        /*
 	        * If not is the current month,
 	        * go to current month.
 	        */
-	        var dMonth = this.displayDate.getMonth();
-	        var month = this.today.getMonth();
-	        if (!(dMonth === month && this.today.getFullYear() === this.displayDate.getFullYear())) {
-	            this.displayDate = this.today.clone();
-	            this.displayDate.setDate(1);
-	            this.dataDay();
-	            this.clearTable();
-	            this.calendarDay();
+	        var dMonth = self.displayDate.getMonth();
+	        var month = self.today.getMonth();
+	        if (!(dMonth === month && self.today.getFullYear() === self.displayDate.getFullYear())) {
+	            self.displayDate = self.today.clone();
+	            self.displayDate.setDate(1);
+	            self.dataDay();
+	            //self.clearTable();
+	            self.calendarDay();
 	        }
         }
-        this.btnNext.onclick =()=>{
-            this.displayDate.setDate(1);
-            this.displayDate.nextMonth();
-            this.dataDay();
-            this.clearTable();
-            this.calendarDay();
+        self.btnNext.onclick =()=>{
+            self.displayDate.setDate(1);
+            self.displayDate.nextMonth();
+            self.dataDay();
+            self.clearTable(self.calendarDay);            
         }         
-        this.loadLegendMatchMedia();
+        self.loadLegendMatchMedia();
        /*
         * Create the days of previous month, current month and next month,
         * with a total of 42 days
         */
         var mod = 1;
         var axuTr = document.createElement('tr');
-        var currentDay = this.data.currentDay;
+        var currentDay = self.data.currentDay;
         for (var j = 0; j < 42; j++) {
-            var item = this.data.items[j];
+            var item = self.data.items[j];
             var day = item.day;
             var td = document.createElement('td');
             /*
@@ -335,13 +369,13 @@ class Calendar {
             */
             if (item.currentDay && day === currentDay) {
                 td.className = 'bg-primary';
-                this.selectedCell = td;
+                self.selectedCell = td;
             }
             /*
             * Add event, if  is input option 
-            * then change this value for the selected date.                
+            * then change self value for the selected date.                
             */
-            var self = this;
+           
             td.onclick = function () {
                 if (this.options && this.options.isInput) {
                     if (this.classList.contains('text-muted')) {     //no is current month
@@ -366,11 +400,11 @@ class Calendar {
             * is because will start other week on the calendar
             */
             if (mod > 1 && mod % 7 === 0) {
-                this.tbody.appendChild(axuTr);
+                self.tbody.appendChild(axuTr);
                 axuTr = document.createElement('tr');
             }
             mod++;
-        }    
+        }
      }
     /*
     * Load the legend of the days of week
@@ -386,46 +420,46 @@ class Calendar {
         }        
      }
 
-    private calendarMonth() {    
-         this.title.text = this.data.year;
+    private calendarMonth(self?) {    
+         self.title.text = self.data.year;
          /*
          * add event to change view type by range years.
          */
-         this.title.onclick = (e)=> {
+         self.title.onclick = (e)=> {
              e.preventDefault();
-             this.dataYear();
-             this.clearTable();
-             this.calendarYear();
+             self.dataYear();
+             ////self.clearTable();
+             self.calendarYear();
          }     
         /*
         * add Event to navigation
         */        
-        this.btnBack.onclick = ()=>{
-            var year = this.displayDate.getFullYear() - 1;
-            if (year > this.yearGregorian) {
-                this.displayDate = new Date(year, 0, 1);
-                this.dataMonth();
-                this.clearTable();
-                this.calendarMonth();
+        self.btnBack.onclick = ()=>{
+            var year = self.displayDate.getFullYear() - 1;
+            if (year > self.yearGregorian) {
+                self.displayDate = new Date(year, 0, 1);
+                self.dataMonth();
+                //self.clearTable();
+                self.calendarMonth();
             }
         }        
-        this.btnCurrent.onclick = ()=>{
+        self.btnCurrent.onclick = ()=>{
             /*
             * If not is the current year,
             * go to current year.
             */
-            if (this.displayDate.getFullYear() !== this.today.getFullYear()) {
-                this.displayDate = this.today.clone();
-                this.dataMonth();
-                this.clearTable();
-                this.calendarMonth();
+            if (self.displayDate.getFullYear() !== self.today.getFullYear()) {
+                self.displayDate = self.today.clone();
+                self.dataMonth();
+                //self.clearTable();
+                self.calendarMonth();
             }
         }
-        this.btnNext.onclick =()=>{
-            this.displayDate = new Date(this.displayDate.getFullYear() + 1, 0, 1);
-            this.dataMonth();
-            this.clearTable();
-            this.calendarMonth();
+        self.btnNext.onclick =()=>{
+            self.displayDate = new Date(self.displayDate.getFullYear() + 1, 0, 1);
+            self.dataMonth();
+            //self.clearTable();
+            self.calendarMonth();
         }
          
             /*
@@ -433,7 +467,7 @@ class Calendar {
             */
             var tr = document.createElement('tr');
             var mod = 1;
-            var currentMonth = this.data.currentMonth;
+            var currentMonth = self.data.currentMonth;
             for (var j = 0; j < 12; j++) {
                 var td = document.createElement('td');
                 /*
@@ -443,17 +477,16 @@ class Calendar {
                 if (j === currentMonth) {
                     td.className = 'bg-primary';
                 }
-                td.textContent = this.abbMonths[j];
+                td.textContent = self.abbMonths[j];
                 tr.appendChild(td);
                 /*
                 * add event to go to month selected.
-                */
-                var self = this;
+                */                
                 td.onclick = function () {
                     self.displayDate.setMonth(self.abbMonths.indexOf(this.textContent));
                     self.displayDate.setDate(1);
                     self.dataDay();
-                    self.clearTable();
+//                    self.clearTable();
                     self.calendarDay();
                 }
                 /*
@@ -461,7 +494,7 @@ class Calendar {
                 * add new row.
                 */
                 if (mod > 1 && mod % 3 === 0) {
-                    this.tbody.appendChild(tr);
+                    self.tbody.appendChild(tr);
                     tr = document.createElement('tr');
                 }
                 mod++;
@@ -485,7 +518,7 @@ class Calendar {
             }
             this.displayDate = new Date(year, 0, 1);
             this.dataYear();
-            this.clearTable();
+            //this.clearTable();
             this.calendarYear();
         }        
         this.btnCurrent.onclick = ()=>{
@@ -496,14 +529,14 @@ class Calendar {
             if (this.displayDate.getFullYear() !== this.today.getFullYear()) {
                 this.displayDate = this.today.clone();
                 this.dataYear();
-                this.clearTable();
+                //this.clearTable();
                 this.calendarYear();
             }
         }
         this.btnNext.onclick =()=>{
             this.displayDate = new Date(this.displayDate.getFullYear() + 12, 0, 1);
             this.dataYear();
-            this.clearTable();
+            //this.clearTable();
             this.calendarYear();
         }
 
@@ -532,7 +565,7 @@ class Calendar {
                 td.onclick = function () {
                     self.displayDate.setFullYear(this.textContent);
                     self.dataMonth();
-                    self.clearTable();
+//                    self.clearTable();
                     self.calendarMonth();
                 }
                 /*
@@ -566,7 +599,7 @@ class Calendar {
                 var row = this.displayDate.getWeekOfMonth();
                 this.displayDate.setDate(1);
                 this.dataDay();
-                this.clearTable();
+                //this.clearTable();
                 this.calendarDay();
                 var cell = this.table.rows[row].cells[col];
                 this.selectedCell.classList.remove('bg-primary');

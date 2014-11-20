@@ -128,12 +128,20 @@
 /*
 * Calendar
 */
+.ui-calendar.panel {
+    max-width: 265px;
+}
+.ui-calendar-content-table{
+  display: table-cell;
+  width: 100%;
+}
 .ui-calendar>.btn-group.btn-group-justified {
 	padding-bottom: 5px;
 }
 
 .ui-calendar.panel>.panel-body {
 	padding: 5px;
+	overflow: hidden;
 }
 
 .ui-calendar table {
@@ -166,6 +174,7 @@
 .ui-calendar-input .panel-main {
 	box-shadow: 1px 2px 3px gray;
 }
+
 
 @media ( max-width : 969px) {
 	/*

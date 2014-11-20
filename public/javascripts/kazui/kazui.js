@@ -6,6 +6,14 @@
 * http://www.kazui.io/purchase/license-agreement/kazui-complete
 * If you do not own a commercial license, this file shall be governed by the trial license terms.
 */
+var Animation = (function () {
+    function Animation(type, fn, time) {
+        this.type = type;
+        this.fn = fn;
+        this.time = time;
+    }
+    return Animation;
+})();
 var Calendar = (function () {
     function Calendar(element, options) {
         this.days = ['Sun', 'Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat'];
@@ -15,6 +23,7 @@ var Calendar = (function () {
         this.today = new Date();
         this.element = element;
         this.options = options;
+        this.animationOut = new Animation('ui-ease', 'ui-flip-out-y', 'ui-0-2s');
         this.setOptions();
         this.displayDate = this.today.clone();
         this.displayDate.setDate(1);
@@ -37,37 +46,33 @@ var Calendar = (function () {
         this.data.currentDay = month === this.today.getMonth() && year === this.today.getFullYear() ? this.today.getDate() : 1;
         this.data.items = new Array();
         var previousTotalDays = 0;
-        var day = 0;
+        var day = 0; //The day to display on the calendar.
         var isPreviousDay = false;
         var isCurrentDay = true;
         var isNextDay = false;
-
         /*
-        * If the day week is greater than zero,
-        * necessary known how many days has the previous month.
-        */
+         * If the day week is greater than zero,
+         * necessary known how many days has the previous month.
+         */
         if (dayweek > 0) {
             var previousDate = this.displayDate.clone();
             previousDate.previousMonth();
             previousTotalDays = previousDate.getMonthDayCount();
-
             /*
-            * calculate the first day for display on the calendar
-            */
+             * calculate the first day for display on the calendar
+             */
             day = previousTotalDays - dayweek;
             if (day > 30)
                 day--;
             isPreviousDay = true;
             isCurrentDay = false;
         }
-
         for (var i = 0; i < 42; i++) {
             var item = {};
             day++;
             item.day = day;
             if (isPreviousDay) {
                 item.previousDay = true;
-
                 /*
                 *If the day is equals at  total days the
                 *previous month, is becasuse wiLL start
@@ -78,9 +83,9 @@ var Calendar = (function () {
                     isCurrentDay = true;
                     day = 0;
                 }
-            } else if (isCurrentDay) {
+            }
+            else if (isCurrentDay) {
                 item.currentDay = true;
-
                 /*
                 *If the day is equals at  total days the
                 *current month, is becasuse wiLL start
@@ -91,19 +96,18 @@ var Calendar = (function () {
                     isCurrentDay = false;
                     day = 0;
                 }
-            } else {
+            }
+            else {
                 item.nextDay = true;
             }
             this.data.items.push(item);
         }
     };
-
     Calendar.prototype.dataMonth = function () {
         var year = this.displayDate.getFullYear();
         this.data.year = year;
         this.data.currentMonth = year === this.today.getFullYear() ? this.today.getMonth() : 0;
     };
-
     Calendar.prototype.dataYear = function () {
         var year = this.displayDate.getFullYear();
         var limitYear = year + 11;
@@ -111,55 +115,45 @@ var Calendar = (function () {
         this.data.currentYear = year <= this.today.getFullYear() && limitYear >= this.today.getFullYear() ? this.today.getFullYear() : year;
         this.data.range = year + ' - ' + limitYear;
     };
-
     Calendar.prototype.createCalendar = function () {
         var row = document.createElement('div');
         var col = document.createElement('div');
         var panelDefault = document.createElement('div');
         var panelBody = document.createElement('div');
-
         row.className = 'row';
         col.className = 'col-sm-12 col-md-12';
         panelDefault.className = 'ui-calendar panel panel-default panel-main';
         panelBody.className = 'panel-body';
-
         panelBody.appendChild(this.header());
         panelBody.appendChild(this.body());
         panelDefault.appendChild(panelBody);
         col.appendChild(panelDefault);
         row.appendChild(col);
-
         /*
         * add calendar to parent
         */
         this.element.appendChild(row);
     };
-
     /*
-    * Create calendar header HTML.
-    * @returns HTMLElement
-    */
+     * Create calendar header HTML.
+     * @returns HTMLElement
+     */
     Calendar.prototype.header = function () {
         var row = document.createElement('div');
         row.className = 'row';
-
         var colTitle = document.createElement('div');
         colTitle.className = 'col-sm-6';
-
         /*
         * add the title
         */
         this.title = document.createElement('a');
         this.title.className = 'ui-title';
         this.title.href = '#';
-
         colTitle.appendChild(this.title);
-
         var colButtons = document.createElement('div');
         colButtons.className = 'ui-calendar col-sm-6';
         var btnGroupJustified = document.createElement('div');
         btnGroupJustified.className = 'btn-group btn-group-justified';
-
         /*
         * back Button
         */
@@ -173,7 +167,6 @@ var Calendar = (function () {
         this.btnBack.appendChild(i);
         btnGroup.appendChild(this.btnBack);
         btnGroupJustified.appendChild(btnGroup);
-
         /*
         * current Button
         */
@@ -187,7 +180,6 @@ var Calendar = (function () {
         this.btnCurrent.appendChild(i);
         btnGroup.appendChild(this.btnCurrent);
         btnGroupJustified.appendChild(btnGroup);
-
         /*
         * next Button
         */
@@ -201,13 +193,11 @@ var Calendar = (function () {
         this.btnNext.appendChild(i);
         btnGroup.appendChild(this.btnNext);
         btnGroupJustified.appendChild(btnGroup);
-
         colButtons.appendChild(btnGroupJustified);
         row.appendChild(colTitle);
         row.appendChild(colButtons);
         return row;
     };
-
     /*
     *Create calendar body HTML.
     *@returns HTMLElement
@@ -217,13 +207,12 @@ var Calendar = (function () {
         row.className = 'row';
         var col = document.createElement('div');
         col.className = 'col-sm-12';
-
         var panelDefault = document.createElement('div');
         panelDefault.className = 'ui-calendar panel panel-default';
-
-        var panelBody = document.createElement('div');
-        panelBody.className = 'panel-body';
-
+        this.panelBody = document.createElement('div');
+        this.panelBody.className = 'panel-body';
+        this.contentTable = document.createElement('div');
+        this.contentTable.className = 'ui-calendar-content-table';
         /*
         * Create the table
         */
@@ -233,88 +222,93 @@ var Calendar = (function () {
         this.tbody = document.createElement('tbody');
         this.table.appendChild(thead);
         this.table.appendChild(this.tbody);
-        panelBody.appendChild(this.table);
-        panelDefault.appendChild(panelBody);
+        this.contentTable.appendChild(this.table);
+        this.panelBody.appendChild(this.contentTable);
+        panelDefault.appendChild(this.panelBody);
         col.appendChild(panelDefault);
         row.appendChild(col);
         return row;
     };
-
     Calendar.prototype.clearTable = function (callback) {
-        var _this = this;
-        this.table.classList.add('ui-ease');
-        this.table.classList.add('ui-fade-out');
-        this.table.classList.add('ui-1s');
+        var oldTable = this.table.cloneNode(true);
+        var oldContent = document.createElement('div');
+        oldContent.className = 'ui-calendar-content-table';
+        oldContent.appendChild(oldTable);
+        this.panelBody.insertBefore(oldContent, this.panelBody.childNodes[0]);
         this.table.tHead.removeChildren();
+        this.tbody.removeChildren();
+        callback(this);
+        oldContent.classList.add(this.animationOut.type);
+        oldContent.classList.add(this.animationOut.fn);
+        oldContent.classList.add(this.animationOut.time);
+        // this.table.classList.add('ui-below');
+        var self = this;
         setTimeout(function () {
-            _this.table.classList.remove('ui-ease');
-            _this.table.classList.remove('ui-fade-out');
-            _this.table.classList.remove('ui-1s');
-            _this.tbody.removeChildren();
-            callback();
-        }, 1000);
+            oldContent.classList.remove(self.animationOut.type);
+            oldContent.classList.remove(self.animationOut.fn);
+            oldContent.classList.remove(self.animationOut.time);
+            //this.table.classList.remove('ui-below');  
+            //oldTable.tHead.removeChildren();   
+            // oldContent.removeChildren();
+            // callback(this);
+        }, 200);
     };
-
-    Calendar.prototype.calendarDay = function () {
-        var _this = this;
-        this.title.textContent = this.data.month.text + ' ' + this.data.year;
-
+    Calendar.prototype.calendarDay = function (self) {
+        if (!self)
+            self = this;
+        self.title.textContent = self.data.month.text + ' ' + self.data.year;
         /*
         * add event to change view type by months.
         */
-        this.title.onclick = function (e) {
+        self.title.onclick = function (e) {
             e.preventDefault();
-            _this.displayDate.setDate(1);
-            _this.dataMonth();
-            _this.clearTable(_this.calendarMonth);
+            self.displayDate.setDate(1);
+            self.dataMonth();
+            self.clearTable(self.calendarMonth);
         };
-
         /*
         * add Event to navigation
         */
-        this.btnBack.onclick = function () {
-            _this.displayDate.setDate(1);
-            _this.displayDate.previousMonth();
-            _this.dataDay();
-            _this.clearTable();
-            _this.calendarDay();
+        self.btnBack.onclick = function () {
+            self.displayDate.setDate(1);
+            self.displayDate.previousMonth();
+            self.dataDay();
+            //self.clearTable();
+            self.calendarDay();
         };
-        this.btnCurrent.onclick = function () {
+        self.btnCurrent.onclick = function () {
             /*
             * If not is the current month,
             * go to current month.
             */
-            var dMonth = _this.displayDate.getMonth();
-            var month = _this.today.getMonth();
-            if (!(dMonth === month && _this.today.getFullYear() === _this.displayDate.getFullYear())) {
-                _this.displayDate = _this.today.clone();
-                _this.displayDate.setDate(1);
-                _this.dataDay();
-                _this.clearTable();
-                _this.calendarDay();
+            var dMonth = self.displayDate.getMonth();
+            var month = self.today.getMonth();
+            if (!(dMonth === month && self.today.getFullYear() === self.displayDate.getFullYear())) {
+                self.displayDate = self.today.clone();
+                self.displayDate.setDate(1);
+                self.dataDay();
+                //self.clearTable();
+                self.calendarDay();
             }
         };
-        this.btnNext.onclick = function () {
-            _this.displayDate.setDate(1);
-            _this.displayDate.nextMonth();
-            _this.dataDay();
-            _this.clearTable();
-            _this.calendarDay();
+        self.btnNext.onclick = function () {
+            self.displayDate.setDate(1);
+            self.displayDate.nextMonth();
+            self.dataDay();
+            self.clearTable(self.calendarDay);
         };
-        this.loadLegendMatchMedia();
-
+        self.loadLegendMatchMedia();
         /*
-        * Create the days of previous month, current month and next month,
-        * with a total of 42 days
-        */
+         * Create the days of previous month, current month and next month,
+         * with a total of 42 days
+         */
         var mod = 1;
         var axuTr = document.createElement('tr');
-        var currentDay = this.data.currentDay;
+        var currentDay = self.data.currentDay;
         for (var j = 0; j < 42; j++) {
-            var item = this.data.items[j];
+            var item = self.data.items[j];
             var day = item.day;
             var td = document.createElement('td');
-
             /*
             * If the day not for the current month,
             * make the text clearer
@@ -322,27 +316,25 @@ var Calendar = (function () {
             if (item.previousDay || item.nextDay) {
                 td.className = 'text-muted';
             }
-
             /*
             * If the day is the current day,
             * make the background darker
             */
             if (item.currentDay && day === currentDay) {
                 td.className = 'bg-primary';
-                this.selectedCell = td;
+                self.selectedCell = td;
             }
-
             /*
             * Add event, if  is input option
-            * then change this value for the selected date.
+            * then change self value for the selected date.
             */
-            var self = this;
             td.onclick = function () {
                 if (this.options && this.options.isInput) {
                     if (this.classList.contains('text-muted')) {
                         if (this.textContent > 20) {
                             this.displayDate.previousMonth();
-                        } else {
+                        }
+                        else {
                             this.displayDate.nextMonth();
                         }
                     }
@@ -356,19 +348,17 @@ var Calendar = (function () {
             };
             td.textContent = day;
             axuTr.appendChild(td);
-
             /*
             * If mod is greater than zero and is module of 7,
             * is because will start other week on the calendar
             */
             if (mod > 1 && mod % 7 === 0) {
-                this.tbody.appendChild(axuTr);
+                self.tbody.appendChild(axuTr);
                 axuTr = document.createElement('tr');
             }
             mod++;
         }
     };
-
     /*
     * Load the legend of the days of week
     */
@@ -383,61 +373,55 @@ var Calendar = (function () {
             this.legend.appendChild(th);
         }
     };
-
-    Calendar.prototype.calendarMonth = function () {
-        var _this = this;
-        this.title.text = this.data.year;
-
+    Calendar.prototype.calendarMonth = function (self) {
+        self.title.text = self.data.year;
         /*
         * add event to change view type by range years.
         */
-        this.title.onclick = function (e) {
+        self.title.onclick = function (e) {
             e.preventDefault();
-            _this.dataYear();
-            _this.clearTable();
-            _this.calendarYear();
+            self.dataYear();
+            ////self.clearTable();
+            self.calendarYear();
         };
-
         /*
         * add Event to navigation
         */
-        this.btnBack.onclick = function () {
-            var year = _this.displayDate.getFullYear() - 1;
-            if (year > _this.yearGregorian) {
-                _this.displayDate = new Date(year, 0, 1);
-                _this.dataMonth();
-                _this.clearTable();
-                _this.calendarMonth();
+        self.btnBack.onclick = function () {
+            var year = self.displayDate.getFullYear() - 1;
+            if (year > self.yearGregorian) {
+                self.displayDate = new Date(year, 0, 1);
+                self.dataMonth();
+                //self.clearTable();
+                self.calendarMonth();
             }
         };
-        this.btnCurrent.onclick = function () {
+        self.btnCurrent.onclick = function () {
             /*
             * If not is the current year,
             * go to current year.
             */
-            if (_this.displayDate.getFullYear() !== _this.today.getFullYear()) {
-                _this.displayDate = _this.today.clone();
-                _this.dataMonth();
-                _this.clearTable();
-                _this.calendarMonth();
+            if (self.displayDate.getFullYear() !== self.today.getFullYear()) {
+                self.displayDate = self.today.clone();
+                self.dataMonth();
+                //self.clearTable();
+                self.calendarMonth();
             }
         };
-        this.btnNext.onclick = function () {
-            _this.displayDate = new Date(_this.displayDate.getFullYear() + 1, 0, 1);
-            _this.dataMonth();
-            _this.clearTable();
-            _this.calendarMonth();
+        self.btnNext.onclick = function () {
+            self.displayDate = new Date(self.displayDate.getFullYear() + 1, 0, 1);
+            self.dataMonth();
+            //self.clearTable();
+            self.calendarMonth();
         };
-
         /*
         * Create all months of a year.
         */
         var tr = document.createElement('tr');
         var mod = 1;
-        var currentMonth = this.data.currentMonth;
+        var currentMonth = self.data.currentMonth;
         for (var j = 0; j < 12; j++) {
             var td = document.createElement('td');
-
             /*
             * If the j is the current day,
             * make the background darker.
@@ -445,40 +429,35 @@ var Calendar = (function () {
             if (j === currentMonth) {
                 td.className = 'bg-primary';
             }
-            td.textContent = this.abbMonths[j];
+            td.textContent = self.abbMonths[j];
             tr.appendChild(td);
-
             /*
             * add event to go to month selected.
             */
-            var self = this;
             td.onclick = function () {
                 self.displayDate.setMonth(self.abbMonths.indexOf(this.textContent));
                 self.displayDate.setDate(1);
                 self.dataDay();
-                self.clearTable();
+                //                    self.clearTable();
                 self.calendarDay();
             };
-
             /*
             * If mod is greater than zero and is module of 3,
             * add new row.
             */
             if (mod > 1 && mod % 3 === 0) {
-                this.tbody.appendChild(tr);
+                self.tbody.appendChild(tr);
                 tr = document.createElement('tr');
             }
             mod++;
         }
     };
-
     Calendar.prototype.calendarYear = function () {
         var _this = this;
         this.title.text = this.data.range;
         this.title.onclick = function (e) {
             e.preventDefault();
         };
-
         /*
         * add Event to navigation
         */
@@ -489,28 +468,27 @@ var Calendar = (function () {
             }
             _this.displayDate = new Date(year, 0, 1);
             _this.dataYear();
-            _this.clearTable();
+            //this.clearTable();
             _this.calendarYear();
         };
         this.btnCurrent.onclick = function () {
             /*
-            * If not is the current year,
-            * go to current range year.
-            */
+           * If not is the current year,
+           * go to current range year.
+           */
             if (_this.displayDate.getFullYear() !== _this.today.getFullYear()) {
                 _this.displayDate = _this.today.clone();
                 _this.dataYear();
-                _this.clearTable();
+                //this.clearTable();
                 _this.calendarYear();
             }
         };
         this.btnNext.onclick = function () {
             _this.displayDate = new Date(_this.displayDate.getFullYear() + 12, 0, 1);
             _this.dataYear();
-            _this.clearTable();
+            //this.clearTable();
             _this.calendarYear();
         };
-
         /*
         * Create range year.
         */
@@ -520,7 +498,6 @@ var Calendar = (function () {
         var currentYear = this.data.currentYear;
         for (var j = 0; j < 12; j++) {
             var td = document.createElement('td');
-
             /*
             * If the j is the current day,
             * make the background darker.
@@ -530,7 +507,6 @@ var Calendar = (function () {
             }
             td.textContent = (year++).toString();
             tr.appendChild(td);
-
             /*
             * add event to go to year selected.
             */
@@ -538,10 +514,9 @@ var Calendar = (function () {
             td.onclick = function () {
                 self.displayDate.setFullYear(this.textContent);
                 self.dataMonth();
-                self.clearTable();
+                //                    self.clearTable();
                 self.calendarMonth();
             };
-
             /*
             * If mod is greater than zero and is module of 3,
             * add new row.
@@ -553,7 +528,6 @@ var Calendar = (function () {
             mod++;
         }
     };
-
     Calendar.prototype.setOptions = function () {
         if (this.options) {
             if (this.options.isInput) {
@@ -561,7 +535,6 @@ var Calendar = (function () {
             }
         }
     };
-
     Calendar.prototype.displayDateFromValue = function () {
         if (this.options && this.options.isInput) {
             var input = this.options.input;
@@ -573,7 +546,7 @@ var Calendar = (function () {
                 var row = this.displayDate.getWeekOfMonth();
                 this.displayDate.setDate(1);
                 this.dataDay();
-                this.clearTable();
+                //this.clearTable();
                 this.calendarDay();
                 var cell = this.table.rows[row].cells[col];
                 this.selectedCell.classList.remove('bg-primary');
@@ -582,7 +555,6 @@ var Calendar = (function () {
             }
         }
     };
-
     /* JavaScript Media Queries */
     Calendar.prototype.mediaQuery = function () {
         if (matchMedia) {
@@ -591,41 +563,38 @@ var Calendar = (function () {
             mq.addListener(function () {
                 if (mq.matches) {
                     self.loadLegend(self.abbDays);
-                } else {
+                }
+                else {
                     self.loadLegend(self.days);
                 }
             });
         }
     };
-
     Calendar.prototype.loadLegendMatchMedia = function () {
         var mq = window.matchMedia("(max-width: 969px)");
         if (mq.matches) {
             this.loadLegend(this.abbDays);
-        } else {
+        }
+        else {
             this.loadLegend(this.days);
         }
     };
-
     Calendar.prototype.open = function (callback) {
         this.element.classList.remove('hidden');
         this.displayDateFromValue();
         if (callback)
             callback();
     };
-
     Calendar.prototype.close = function (callback) {
         this.element.classList.add('hidden');
         if (callback)
             callback();
     };
-
     Calendar.prototype.isOpen = function () {
         return !this.element.classList.contains('hidden');
     };
     return Calendar;
 })();
-
 var Select = (function () {
     function Select(htmlElement, data) {
         var _this = this;
@@ -729,7 +698,6 @@ var Select = (function () {
             }
         }
     };
-
     Select.prototype.animationIn = function () {
         var _this = this;
         this.items.classList.add('open');
@@ -742,7 +710,6 @@ var Select = (function () {
             _this.items.classList.remove('ui-fade-in-down');
         }, 200);
     };
-
     Select.prototype.animationOut = function () {
         var _this = this;
         this.items.classList.add('ui-ease-out');
@@ -755,7 +722,6 @@ var Select = (function () {
             _this.items.classList.remove('open');
         }, 200);
     };
-
     Select.prototype.changeValue = function (htmlElement) {
         this.oldItem = this.currentItem;
         this.currentItem = htmlElement;
@@ -767,7 +733,6 @@ var Select = (function () {
         this.currentItem.classList.add('bg-primary');
         this.input.focus();
     };
-
     Select.prototype.next = function () {
         if (!this.disabled && !this.readOnly && this.currentItem) {
             var item = this.currentItem.nextElementSibling;
@@ -776,7 +741,6 @@ var Select = (function () {
             }
         }
     };
-
     Select.prototype.previous = function () {
         if (!this.disabled && !this.readOnly && this.currentItem) {
             var item = this.currentItem.previousSibling;
@@ -785,14 +749,14 @@ var Select = (function () {
             }
         }
     };
-
     Select.prototype.toggle = function () {
         if (!this.readOnly && !this.disabled) {
             this.open = this.items.classList.contains('open');
             if (this.open) {
                 this.animationOut();
                 this.open = false;
-            } else {
+            }
+            else {
                 Select.clear();
                 this.animationIn();
                 this.open = true;
@@ -805,7 +769,6 @@ var Select = (function () {
             }
         }
     };
-
     Select.prototype.selectItem = function (option) {
         if (!this.disabled && !this.readOnly) {
             var lis = this.items.getElementsByTagName('li');
@@ -820,7 +783,7 @@ var Select = (function () {
                         this.currentItem = item;
                         found = true;
                     }
-                } while(!found && i < this.length);
+                } while (!found && i < this.length);
                 if (found) {
                     this.input.value = this.currentItem.textContent;
                     this.input.setAttribute('data-option', this.currentItem.getAttribute('data-option'));
@@ -833,7 +796,6 @@ var Select = (function () {
             }
         }
     };
-
     Select.prototype.addItem = function (option, value) {
         if (!this.disabled && !this.readOnly) {
             var li = document.createElement('li');
@@ -851,7 +813,6 @@ var Select = (function () {
             this.length++;
         }
     };
-
     Select.prototype.getItem = function () {
         if (!this.disabled && !this.readOnly) {
             return {
@@ -860,65 +821,57 @@ var Select = (function () {
             };
         }
     };
-
     Select.prototype.getValue = function () {
         if (!this.disabled && !this.readOnly) {
             return this.input.value;
         }
     };
-
     Select.prototype.getOption = function () {
         if (!this.disabled && !this.readOnly) {
             return this.input.getAttribute('data-option');
         }
     };
-
     Select.prototype.isOpen = function () {
         if (!this.disabled && !this.readOnly) {
             return this.open;
         }
     };
-
     Select.prototype.isDisabled = function () {
         return this.disabled;
     };
-
     Select.prototype.setDisabled = function (disabled) {
         this.disabled = disabled;
         this.input.disabled = this.disabled;
         if (this.disabled) {
             this.element.classList.add('disabled');
-        } else {
+        }
+        else {
             this.element.classList.remove('disabled');
         }
     };
-
     Select.prototype.isReadOnly = function () {
         return this.readOnly;
     };
-
     Select.prototype.setReadOnly = function (readOnly) {
         this.readOnly = readOnly;
         this.input.readOnly = this.readOnly;
         if (this.readOnly) {
             this.element.classList.add('read-only');
-        } else {
+        }
+        else {
             this.element.classList.remove('read-only');
         }
     };
-
     Select.prototype.setHeight = function (height) {
         if (!this.disabled && !this.readOnly) {
             this.items.style.height = height;
         }
     };
-
     Select.prototype.getSize = function () {
         if (!this.disabled || !this.readOnly) {
             return this.length;
         }
     };
-
     Select.prototype.setIcono = function (icono) {
         if (!this.disabled && !this.readOnly) {
             this.ico.classList.remove(this.icono);
@@ -926,17 +879,14 @@ var Select = (function () {
             this.ico.classList.add(this.icono);
         }
     };
-
     Select.prototype.focus = function () {
         if (!this.disabled && !this.readOnly) {
             this.input.focus();
         }
     };
-
     Select.prototype.onchange = function (callback) {
         this.input.onchange = callback;
     };
-
     Select.clear = function () {
         var selects = document.getElementsByClassName('ui-select');
         var n = selects.length;
@@ -962,7 +912,6 @@ var Select = (function () {
     };
     return Select;
 })();
-
 var Alert = (function () {
     function Alert(htmlElement) {
         this.element = null;
@@ -1024,7 +973,6 @@ var Alert = (function () {
             }, 1000);
         }
     };
-
     Alert.prototype.success = function (message) {
         this.removeAnimation();
         this.i.className = 'fa fa-lg pull-left';
@@ -1034,7 +982,6 @@ var Alert = (function () {
         this.strong.textContent = message;
         this.type = 'success';
     };
-
     Alert.prototype.info = function (message) {
         this.i.className = 'fa fa-lg pull-left';
         this.i.classList.add(this.icoInfo);
@@ -1044,7 +991,6 @@ var Alert = (function () {
         this.type = 'info';
         this.removeAnimation();
     };
-
     Alert.prototype.warning = function (message) {
         this.i.className = 'fa fa-lg pull-left';
         this.i.classList.add(this.icoWarning);
@@ -1054,7 +1000,6 @@ var Alert = (function () {
         this.type = 'warning';
         this.removeAnimation();
     };
-
     Alert.prototype.danger = function (message) {
         this.i.className = 'fa fa-lg pull-left';
         this.i.classList.add(this.icoDanger);
@@ -1064,7 +1009,6 @@ var Alert = (function () {
         this.type = 'danger';
         this.removeAnimation();
     };
-
     Alert.prototype.wait = function (message) {
         this.i.className = 'fa fa-spin fa-lg pull-left';
         this.i.classList.add(this.icoWait);
@@ -1074,13 +1018,11 @@ var Alert = (function () {
         this.type = 'wait';
         this.removeAnimation();
     };
-
     Alert.prototype.addAnimation = function () {
         this.element.classList.add(this.typeAnimation);
         this.element.classList.add(this.durationAnimation);
         this.element.classList.add(this.animationIn);
     };
-
     Alert.prototype.removeAnimation = function () {
         var self = this;
         setTimeout(function () {
@@ -1091,7 +1033,6 @@ var Alert = (function () {
     };
     return Alert;
 })();
-
 var Toggle = (function () {
     function Toggle() {
     }
@@ -1099,7 +1040,6 @@ var Toggle = (function () {
         this.initNavBar();
         this.initDropDown();
     };
-
     Toggle.initNavBar = function () {
         var navbars = document.querySelectorAll('.navbar-toggle[data-toggle="collapse"]');
         var n = navbars.length;
@@ -1114,7 +1054,6 @@ var Toggle = (function () {
             }
         }
     };
-
     Toggle.initDropDown = function () {
         var dropdownsToggle = document.querySelectorAll('.dropdown-toggle[data-toggle="dropdown"]');
         var n = dropdownsToggle.length;
@@ -1134,7 +1073,8 @@ var Toggle = (function () {
                             dropdownMenu.classList.remove('ui-fade-out-up');
                             dropdown.classList.remove('open');
                         }, 500);
-                    } else {
+                    }
+                    else {
                         dropdown.classList.add('open');
                         dropdownMenu.classList.add('ui-ease');
                         dropdownMenu.classList.add('ui-0-5s');
@@ -1151,7 +1091,6 @@ var Toggle = (function () {
             }
         }
     };
-
     Toggle.clearDropDown = function () {
         var dropdownsToggle = document.querySelectorAll('.dropdown-toggle[data-toggle="dropdown"]');
         var n = dropdownsToggle.length;
@@ -1175,7 +1114,6 @@ var Toggle = (function () {
     };
     return Toggle;
 })();
-
 var Utils = (function () {
     function Utils() {
     }
@@ -1196,23 +1134,19 @@ var Utils = (function () {
             }
         }
     };
-
     Utils.reloadCSS = function (element, href) {
         var queryString = '?reload=' + new Date().getTime();
         element.href = href.replace(/\?.*|$/, queryString);
     };
     return Utils;
 })();
-
 window.onload = function () {
     Toggle.init();
 };
-
 document.onclick = function () {
     Toggle.clearDropDown();
     Select.clear();
 };
-
 /*
 * Return name of month
 */
@@ -1233,7 +1167,6 @@ Date.prototype.getMonthName = function () {
     ];
     return month_names[this.getMonth()];
 };
-
 /*
 * Return month abbreviation
 */
@@ -1252,10 +1185,8 @@ Date.prototype.getMonthAbbr = function () {
         'Nov',
         'Dec'
     ];
-
     return month_abbrs[this.getMonth()];
 };
-
 /*
 * Return full day of week name
 */
@@ -1271,7 +1202,6 @@ Date.prototype.getDayFull = function () {
     ];
     return days_full[this.getDay()];
 };
-
 /*
 *  Return full day of week name
 */
@@ -1287,7 +1217,6 @@ Date.prototype.getDayAbbr = function () {
     ];
     return days_abbr[this.getDay()];
 };
-
 /*
 * Return the day of year 1-365
 */
@@ -1295,7 +1224,6 @@ Date.prototype.getDayOfYear = function () {
     var onejan = new Date(this.getFullYear(), 0, 1);
     return Math.ceil((this.getTime() - onejan.getTime()) / 86400000);
 };
-
 /*
 * Return the day suffix (st,nd,rd,th)
 */
@@ -1305,7 +1233,6 @@ Date.prototype.getDaySuffix = function () {
     var val = d % 100;
     return (sfx[(val - 20) % 10] || sfx[val] || sfx[0]);
 };
-
 /*
 * Return Week of Year
 */
@@ -1313,7 +1240,6 @@ Date.prototype.getWeekOfYear = function () {
     var onejan = new Date(this.getFullYear(), 0, 1);
     return Math.ceil((((this.getTime() - onejan.getTime()) / 86400000) + onejan.getDay() + 1) / 7);
 };
-
 /*
 * return week of month
 */
@@ -1321,14 +1247,12 @@ Date.prototype.getWeekOfMonth = function () {
     var firstDayOfMonth = new Date(this.getFullYear(), this.getMonth(), 1).getDay();
     return Math.ceil((this.getDate() + firstDayOfMonth) / 7);
 };
-
 /*
 * Return if it is a leap year or not
 */
 Date.prototype.isLeapYear = function () {
     return (this.getFullYear() % 4 === 0 || (this.getFullYear() % 100 !== 0 && this.getFullYear() % 400 === 0));
 };
-
 /*
 * Return Number of Days in a given month
 */
@@ -1347,10 +1271,8 @@ Date.prototype.getMonthDayCount = function () {
         30,
         31
     ];
-
     return month_day_counts[this.getMonth()];
 };
-
 /*
 * back a month
 */
@@ -1368,7 +1290,6 @@ Date.prototype.previousMonth = function () {
     this.setMonth(month);
     this.setFullYear(year);
 };
-
 /*
 * next an month
 */
@@ -1386,21 +1307,18 @@ Date.prototype.nextMonth = function () {
     this.setMonth(month);
     this.setFullYear(year);
 };
-
 /*
 * returns clone date
 */
 Date.prototype.clone = function () {
     return new Date(this.getFullYear(), this.getMonth(), this.getDate());
 };
-
 /*
-* returns true if the date is valid
-*/
+ * returns true if the date is valid
+ */
 Date.prototype.isValid = function () {
     return !isNaN(this.getTime());
 };
-
 /*
 * return Format date
 */
@@ -1410,7 +1328,6 @@ Date.prototype.format = function (dateFormat) {
     */
     dateFormat = dateFormat.split("");
     var date = this.getDate(), month = this.getMonth(), hours = this.getHours(), minutes = this.getMinutes(), seconds = this.getSeconds();
-
     /*
     * get all date properties
     * ( based on PHP date object functionality )
@@ -1441,7 +1358,6 @@ Date.prototype.format = function (dateFormat) {
         i: minutes < 10 ? '0' + minutes : minutes,
         s: seconds < 10 ? '0' + seconds : seconds
     };
-
     /*
     * loop through format array of characters and add matching data
     * else add the format character (:,/, etc.)
@@ -1452,14 +1368,13 @@ Date.prototype.format = function (dateFormat) {
         var f = dateFormat[i];
         if (f.match(/[a-zA-Z]/g)) {
             date_string += date_props[f] ? date_props[f] : '';
-        } else {
+        }
+        else {
             date_string += f;
         }
     }
-
     return date_string;
 };
-
 /*
 * parse string date to object Date
 * @param string date
@@ -1526,12 +1441,10 @@ Date.prototype.parse = function (dateString, pattern) {
     }
     return date;
 };
-
 Element.prototype.removeChildren = function () {
     while (this.childNodes.length > 0) {
         this.removeChild(this.childNodes[0]);
     }
 };
-
 var author = 'Yonatan Alexis Quintero Rodriguez';
 var version = '0.1';

@@ -1543,35 +1543,21 @@
 
 
 
-@-webkit-keyframes translate-x { 
-   0% { 
-        
-        -webkit-transform: translateX(-2000px); 
-    } 
-    100% { 
-        
-        -webkit-transform: translateX(30px); 
-    } 
-    100% { 
-        -webkit-transform: translateX(0); 
-    } 
-} 
-
-@keyframes  translate-x{ 
-   0% { 
-        
-        -webkit-transform: translateX(-2000px); 
-    } 
-    60% { 
-        
-        -webkit-transform: translateX(30px); 
-    } 
-    100% { 
-        -webkit-transform: translateX(0); 
-    } 
-} 
-
-.ui-translate-x { 
-    -webkit-animation-name: translate-x; 
-    animation-name: translate-x; 
+@keyframes slider {
+	0% { transform: translateX(0%); }
+	20% { transform: translateX(0%); }
+/* 	25% { transform: translateX(-20%); } */
+/* 	55% { transform: translateX(-60%); } */
+	100% { transform: translateX(-100%); }
+}
+@-webkit-keyframes slider{
+	0% { transform: translateX(0%); }
+	20% { transform: translateX(0%); }
+/* 	25% { transform: translateX(-20%); } */
+/* 	55% { transform: translateX(-60%); } */
+	100% { transform: translateX(-100%); }
+}
+.ui-slider{ 
+    -webkit-animation-name: slider; 
+animation-name:slider;
 }
