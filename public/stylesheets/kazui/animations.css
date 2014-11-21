@@ -1540,24 +1540,3 @@
     -webkit-animation-name: wobble; 
     animation-name: wobble; 
 }
-
-
-
-@keyframes slider {
-	0% { transform: translateX(0%); }
-	20% { transform: translateX(0%); }
-/* 	25% { transform: translateX(-20%); } */
-/* 	55% { transform: translateX(-60%); } */
-	100% { transform: translateX(-100%); }
-}
-@-webkit-keyframes slider{
-	0% { transform: translateX(0%); }
-	20% { transform: translateX(0%); }
-/* 	25% { transform: translateX(-20%); } */
-/* 	55% { transform: translateX(-60%); } */
-	100% { transform: translateX(-100%); }
-}
-.ui-slider{ 
-    -webkit-animation-name: slider; 
-animation-name:slider;
-}

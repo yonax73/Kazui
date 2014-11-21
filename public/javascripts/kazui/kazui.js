@@ -14,6 +14,12 @@ var Animation = (function () {
     }
     return Animation;
 })();
+var ETypeCalendar;
+(function (ETypeCalendar) {
+    ETypeCalendar[ETypeCalendar["DAY"] = 0] = "DAY";
+    ETypeCalendar[ETypeCalendar["MONTH"] = 1] = "MONTH";
+    ETypeCalendar[ETypeCalendar["YEAR"] = 2] = "YEAR";
+})(ETypeCalendar || (ETypeCalendar = {}));
 var Calendar = (function () {
     function Calendar(element, options) {
         this.days = ['Sun', 'Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat'];
@@ -21,9 +27,13 @@ var Calendar = (function () {
         this.abbMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         this.yearGregorian = 1582;
         this.today = new Date();
+        this.type = 0 /* DAY */;
         this.element = element;
         this.options = options;
-        this.animationOut = new Animation('ui-ease', 'ui-flip-out-y', 'ui-0-2s');
+        this.animationNext = new Animation('ui-ease', 'ui-flip-out-y', 'ui-0-2s');
+        this.animationBack = new Animation('ui-ease', 'ui-flip-out-y', 'ui-0-2s');
+        this.animationUp = new Animation('ui-ease', 'ui-flip-out-x', 'ui-0-2s');
+        this.animationDown = new Animation('ui-ease', 'ui-flip-out-x', 'ui-0-2s');
         this.setOptions();
         this.displayDate = this.today.clone();
         this.displayDate.setDate(1);
@@ -102,11 +112,13 @@ var Calendar = (function () {
             }
             this.data.items.push(item);
         }
+        this.type = 0 /* DAY */;
     };
     Calendar.prototype.dataMonth = function () {
         var year = this.displayDate.getFullYear();
         this.data.year = year;
         this.data.currentMonth = year === this.today.getFullYear() ? this.today.getMonth() : 0;
+        this.type = 1 /* MONTH */;
     };
     Calendar.prototype.dataYear = function () {
         var year = this.displayDate.getFullYear();
@@ -114,6 +126,7 @@ var Calendar = (function () {
         this.data.year = year;
         this.data.currentYear = year <= this.today.getFullYear() && limitYear >= this.today.getFullYear() ? this.today.getFullYear() : year;
         this.data.range = year + ' - ' + limitYear;
+        this.type = 2 /* YEAR */;
     };
     Calendar.prototype.createCalendar = function () {
         var row = document.createElement('div');
@@ -209,10 +222,8 @@ var Calendar = (function () {
         col.className = 'col-sm-12';
         var panelDefault = document.createElement('div');
         panelDefault.className = 'ui-calendar panel panel-default';
-        this.panelBody = document.createElement('div');
-        this.panelBody.className = 'panel-body';
-        this.contentTable = document.createElement('div');
-        this.contentTable.className = 'ui-calendar-content-table';
+        var panelBody = document.createElement('div');
+        panelBody.className = 'panel-body';
         /*
         * Create the table
         */
@@ -222,35 +233,24 @@ var Calendar = (function () {
         this.tbody = document.createElement('tbody');
         this.table.appendChild(thead);
         this.table.appendChild(this.tbody);
-        this.contentTable.appendChild(this.table);
-        this.panelBody.appendChild(this.contentTable);
-        panelDefault.appendChild(this.panelBody);
+        panelBody.appendChild(this.table);
+        panelDefault.appendChild(panelBody);
         col.appendChild(panelDefault);
         row.appendChild(col);
         return row;
     };
-    Calendar.prototype.clearTable = function (callback) {
-        var oldTable = this.table.cloneNode(true);
-        var oldContent = document.createElement('div');
-        oldContent.className = 'ui-calendar-content-table';
-        oldContent.appendChild(oldTable);
-        this.panelBody.insertBefore(oldContent, this.panelBody.childNodes[0]);
-        this.table.tHead.removeChildren();
-        this.tbody.removeChildren();
-        callback(this);
-        oldContent.classList.add(this.animationOut.type);
-        oldContent.classList.add(this.animationOut.fn);
-        oldContent.classList.add(this.animationOut.time);
-        // this.table.classList.add('ui-below');
-        var self = this;
+    Calendar.prototype.clearTable = function (callback, animation) {
+        var _this = this;
+        this.table.classList.add(animation.type);
+        this.table.classList.add(animation.fn);
+        this.table.classList.add(animation.time);
         setTimeout(function () {
-            oldContent.classList.remove(self.animationOut.type);
-            oldContent.classList.remove(self.animationOut.fn);
-            oldContent.classList.remove(self.animationOut.time);
-            //this.table.classList.remove('ui-below');  
-            //oldTable.tHead.removeChildren();   
-            // oldContent.removeChildren();
-            // callback(this);
+            _this.table.classList.remove(animation.type);
+            _this.table.classList.remove(animation.fn);
+            _this.table.classList.remove(animation.time);
+            _this.table.tHead.removeChildren();
+            _this.tbody.removeChildren();
+            callback(_this);
         }, 200);
     };
     Calendar.prototype.calendarDay = function (self) {
@@ -264,7 +264,7 @@ var Calendar = (function () {
             e.preventDefault();
             self.displayDate.setDate(1);
             self.dataMonth();
-            self.clearTable(self.calendarMonth);
+            self.clearTable(self.calendarMonth, self.animationUp);
         };
         /*
         * add Event to navigation
@@ -273,8 +273,7 @@ var Calendar = (function () {
             self.displayDate.setDate(1);
             self.displayDate.previousMonth();
             self.dataDay();
-            //self.clearTable();
-            self.calendarDay();
+            self.clearTable(self.calendarDay, self.animationBack);
         };
         self.btnCurrent.onclick = function () {
             /*
@@ -287,15 +286,14 @@ var Calendar = (function () {
                 self.displayDate = self.today.clone();
                 self.displayDate.setDate(1);
                 self.dataDay();
-                //self.clearTable();
-                self.calendarDay();
+                self.clearTable(self.calendarDay, self.animationUp);
             }
         };
         self.btnNext.onclick = function () {
             self.displayDate.setDate(1);
             self.displayDate.nextMonth();
             self.dataDay();
-            self.clearTable(self.calendarDay);
+            self.clearTable(self.calendarDay, self.animationNext);
         };
         self.loadLegendMatchMedia();
         /*
@@ -329,18 +327,39 @@ var Calendar = (function () {
             * then change self value for the selected date.
             */
             td.onclick = function () {
-                if (this.options && this.options.isInput) {
-                    if (this.classList.contains('text-muted')) {
-                        if (this.textContent > 20) {
-                            this.displayDate.previousMonth();
-                        }
-                        else {
-                            this.displayDate.nextMonth();
-                        }
+                self.selectCell(this);
+                if (this.classList.contains('text-muted')) {
+                    if (this.textContent > 20) {
+                        /*self.displayDate.setDate(this.textContent);
+                        self.displayDate.previousMonth();
+                        self.dataDay();
+                        self.data.currentDay =  self.displayDate.getDate();
+                        self.clearTable(self.calendarDay,self.animationBack);*/
+                        self.displayDate.setDate(1);
+                        self.displayDate.nextMonth();
+                        self.dataDay();
+                        self.displayDate.setDate(this.textContent);
+                        self.data.currentDay = self.displayDate.getDate();
+                        self.clearTable(self.calendarDay, self.animationBack);
                     }
-                    this.displayDate.setDate(this.textContent);
-                    var tmpInput = this.options.input;
-                    tmpInput.value = this.displayDate.format(tmpInput.dataset.date);
+                    else {
+                        /*self.displayDate.setDate(this.textContent);
+                        self.displayDate.nextMonth();
+                        self.dataDay();
+                        self.data.currentDay =  self.displayDate.getDate();
+                        self.clearTable(self.calendarDay,self.animationNext);*/
+                        self.displayDate.setDate(1);
+                        self.displayDate.nextMonth();
+                        self.dataDay();
+                        self.displayDate.setDate(this.textContent);
+                        self.data.currentDay = self.displayDate.getDate();
+                        self.clearTable(self.calendarDay, self.animationNext);
+                    }
+                }
+                if (self.options && self.options.isInput) {
+                    self.displayDate.setDate(this.textContent);
+                    var tmpInput = self.options.input;
+                    tmpInput.value = self.displayDate.format(tmpInput.dataset.date);
                     tmpInput.onchange();
                     tmpInput.onblur();
                     self.close();
@@ -363,17 +382,21 @@ var Calendar = (function () {
     * Load the legend of the days of week
     */
     Calendar.prototype.loadLegend = function (array) {
-        if (this.legend)
-            this.legend.removeChildren();
-        this.legend = document.createElement('tr');
-        this.table.tHead.appendChild(this.legend);
-        for (var i = 0; i < 7; i++) {
-            var th = document.createElement('th');
-            th.textContent = array[i];
-            this.legend.appendChild(th);
+        if (this.type === 0 /* DAY */) {
+            if (this.legend)
+                this.legend.removeChildren();
+            this.legend = document.createElement('tr');
+            this.table.tHead.appendChild(this.legend);
+            for (var i = 0; i < 7; i++) {
+                var th = document.createElement('th');
+                th.textContent = array[i];
+                this.legend.appendChild(th);
+            }
         }
     };
     Calendar.prototype.calendarMonth = function (self) {
+        if (!self)
+            self = this;
         self.title.text = self.data.year;
         /*
         * add event to change view type by range years.
@@ -381,8 +404,7 @@ var Calendar = (function () {
         self.title.onclick = function (e) {
             e.preventDefault();
             self.dataYear();
-            ////self.clearTable();
-            self.calendarYear();
+            self.clearTable(self.calendarYear, self.animationUp);
         };
         /*
         * add Event to navigation
@@ -392,8 +414,7 @@ var Calendar = (function () {
             if (year > self.yearGregorian) {
                 self.displayDate = new Date(year, 0, 1);
                 self.dataMonth();
-                //self.clearTable();
-                self.calendarMonth();
+                self.clearTable(self.calendarMonth, self.animationBack);
             }
         };
         self.btnCurrent.onclick = function () {
@@ -404,15 +425,13 @@ var Calendar = (function () {
             if (self.displayDate.getFullYear() !== self.today.getFullYear()) {
                 self.displayDate = self.today.clone();
                 self.dataMonth();
-                //self.clearTable();
-                self.calendarMonth();
+                self.clearTable(self.calendarMonth, self.animationUp);
             }
         };
         self.btnNext.onclick = function () {
             self.displayDate = new Date(self.displayDate.getFullYear() + 1, 0, 1);
             self.dataMonth();
-            //self.clearTable();
-            self.calendarMonth();
+            self.clearTable(self.calendarMonth, self.animationNext);
         };
         /*
         * Create all months of a year.
@@ -438,8 +457,7 @@ var Calendar = (function () {
                 self.displayDate.setMonth(self.abbMonths.indexOf(this.textContent));
                 self.displayDate.setDate(1);
                 self.dataDay();
-                //                    self.clearTable();
-                self.calendarDay();
+                self.clearTable(self.calendarDay, self.animationDown);
             };
             /*
             * If mod is greater than zero and is module of 3,
@@ -452,50 +470,48 @@ var Calendar = (function () {
             mod++;
         }
     };
-    Calendar.prototype.calendarYear = function () {
-        var _this = this;
-        this.title.text = this.data.range;
-        this.title.onclick = function (e) {
+    Calendar.prototype.calendarYear = function (self) {
+        if (!self)
+            self = this;
+        self.title.text = self.data.range;
+        self.title.onclick = function (e) {
             e.preventDefault();
         };
         /*
         * add Event to navigation
         */
-        this.btnBack.onclick = function () {
-            var year = _this.displayDate.getFullYear() - 12;
-            if (year <= _this.yearGregorian) {
-                year = _this.yearGregorian;
+        self.btnBack.onclick = function () {
+            var year = self.displayDate.getFullYear() - 12;
+            if (year <= self.yearGregorian) {
+                year = self.yearGregorian;
             }
-            _this.displayDate = new Date(year, 0, 1);
-            _this.dataYear();
-            //this.clearTable();
-            _this.calendarYear();
+            self.displayDate = new Date(year, 0, 1);
+            self.dataYear();
+            self.clearTable(self.calendarYear, self.animationBack);
         };
-        this.btnCurrent.onclick = function () {
+        self.btnCurrent.onclick = function () {
             /*
            * If not is the current year,
            * go to current range year.
            */
-            if (_this.displayDate.getFullYear() !== _this.today.getFullYear()) {
-                _this.displayDate = _this.today.clone();
-                _this.dataYear();
-                //this.clearTable();
-                _this.calendarYear();
+            if (self.displayDate.getFullYear() !== self.today.getFullYear()) {
+                self.displayDate = self.today.clone();
+                self.dataYear();
+                self.clearTable(self.calendarYear, self.animationUp);
             }
         };
-        this.btnNext.onclick = function () {
-            _this.displayDate = new Date(_this.displayDate.getFullYear() + 12, 0, 1);
-            _this.dataYear();
-            //this.clearTable();
-            _this.calendarYear();
+        self.btnNext.onclick = function () {
+            self.displayDate = new Date(self.displayDate.getFullYear() + 12, 0, 1);
+            self.dataYear();
+            self.clearTable(self.calendarYear, self.animationNext);
         };
         /*
         * Create range year.
         */
         var tr = document.createElement('tr');
         var mod = 1;
-        var year = this.data.year;
-        var currentYear = this.data.currentYear;
+        var year = self.data.year;
+        var currentYear = self.data.currentYear;
         for (var j = 0; j < 12; j++) {
             var td = document.createElement('td');
             /*
@@ -510,19 +526,17 @@ var Calendar = (function () {
             /*
             * add event to go to year selected.
             */
-            var self = this;
             td.onclick = function () {
                 self.displayDate.setFullYear(this.textContent);
                 self.dataMonth();
-                //                    self.clearTable();
-                self.calendarMonth();
+                self.clearTable(self.calendarMonth, self.animationDown);
             };
             /*
             * If mod is greater than zero and is module of 3,
             * add new row.
             */
             if (mod > 1 && mod % 3 === 0) {
-                this.tbody.appendChild(tr);
+                self.tbody.appendChild(tr);
                 tr = document.createElement('tr');
             }
             mod++;
@@ -546,14 +560,16 @@ var Calendar = (function () {
                 var row = this.displayDate.getWeekOfMonth();
                 this.displayDate.setDate(1);
                 this.dataDay();
-                //this.clearTable();
-                this.calendarDay();
+                this.clearTable(this.calendarDay, this.animationUp);
                 var cell = this.table.rows[row].cells[col];
-                this.selectedCell.classList.remove('bg-primary');
-                cell.classList.add('bg-primary');
-                this.selectedCell = cell;
+                this.selectCell(cell);
             }
         }
+    };
+    Calendar.prototype.selectCell = function (cell) {
+        this.selectedCell.classList.remove('bg-primary');
+        cell.classList.add('bg-primary');
+        this.selectedCell = cell;
     };
     /* JavaScript Media Queries */
     Calendar.prototype.mediaQuery = function () {

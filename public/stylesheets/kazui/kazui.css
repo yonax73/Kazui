@@ -128,13 +128,6 @@
 /*
 * Calendar
 */
-.ui-calendar.panel {
-    max-width: 265px;
-}
-.ui-calendar-content-table{
-  display: table-cell;
-  width: 100%;
-}
 .ui-calendar>.btn-group.btn-group-justified {
 	padding-bottom: 5px;
 }
