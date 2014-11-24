@@ -13,11 +13,10 @@ var ETypeClock;
     ETypeClock[ETypeClock["COUNT_DOWN"] = 2] = "COUNT_DOWN";
     ETypeClock[ETypeClock["COUNT_UP"] = 3] = "COUNT_UP";
 })(ETypeClock || (ETypeClock = {}));
-
 /**
-* Clock
-* @class Clock
-*/
+ * Clock
+ * @class Clock
+ */
 var Clock = (function () {
     /**
     * constructor
@@ -27,9 +26,8 @@ var Clock = (function () {
         this.element = element;
         this.iconUp = 'fa fa-chevron-up';
         this.iconDown = 'fa fa-chevron-down';
-        this.today = new Date();
-        this.animationUp = new Animation('ui-ease-in', 'ui-fade-in-up', 'ui-0-2s');
-        this.animationDown = new Animation('ui-ease-in', 'ui-fade-in-down', 'ui-0-2s');
+        this.animationUp = new Animation('ui-ease-in', 'ui-fade-in-up', 'ui-0-2s', 200);
+        this.animationDown = new Animation('ui-ease-in', 'ui-fade-in-down', 'ui-0-2s', 200);
         this.isStop = true;
         this.create();
     }
@@ -39,35 +37,32 @@ var Clock = (function () {
     */
     Clock.prototype.create = function () {
         /**
-        * Create HTMLElements.
-        */
+         * Create HTMLElements.
+         */
         this.panel = document.createElement('div');
         this.panelBody = document.createElement('div');
         this.createTable();
-
         /**
-        * add classes.
-        */
+         * add classes.
+         */
         this.element.className = 'ui-clock';
         this.panel.className = 'panel panel-primary';
         this.panelBody.className = 'ui-clock panel-body';
-
         /**
-        * append Nodes.
-        */
+         * append Nodes.
+         */
         this.panelBody.appendChild(this.table);
         this.panel.appendChild(this.panelBody);
         this.element.appendChild(this.panel);
     };
-
     /**
     * Create Table HTML
     * @method createTable
     */
     Clock.prototype.createTable = function () {
         /**
-        * Create HTMLElements.
-        */
+         * Create HTMLElements.
+         */
         this.table = document.createElement('table');
         var tbody = document.createElement('tbody');
         var tr = document.createElement('tr');
@@ -85,18 +80,16 @@ var Clock = (function () {
         this.time = document.createElement('td');
         var iconUp = document.createElement('i');
         var iconDown = document.createElement('i');
-
         /**
-        * add classes.
-        */
+         * add classes.
+         */
         this.table.className = 'ui-clock table table-condensed';
         tr.className = 'ui-clock-controls text-primary';
         iconUp.className = this.iconUp;
         iconDown.className = this.iconDown;
-
         /**
-        * create row for up controls
-        */
+         * create row for up controls
+         */
         this.upHour.appendChild(iconUp.cloneNode());
         this.upMinutes.appendChild(iconUp.cloneNode());
         this.upSeconds.appendChild(iconUp.cloneNode());
@@ -107,25 +100,20 @@ var Clock = (function () {
         tr.appendChild(this.upTime);
         tbody.appendChild(tr);
         this.addEventsUpControls();
-
         /**
-        * create row for display the time
-        */
+         * create row for display the time
+         */
         tr = document.createElement('tr');
         tr.className = 'bg-primary';
-        this.hour.textContent = '00';
-        this.minutes.textContent = '00';
-        this.seconds.textContent = '00';
-        this.time.textContent = '--';
+        this.clearTime();
         tr.appendChild(this.hour);
         tr.appendChild(this.minutes);
         tr.appendChild(this.seconds);
         tr.appendChild(this.time);
         tbody.appendChild(tr);
-
         /**
-        * create row for down controls
-        */
+         * create row for down controls
+         */
         tr = document.createElement('tr');
         tr.className = 'ui-clock-controls text-primary';
         this.downHour.appendChild(iconDown.cloneNode());
@@ -138,28 +126,45 @@ var Clock = (function () {
         tr.appendChild(this.downTime);
         tbody.appendChild(tr);
         this.addEventsDownControls();
-
         /**
-        * add node tbody
-        */
+         * add node tbody
+         */
         this.table.appendChild(tbody);
     };
-
+    /**
+    * clear clock
+    * @method clearTime
+    */
+    Clock.prototype.clearTime = function () {
+        this.hour.textContent = '00';
+        this.minutes.textContent = '00';
+        this.seconds.textContent = '00';
+        this.time.textContent = '--';
+    };
     /**
     * add events for Up Controls
     * @method addEventsUpControls
     */
     Clock.prototype.addEventsUpControls = function () {
+        var _this = this;
         this.upHour.onclick = function () {
+            var max = _this.type === 2 /* COUNT_DOWN */ || _this.type === 3 /* COUNT_UP */ ? 99 : 59;
+            _this.animationUp.run(_this.hour);
+            _this.hour.textContent = _this.upDigit(_this.hour.textContent, max);
         };
         this.upMinutes.onclick = function () {
+            _this.animationUp.run(_this.minutes);
+            _this.minutes.textContent = _this.upDigit(_this.minutes.textContent, 59);
         };
         this.upSeconds.onclick = function () {
+            _this.animationUp.run(_this.seconds);
+            _this.seconds.textContent = _this.upDigit(_this.seconds.textContent, 59);
         };
         this.upTime.onclick = function () {
+            _this.animationUp.run(_this.time);
+            _this.time.textContent = _this.time.textContent === 'AM' ? 'PM' : 'AM';
         };
     };
-
     /**
     * add events for Down Controls
     * @method addEventsDownControls
@@ -174,57 +179,308 @@ var Clock = (function () {
         this.downTime.onclick = function () {
         };
     };
-
     /**
-    * Start clock in the standard time
-    * @method standardTime
+    * Add an zero in front, if the digit is less that ten
+    * @param {any} digit
+    * @return {string} digit fixed
+    * @method fixDigit
     */
+    Clock.prototype.fixDigit = function (digit) {
+        if (digit < 10) {
+            digit = '0' + digit;
+        }
+        return digit;
+    };
+    /**
+    * hidden time column
+    * @method hiddenTimeColumn
+    */
+    Clock.prototype.hiddenTimeColumn = function () {
+        if (!this.upTime.classList.contains('hidden'))
+            this.upTime.classList.add('hidden');
+        if (!this.time.classList.contains('hidden'))
+            this.time.classList.add('hidden');
+        if (!this.downTime.classList.contains('hidden'))
+            this.downTime.classList.add('hidden');
+    };
+    /**
+    * show time column
+    * @method showTimeColumn
+    */
+    Clock.prototype.showTimeColumn = function () {
+        if (this.upTime.classList.contains('hidden'))
+            this.upTime.classList.remove('hidden');
+        if (this.time.classList.contains('hidden'))
+            this.time.classList.remove('hidden');
+        if (this.downTime.classList.contains('hidden'))
+            this.downTime.classList.remove('hidden');
+    };
+    /**
+    * Digit increase to the maximum number
+    * @param {any} digit
+    * @param {number} max
+    * @method upDigit
+    */
+    Clock.prototype.upDigit = function (digit, max) {
+        digit++;
+        if (digit > max)
+            digit = 0;
+        return this.fixDigit(digit);
+    };
+    /**
+    * Decrement digit to the minimum number and start over
+    * @param {any} digit
+    * @param {number} min
+    * @param {number} start
+    * @method downDigit
+    */
+    Clock.prototype.downDigit = function (digit, min, start) {
+        digit--;
+        if (digit < min)
+            digit = start;
+        return this.fixDigit(digit);
+    };
+    /**
+   * Start clock in the standard time
+   * @method standardTime
+   */
     Clock.prototype.standardTime = function () {
+        this.isStop = false;
         this.type = 0 /* STANDARD */;
+        this.showTimeColumn();
+        this.setDisabledControls(true);
+        this.runStandardTime();
     };
-
     /**
-    * Start clock in the military time
-    * @method standardTime
-    */
+   * run clock in the standard time
+   * @method runStandardTime
+   */
+    Clock.prototype.runStandardTime = function () {
+        var _this = this;
+        var today = new Date();
+        var h = today.getHours();
+        var m = today.getMinutes();
+        var s = today.getSeconds();
+        var t = h < 12 ? 'AM' : 'PM';
+        if (h > 12)
+            h = h - 12;
+        h = this.fixDigit(h);
+        m = this.fixDigit(m);
+        s = this.fixDigit(s);
+        if (this.seconds.textContent != s) {
+            this.animationDown.run(this.seconds);
+            this.seconds.textContent = s;
+        }
+        if (this.minutes.textContent != m) {
+            this.animationDown.run(this.minutes);
+            this.minutes.textContent = m;
+        }
+        if (this.hour.textContent != h) {
+            this.animationDown.run(this.hour);
+            this.hour.textContent = h;
+        }
+        if (this.time.textContent != t) {
+            this.animationDown.run(this.time);
+            this.time.textContent = t;
+        }
+        this.timeOut = setTimeout(function () {
+            _this.runStandardTime();
+        }, 1000);
+    };
+    /**
+   * Start clock in the military time
+   * @method militaryTime
+   */
     Clock.prototype.militaryTime = function () {
+        this.isStop = false;
         this.type = 1 /* MILITARY */;
+        this.hiddenTimeColumn();
+        this.setDisabledControls(true);
+        this.runMilitaryTime();
     };
-
     /**
-    * Start clock with the counting down
-    * @method countDown
-    */
+   * Run clock in the military time
+   * @method runMilitaryTime
+   */
+    Clock.prototype.runMilitaryTime = function () {
+        var _this = this;
+        var today = new Date();
+        var h = today.getHours();
+        var m = today.getMinutes();
+        var s = today.getSeconds();
+        h = this.fixDigit(h);
+        m = this.fixDigit(m);
+        s = this.fixDigit(s);
+        if (this.seconds.textContent != s) {
+            this.animationDown.run(this.seconds);
+            this.seconds.textContent = s;
+        }
+        if (this.minutes.textContent != m) {
+            this.animationDown.run(this.minutes);
+            this.minutes.textContent = m;
+        }
+        if (this.hour.textContent != h) {
+            this.animationDown.run(this.hour);
+            this.hour.textContent = h;
+        }
+        this.timeOut = setTimeout(function () {
+            _this.runMilitaryTime();
+        }, 1000);
+    };
+    /**
+   * Start clock with the counting down
+   * @method countDown
+   */
     Clock.prototype.countDown = function () {
+        this.isStop = false;
         this.type = 2 /* COUNT_DOWN */;
     };
-
     /**
-    * Start clock with the counting up
-    * @method countUp
-    */
+   * Start clock with the counting up
+   * @method countUp
+   */
     Clock.prototype.countUp = function () {
+        this.isStop = false;
         this.type = 3 /* COUNT_UP */;
+    };
+    /**
+    * set Date
+    * @param {Date} date
+    * @method setDate
+    */
+    Clock.prototype.setDate = function (date) {
+        this.isStop = false;
+        this.type = 0 /* STANDARD */;
+        this.showTimeColumn();
+        this.setDisabledControls(true);
+        this.runStandardTime();
+    };
+    /**
+   * Start clock
+   * @method start
+   */
+    Clock.prototype.start = function () {
+        switch (this.type) {
+            case 0 /* STANDARD */:
+                break;
+            case 1 /* MILITARY */:
+                break;
+            case 2 /* COUNT_DOWN */:
+                break;
+            case 3 /* COUNT_UP */:
+                break;
+        }
+    };
+    /**
+    * Stop clock
+    * @method stop
+    */
+    Clock.prototype.stop = function () {
+        if (!this.isStop) {
+            if (this.timeOut) {
+                this.isStop = true;
+                clearTimeout(this.timeOut);
+                this.setDisabledControls(false);
+            }
+        }
+    };
+    /**
+   * Reset clock
+   * @method reset
+   */
+    Clock.prototype.reset = function () {
+        this.stop();
+        this.clearTime();
+    };
+    /**
+   * Set disabled controls
+   * @param {boolean} disabled
+   * @method setDisabledControls
+   */
+    Clock.prototype.setDisabledControls = function (disabled) {
+        var rowControlsUp = this.table.rows[0];
+        var rowControlsDown = this.table.rows[2];
+        this.disabledControl = disabled;
+        if (disabled) {
+            if (!rowControlsUp.classList.contains('disabled')) {
+                rowControlsUp.classList.add('disabled');
+            }
+            if (!rowControlsDown.classList.contains('disabled')) {
+                rowControlsDown.classList.add('disabled');
+            }
+        }
+        else {
+            if (rowControlsUp.classList.contains('disabled')) {
+                rowControlsUp.classList.remove('disabled');
+            }
+            if (rowControlsDown.classList.contains('disabled')) {
+                rowControlsDown.classList.remove('disabled');
+            }
+        }
+    };
+    /**
+    * Is disabled controls
+    * @returns {boolean} disabled
+    * @method isDisabledControls
+    */
+    Clock.prototype.isDisabledControls = function () {
+        return this.disabledControl;
     };
     return Clock;
 })();
-
+/**
+ * Animation
+ * @class Animation
+ */
 var Animation = (function () {
-    function Animation(type, fn, time) {
+    /**
+    * constructor
+    * @param {string} type
+    * @param {string} fn
+    * @param {string} time
+    * @param {number} ms
+    */
+    function Animation(type, fn, time, ms) {
         this.type = type;
         this.fn = fn;
         this.time = time;
+        this.ms = ms;
     }
+    /**
+   * Run animation
+   * @param {HTMLElement} element
+   * @param {Function} callback
+   * @method run
+   */
+    Animation.prototype.run = function (element, callBack) {
+        var _this = this;
+        element.classList.add(this.type);
+        element.classList.add(this.fn);
+        element.classList.add(this.time);
+        this.timeOut = setTimeout(function () {
+            element.classList.remove(_this.type);
+            element.classList.remove(_this.fn);
+            element.classList.remove(_this.time);
+            if (callBack)
+                callBack();
+        }, this.ms);
+    };
+    /**
+    * Stop animation
+    * @method stop
+    */
+    Animation.prototype.stop = function () {
+        if (this.timeOut)
+            clearTimeout(this.timeOut);
+    };
     return Animation;
 })();
-
 var ETypeCalendar;
 (function (ETypeCalendar) {
     ETypeCalendar[ETypeCalendar["DAY"] = 0] = "DAY";
     ETypeCalendar[ETypeCalendar["MONTH"] = 1] = "MONTH";
     ETypeCalendar[ETypeCalendar["YEAR"] = 2] = "YEAR";
 })(ETypeCalendar || (ETypeCalendar = {}));
-
 var Calendar = (function () {
     function Calendar(element, options) {
         this.days = ['Sun', 'Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat'];
@@ -235,12 +491,12 @@ var Calendar = (function () {
         this.type = 0 /* DAY */;
         this.element = element;
         this.options = options;
-        this.animationIn = new Animation('ui-ease', 'ui-fade-in-down', 'ui-0-5s');
-        this.animationOut = new Animation('ui-ease', 'ui-fade-out-up', 'ui-0-5s');
-        this.animationNext = new Animation('ui-ease', 'ui-flip-out-y', 'ui-0-2s');
-        this.animationBack = new Animation('ui-ease', 'ui-flip-out-y', 'ui-0-2s');
-        this.animationUp = new Animation('ui-ease', 'ui-flip-out-x', 'ui-0-2s');
-        this.animationDown = new Animation('ui-ease', 'ui-flip-out-x', 'ui-0-2s');
+        this.animationIn = new Animation('ui-ease', 'ui-fade-in-down', 'ui-0-5s', 500);
+        this.animationOut = new Animation('ui-ease', 'ui-fade-out-up', 'ui-0-5s', 500);
+        this.animationNext = new Animation('ui-ease', 'ui-flip-out-y', 'ui-0-2s', 200);
+        this.animationBack = new Animation('ui-ease', 'ui-flip-out-y', 'ui-0-2s', 200);
+        this.animationUp = new Animation('ui-ease', 'ui-flip-out-x', 'ui-0-2s', 200);
+        this.animationDown = new Animation('ui-ease', 'ui-flip-out-x', 'ui-0-2s', 200);
         this.setOptions();
         this.displayDate = this.today.clone();
         this.displayDate.setDate(1);
@@ -263,37 +519,33 @@ var Calendar = (function () {
         this.data.currentDay = month === this.today.getMonth() && year === this.today.getFullYear() ? this.today.getDate() : 1;
         this.data.items = new Array();
         var previousTotalDays = 0;
-        var day = 0;
+        var day = 0; //The day to display on the calendar.
         var isPreviousDay = false;
         var isCurrentDay = true;
         var isNextDay = false;
-
         /*
-        * If the day week is greater than zero,
-        * necessary known how many days has the previous month.
-        */
+         * If the day week is greater than zero,
+         * necessary known how many days has the previous month.
+         */
         if (dayweek > 0) {
             var previousDate = this.displayDate.clone();
             previousDate.previousMonth();
             previousTotalDays = previousDate.getMonthDayCount();
-
             /*
-            * calculate the first day for display on the calendar
-            */
+             * calculate the first day for display on the calendar
+             */
             day = previousTotalDays - dayweek;
             if (day > 30)
                 day--;
             isPreviousDay = true;
             isCurrentDay = false;
         }
-
         for (var i = 0; i < 42; i++) {
             var item = {};
             day++;
             item.day = day;
             if (isPreviousDay) {
                 item.previousDay = true;
-
                 /*
                 *If the day is equals at  total days the
                 *previous month, is becasuse wiLL start
@@ -304,9 +556,9 @@ var Calendar = (function () {
                     isCurrentDay = true;
                     day = 0;
                 }
-            } else if (isCurrentDay) {
+            }
+            else if (isCurrentDay) {
                 item.currentDay = true;
-
                 /*
                 *If the day is equals at  total days the
                 *current month, is becasuse wiLL start
@@ -317,21 +569,20 @@ var Calendar = (function () {
                     isCurrentDay = false;
                     day = 0;
                 }
-            } else {
+            }
+            else {
                 item.nextDay = true;
             }
             this.data.items.push(item);
         }
         this.type = 0 /* DAY */;
     };
-
     Calendar.prototype.dataMonth = function () {
         var year = this.displayDate.getFullYear();
         this.data.year = year;
         this.data.currentMonth = year === this.today.getFullYear() ? this.today.getMonth() : 0;
         this.type = 1 /* MONTH */;
     };
-
     Calendar.prototype.dataYear = function () {
         var year = this.displayDate.getFullYear();
         var limitYear = year + 11;
@@ -340,55 +591,45 @@ var Calendar = (function () {
         this.data.range = year + ' - ' + limitYear;
         this.type = 2 /* YEAR */;
     };
-
     Calendar.prototype.createCalendar = function () {
         var row = document.createElement('div');
         var col = document.createElement('div');
         var panelDefault = document.createElement('div');
         var panelBody = document.createElement('div');
-
         row.className = 'row';
         col.className = 'col-sm-12 col-md-12';
         panelDefault.className = 'ui-calendar panel panel-default panel-main';
         panelBody.className = 'panel-body';
-
         panelBody.appendChild(this.header());
         panelBody.appendChild(this.body());
         panelDefault.appendChild(panelBody);
         col.appendChild(panelDefault);
         row.appendChild(col);
-
         /*
         * add calendar to parent
         */
         this.element.appendChild(row);
     };
-
     /*
-    * Create calendar header HTML.
-    * @returns HTMLElement
-    */
+     * Create calendar header HTML.
+     * @returns HTMLElement
+     */
     Calendar.prototype.header = function () {
         var row = document.createElement('div');
         row.className = 'row';
-
         var colTitle = document.createElement('div');
         colTitle.className = 'col-sm-6';
-
         /*
         * add the title
         */
         this.title = document.createElement('a');
         this.title.className = 'ui-title';
         this.title.href = '#';
-
         colTitle.appendChild(this.title);
-
         var colButtons = document.createElement('div');
         colButtons.className = 'ui-calendar col-sm-6';
         var btnGroupJustified = document.createElement('div');
         btnGroupJustified.className = 'btn-group btn-group-justified';
-
         /*
         * back Button
         */
@@ -402,7 +643,6 @@ var Calendar = (function () {
         this.btnBack.appendChild(i);
         btnGroup.appendChild(this.btnBack);
         btnGroupJustified.appendChild(btnGroup);
-
         /*
         * current Button
         */
@@ -416,7 +656,6 @@ var Calendar = (function () {
         this.btnCurrent.appendChild(i);
         btnGroup.appendChild(this.btnCurrent);
         btnGroupJustified.appendChild(btnGroup);
-
         /*
         * next Button
         */
@@ -430,13 +669,11 @@ var Calendar = (function () {
         this.btnNext.appendChild(i);
         btnGroup.appendChild(this.btnNext);
         btnGroupJustified.appendChild(btnGroup);
-
         colButtons.appendChild(btnGroupJustified);
         row.appendChild(colTitle);
         row.appendChild(colButtons);
         return row;
     };
-
     /*
     *Create calendar body HTML.
     *@returns HTMLElement
@@ -446,13 +683,10 @@ var Calendar = (function () {
         row.className = 'row';
         var col = document.createElement('div');
         col.className = 'col-sm-12';
-
         var panelDefault = document.createElement('div');
         panelDefault.className = 'ui-calendar panel panel-default';
-
         var panelBody = document.createElement('div');
         panelBody.className = 'panel-body';
-
         /*
         * Create the table
         */
@@ -468,7 +702,6 @@ var Calendar = (function () {
         row.appendChild(col);
         return row;
     };
-
     Calendar.prototype.clearTable = function (callback, animation) {
         var _this = this;
         this.table.classList.add(animation.type);
@@ -483,12 +716,10 @@ var Calendar = (function () {
             callback(_this);
         }, 200);
     };
-
     Calendar.prototype.calendarDay = function (self) {
         if (!self)
             self = this;
         self.title.textContent = self.data.month.text + ' ' + self.data.year;
-
         /*
         * add event to change view type by months.
         */
@@ -498,7 +729,6 @@ var Calendar = (function () {
             self.dataMonth();
             self.clearTable(self.calendarMonth, self.animationUp);
         };
-
         /*
         * add Event to navigation
         */
@@ -529,11 +759,10 @@ var Calendar = (function () {
             self.clearTable(self.calendarDay, self.animationNext);
         };
         self.loadLegendMatchMedia();
-
         /*
-        * Create the days of previous month, current month and next month,
-        * with a total of 42 days
-        */
+         * Create the days of previous month, current month and next month,
+         * with a total of 42 days
+         */
         var mod = 1;
         var axuTr = document.createElement('tr');
         var currentDay = self.data.currentDay;
@@ -541,7 +770,6 @@ var Calendar = (function () {
             var item = self.data.items[j];
             var day = item.day;
             var td = document.createElement('td');
-
             /*
             * If the day not for the current month,
             * make the text clearer
@@ -549,7 +777,6 @@ var Calendar = (function () {
             if (item.previousDay || item.nextDay) {
                 td.className = 'text-muted';
             }
-
             /*
             * If the day is the current day,
             * make the background darker
@@ -558,7 +785,6 @@ var Calendar = (function () {
                 td.className = 'bg-primary';
                 self.selectedCell = td;
             }
-
             /*
             * Add event, if  is input option
             * then change self value for the selected date.
@@ -573,7 +799,8 @@ var Calendar = (function () {
                         self.displayDate.setDate(this.textContent);
                         self.data.currentDay = self.displayDate.getDate();
                         self.clearTable(self.calendarDay, self.animationBack);
-                    } else {
+                    }
+                    else {
                         self.displayDate.setDate(1);
                         self.displayDate.nextMonth();
                         self.dataDay();
@@ -593,7 +820,6 @@ var Calendar = (function () {
             };
             td.textContent = day;
             axuTr.appendChild(td);
-
             /*
             * If mod is greater than zero and is module of 7,
             * is because will start other week on the calendar
@@ -605,7 +831,6 @@ var Calendar = (function () {
             mod++;
         }
     };
-
     /*
     * Load the legend of the days of week
     */
@@ -622,12 +847,10 @@ var Calendar = (function () {
             }
         }
     };
-
     Calendar.prototype.calendarMonth = function (self) {
         if (!self)
             self = this;
         self.title.text = self.data.year;
-
         /*
         * add event to change view type by range years.
         */
@@ -636,7 +859,6 @@ var Calendar = (function () {
             self.dataYear();
             self.clearTable(self.calendarYear, self.animationUp);
         };
-
         /*
         * add Event to navigation
         */
@@ -664,7 +886,6 @@ var Calendar = (function () {
             self.dataMonth();
             self.clearTable(self.calendarMonth, self.animationNext);
         };
-
         /*
         * Create all months of a year.
         */
@@ -673,7 +894,6 @@ var Calendar = (function () {
         var currentMonth = self.data.currentMonth;
         for (var j = 0; j < 12; j++) {
             var td = document.createElement('td');
-
             /*
             * If the j is the current day,
             * make the background darker.
@@ -683,7 +903,6 @@ var Calendar = (function () {
             }
             td.textContent = self.abbMonths[j];
             tr.appendChild(td);
-
             /*
             * add event to go to month selected.
             */
@@ -693,7 +912,6 @@ var Calendar = (function () {
                 self.dataDay();
                 self.clearTable(self.calendarDay, self.animationDown);
             };
-
             /*
             * If mod is greater than zero and is module of 3,
             * add new row.
@@ -705,7 +923,6 @@ var Calendar = (function () {
             mod++;
         }
     };
-
     Calendar.prototype.calendarYear = function (self) {
         if (!self)
             self = this;
@@ -713,7 +930,6 @@ var Calendar = (function () {
         self.title.onclick = function (e) {
             e.preventDefault();
         };
-
         /*
         * add Event to navigation
         */
@@ -728,9 +944,9 @@ var Calendar = (function () {
         };
         self.btnCurrent.onclick = function () {
             /*
-            * If not is the current year,
-            * go to current range year.
-            */
+           * If not is the current year,
+           * go to current range year.
+           */
             if (self.displayDate.getFullYear() !== self.today.getFullYear()) {
                 self.displayDate = self.today.clone();
                 self.dataYear();
@@ -742,7 +958,6 @@ var Calendar = (function () {
             self.dataYear();
             self.clearTable(self.calendarYear, self.animationNext);
         };
-
         /*
         * Create range year.
         */
@@ -752,7 +967,6 @@ var Calendar = (function () {
         var currentYear = self.data.currentYear;
         for (var j = 0; j < 12; j++) {
             var td = document.createElement('td');
-
             /*
             * If the j is the current day,
             * make the background darker.
@@ -762,7 +976,6 @@ var Calendar = (function () {
             }
             td.textContent = (year++).toString();
             tr.appendChild(td);
-
             /*
             * add event to go to year selected.
             */
@@ -771,7 +984,6 @@ var Calendar = (function () {
                 self.dataMonth();
                 self.clearTable(self.calendarMonth, self.animationDown);
             };
-
             /*
             * If mod is greater than zero and is module of 3,
             * add new row.
@@ -783,7 +995,6 @@ var Calendar = (function () {
             mod++;
         }
     };
-
     Calendar.prototype.setOptions = function () {
         if (this.options) {
             if (this.options.isInput) {
@@ -791,7 +1002,6 @@ var Calendar = (function () {
             }
         }
     };
-
     Calendar.prototype.displayDateFromValue = function () {
         if (this.options && this.options.isInput) {
             var input = this.options.input;
@@ -809,13 +1019,11 @@ var Calendar = (function () {
             }
         }
     };
-
     Calendar.prototype.selectCell = function (cell) {
         this.selectedCell.classList.remove('bg-primary');
         cell.classList.add('bg-primary');
         this.selectedCell = cell;
     };
-
     /* JavaScript Media Queries */
     Calendar.prototype.mediaQuery = function () {
         if (matchMedia) {
@@ -824,27 +1032,26 @@ var Calendar = (function () {
             mq.addListener(function () {
                 if (mq.matches) {
                     self.loadLegend(self.abbDays);
-                } else {
+                }
+                else {
                     self.loadLegend(self.days);
                 }
             });
         }
     };
-
     Calendar.prototype.loadLegendMatchMedia = function () {
         var mq = window.matchMedia("(max-width: 969px)");
         if (mq.matches) {
             this.loadLegend(this.abbDays);
-        } else {
+        }
+        else {
             this.loadLegend(this.days);
         }
     };
-
     Calendar.prototype.refresh = function () {
         this.dataDay();
         this.clearTable(this.calendarDay, this.animationUp);
     };
-
     Calendar.prototype.open = function (callback) {
         var _this = this;
         this.element.classList.remove('hidden');
@@ -860,7 +1067,6 @@ var Calendar = (function () {
                 callback();
         }, 500);
     };
-
     Calendar.prototype.close = function (callback) {
         var _this = this;
         this.element.classList.add(this.animationOut.type);
@@ -875,24 +1081,19 @@ var Calendar = (function () {
                 callback();
         }, 500);
     };
-
     Calendar.prototype.isOpen = function () {
         return !this.element.classList.contains('hidden');
     };
-
     Calendar.prototype.getDate = function () {
         this.displayDate.setDate(this.selectedCell.textContent);
         return this.displayDate;
     };
-
     Calendar.prototype.setAnimationIn = function (animationFn) {
         this.animationIn.fn = animationFn;
     };
-
     Calendar.prototype.setAnimationOut = function (animationFn) {
         this.animationOut.fn = animationFn;
     };
-
     Calendar.prototype.setLegendDaysWeek = function (strDays) {
         this.days = strDays.split(',');
         this.abbDays = new Array();
@@ -902,10 +1103,8 @@ var Calendar = (function () {
             i++;
         }
     };
-
     Calendar.prototype.setLegendMonths = function (strMonths) {
         var months = strMonths.split(',');
-
         //@overwrite Date.getMonthName()
         Date.prototype.getMonthName = function () {
             var month_names = months;
@@ -918,7 +1117,6 @@ var Calendar = (function () {
             i++;
         }
         var mAbbrs = this.abbMonths;
-
         //@overwrite Date.getMonthAbbr()
         Date.prototype.getMonthAbbr = function () {
             var month_abbrs = mAbbrs;
@@ -927,7 +1125,6 @@ var Calendar = (function () {
     };
     return Calendar;
 })();
-
 var Select = (function () {
     function Select(htmlElement, data) {
         var _this = this;
@@ -1031,7 +1228,6 @@ var Select = (function () {
             }
         }
     };
-
     Select.prototype.animationIn = function () {
         var _this = this;
         this.items.classList.add('open');
@@ -1044,7 +1240,6 @@ var Select = (function () {
             _this.items.classList.remove('ui-fade-in-down');
         }, 200);
     };
-
     Select.prototype.animationOut = function () {
         var _this = this;
         this.items.classList.add('ui-ease-out');
@@ -1057,7 +1252,6 @@ var Select = (function () {
             _this.items.classList.remove('open');
         }, 200);
     };
-
     Select.prototype.changeValue = function (htmlElement) {
         this.oldItem = this.currentItem;
         this.currentItem = htmlElement;
@@ -1069,7 +1263,6 @@ var Select = (function () {
         this.currentItem.classList.add('bg-primary');
         this.input.focus();
     };
-
     Select.prototype.next = function () {
         if (!this.disabled && !this.readOnly && this.currentItem) {
             var item = this.currentItem.nextElementSibling;
@@ -1078,7 +1271,6 @@ var Select = (function () {
             }
         }
     };
-
     Select.prototype.previous = function () {
         if (!this.disabled && !this.readOnly && this.currentItem) {
             var item = this.currentItem.previousSibling;
@@ -1087,14 +1279,14 @@ var Select = (function () {
             }
         }
     };
-
     Select.prototype.toggle = function () {
         if (!this.readOnly && !this.disabled) {
             this.open = this.items.classList.contains('open');
             if (this.open) {
                 this.animationOut();
                 this.open = false;
-            } else {
+            }
+            else {
                 Select.clear();
                 this.animationIn();
                 this.open = true;
@@ -1107,7 +1299,6 @@ var Select = (function () {
             }
         }
     };
-
     Select.prototype.selectItem = function (option) {
         if (!this.disabled && !this.readOnly) {
             var lis = this.items.getElementsByTagName('li');
@@ -1122,7 +1313,7 @@ var Select = (function () {
                         this.currentItem = item;
                         found = true;
                     }
-                } while(!found && i < this.length);
+                } while (!found && i < this.length);
                 if (found) {
                     this.input.value = this.currentItem.textContent;
                     this.input.setAttribute('data-option', this.currentItem.getAttribute('data-option'));
@@ -1135,7 +1326,6 @@ var Select = (function () {
             }
         }
     };
-
     Select.prototype.addItem = function (option, value) {
         if (!this.disabled && !this.readOnly) {
             var li = document.createElement('li');
@@ -1153,7 +1343,6 @@ var Select = (function () {
             this.length++;
         }
     };
-
     Select.prototype.getItem = function () {
         if (!this.disabled && !this.readOnly) {
             return {
@@ -1162,65 +1351,57 @@ var Select = (function () {
             };
         }
     };
-
     Select.prototype.getValue = function () {
         if (!this.disabled && !this.readOnly) {
             return this.input.value;
         }
     };
-
     Select.prototype.getOption = function () {
         if (!this.disabled && !this.readOnly) {
             return this.input.getAttribute('data-option');
         }
     };
-
     Select.prototype.isOpen = function () {
         if (!this.disabled && !this.readOnly) {
             return this.open;
         }
     };
-
     Select.prototype.isDisabled = function () {
         return this.disabled;
     };
-
     Select.prototype.setDisabled = function (disabled) {
         this.disabled = disabled;
         this.input.disabled = this.disabled;
         if (this.disabled) {
             this.element.classList.add('disabled');
-        } else {
+        }
+        else {
             this.element.classList.remove('disabled');
         }
     };
-
     Select.prototype.isReadOnly = function () {
         return this.readOnly;
     };
-
     Select.prototype.setReadOnly = function (readOnly) {
         this.readOnly = readOnly;
         this.input.readOnly = this.readOnly;
         if (this.readOnly) {
             this.element.classList.add('read-only');
-        } else {
+        }
+        else {
             this.element.classList.remove('read-only');
         }
     };
-
     Select.prototype.setHeight = function (height) {
         if (!this.disabled && !this.readOnly) {
             this.items.style.height = height;
         }
     };
-
     Select.prototype.getSize = function () {
         if (!this.disabled || !this.readOnly) {
             return this.length;
         }
     };
-
     Select.prototype.setIcono = function (icono) {
         if (!this.disabled && !this.readOnly) {
             this.ico.classList.remove(this.icono);
@@ -1228,17 +1409,14 @@ var Select = (function () {
             this.ico.classList.add(this.icono);
         }
     };
-
     Select.prototype.focus = function () {
         if (!this.disabled && !this.readOnly) {
             this.input.focus();
         }
     };
-
     Select.prototype.onchange = function (callback) {
         this.input.onchange = callback;
     };
-
     Select.clear = function () {
         var selects = document.getElementsByClassName('ui-select');
         var n = selects.length;
@@ -1264,7 +1442,6 @@ var Select = (function () {
     };
     return Select;
 })();
-
 var Alert = (function () {
     function Alert(htmlElement) {
         this.element = null;
@@ -1326,7 +1503,6 @@ var Alert = (function () {
             }, 1000);
         }
     };
-
     Alert.prototype.success = function (message) {
         this.removeAnimation();
         this.i.className = 'fa fa-lg pull-left';
@@ -1336,7 +1512,6 @@ var Alert = (function () {
         this.strong.textContent = message;
         this.type = 'success';
     };
-
     Alert.prototype.info = function (message) {
         this.i.className = 'fa fa-lg pull-left';
         this.i.classList.add(this.icoInfo);
@@ -1346,7 +1521,6 @@ var Alert = (function () {
         this.type = 'info';
         this.removeAnimation();
     };
-
     Alert.prototype.warning = function (message) {
         this.i.className = 'fa fa-lg pull-left';
         this.i.classList.add(this.icoWarning);
@@ -1356,7 +1530,6 @@ var Alert = (function () {
         this.type = 'warning';
         this.removeAnimation();
     };
-
     Alert.prototype.danger = function (message) {
         this.i.className = 'fa fa-lg pull-left';
         this.i.classList.add(this.icoDanger);
@@ -1366,7 +1539,6 @@ var Alert = (function () {
         this.type = 'danger';
         this.removeAnimation();
     };
-
     Alert.prototype.wait = function (message) {
         this.i.className = 'fa fa-spin fa-lg pull-left';
         this.i.classList.add(this.icoWait);
@@ -1376,13 +1548,11 @@ var Alert = (function () {
         this.type = 'wait';
         this.removeAnimation();
     };
-
     Alert.prototype.addAnimation = function () {
         this.element.classList.add(this.typeAnimation);
         this.element.classList.add(this.durationAnimation);
         this.element.classList.add(this.animationIn);
     };
-
     Alert.prototype.removeAnimation = function () {
         var self = this;
         setTimeout(function () {
@@ -1393,7 +1563,6 @@ var Alert = (function () {
     };
     return Alert;
 })();
-
 var Toggle = (function () {
     function Toggle() {
     }
@@ -1401,7 +1570,6 @@ var Toggle = (function () {
         this.initNavBar();
         this.initDropDown();
     };
-
     Toggle.initNavBar = function () {
         var navbars = document.querySelectorAll('.navbar-toggle[data-toggle="collapse"]');
         var n = navbars.length;
@@ -1416,7 +1584,6 @@ var Toggle = (function () {
             }
         }
     };
-
     Toggle.initDropDown = function () {
         var dropdownsToggle = document.querySelectorAll('.dropdown-toggle[data-toggle="dropdown"]');
         var n = dropdownsToggle.length;
@@ -1436,7 +1603,8 @@ var Toggle = (function () {
                             dropdownMenu.classList.remove('ui-fade-out-up');
                             dropdown.classList.remove('open');
                         }, 500);
-                    } else {
+                    }
+                    else {
                         dropdown.classList.add('open');
                         dropdownMenu.classList.add('ui-ease');
                         dropdownMenu.classList.add('ui-0-5s');
@@ -1453,7 +1621,6 @@ var Toggle = (function () {
             }
         }
     };
-
     Toggle.clearDropDown = function () {
         var dropdownsToggle = document.querySelectorAll('.dropdown-toggle[data-toggle="dropdown"]');
         var n = dropdownsToggle.length;
@@ -1477,7 +1644,6 @@ var Toggle = (function () {
     };
     return Toggle;
 })();
-
 var Utils = (function () {
     function Utils() {
     }
@@ -1498,23 +1664,19 @@ var Utils = (function () {
             }
         }
     };
-
     Utils.reloadCSS = function (element, href) {
         var queryString = '?reload=' + new Date().getTime();
         element.href = href.replace(/\?.*|$/, queryString);
     };
     return Utils;
 })();
-
 window.onload = function () {
     Toggle.init();
 };
-
 document.onclick = function () {
     Toggle.clearDropDown();
     Select.clear();
 };
-
 /*
 * Return name of month
 */
@@ -1535,7 +1697,6 @@ Date.prototype.getMonthName = function () {
     ];
     return month_names[this.getMonth()];
 };
-
 /*
 * Return month abbreviation
 */
@@ -1554,10 +1715,8 @@ Date.prototype.getMonthAbbr = function () {
         'Nov',
         'Dec'
     ];
-
     return month_abbrs[this.getMonth()];
 };
-
 /*
 * Return full day of week name
 */
@@ -1573,7 +1732,6 @@ Date.prototype.getDayFull = function () {
     ];
     return days_full[this.getDay()];
 };
-
 /*
 *  Return full day of week name
 */
@@ -1589,7 +1747,6 @@ Date.prototype.getDayAbbr = function () {
     ];
     return days_abbr[this.getDay()];
 };
-
 /*
 * Return the day of year 1-365
 */
@@ -1597,7 +1754,6 @@ Date.prototype.getDayOfYear = function () {
     var onejan = new Date(this.getFullYear(), 0, 1);
     return Math.ceil((this.getTime() - onejan.getTime()) / 86400000);
 };
-
 /*
 * Return the day suffix (st,nd,rd,th)
 */
@@ -1607,7 +1763,6 @@ Date.prototype.getDaySuffix = function () {
     var val = d % 100;
     return (sfx[(val - 20) % 10] || sfx[val] || sfx[0]);
 };
-
 /*
 * Return Week of Year
 */
@@ -1615,7 +1770,6 @@ Date.prototype.getWeekOfYear = function () {
     var onejan = new Date(this.getFullYear(), 0, 1);
     return Math.ceil((((this.getTime() - onejan.getTime()) / 86400000) + onejan.getDay() + 1) / 7);
 };
-
 /*
 * return week of month
 */
@@ -1623,14 +1777,12 @@ Date.prototype.getWeekOfMonth = function () {
     var firstDayOfMonth = new Date(this.getFullYear(), this.getMonth(), 1).getDay();
     return Math.ceil((this.getDate() + firstDayOfMonth) / 7);
 };
-
 /*
 * Return if it is a leap year or not
 */
 Date.prototype.isLeapYear = function () {
     return (this.getFullYear() % 4 === 0 || (this.getFullYear() % 100 !== 0 && this.getFullYear() % 400 === 0));
 };
-
 /*
 * Return Number of Days in a given month
 */
@@ -1649,10 +1801,8 @@ Date.prototype.getMonthDayCount = function () {
         30,
         31
     ];
-
     return month_day_counts[this.getMonth()];
 };
-
 /*
 * back a month
 */
@@ -1670,7 +1820,6 @@ Date.prototype.previousMonth = function () {
     this.setMonth(month);
     this.setFullYear(year);
 };
-
 /*
 * next an month
 */
@@ -1688,21 +1837,18 @@ Date.prototype.nextMonth = function () {
     this.setMonth(month);
     this.setFullYear(year);
 };
-
 /*
 * returns clone date
 */
 Date.prototype.clone = function () {
     return new Date(this.getFullYear(), this.getMonth(), this.getDate());
 };
-
 /*
-* returns true if the date is valid
-*/
+ * returns true if the date is valid
+ */
 Date.prototype.isValid = function () {
     return !isNaN(this.getTime());
 };
-
 /*
 * return Format date
 */
@@ -1712,7 +1858,6 @@ Date.prototype.format = function (dateFormat) {
     */
     dateFormat = dateFormat.split("");
     var date = this.getDate(), month = this.getMonth(), hours = this.getHours(), minutes = this.getMinutes(), seconds = this.getSeconds();
-
     /*
     * get all date properties
     * ( based on PHP date object functionality )
@@ -1743,7 +1888,6 @@ Date.prototype.format = function (dateFormat) {
         i: minutes < 10 ? '0' + minutes : minutes,
         s: seconds < 10 ? '0' + seconds : seconds
     };
-
     /*
     * loop through format array of characters and add matching data
     * else add the format character (:,/, etc.)
@@ -1754,14 +1898,13 @@ Date.prototype.format = function (dateFormat) {
         var f = dateFormat[i];
         if (f.match(/[a-zA-Z]/g)) {
             date_string += date_props[f] ? date_props[f] : '';
-        } else {
+        }
+        else {
             date_string += f;
         }
     }
-
     return date_string;
 };
-
 /*
 * parse string date to object Date
 * @param string date
@@ -1828,12 +1971,10 @@ Date.prototype.parse = function (dateString, pattern) {
     }
     return date;
 };
-
 Element.prototype.removeChildren = function () {
     while (this.childNodes.length > 0) {
         this.removeChild(this.childNodes[0]);
     }
 };
-
 var author = 'Yonatan Alexis Quintero Rodriguez';
 var version = '0.1';

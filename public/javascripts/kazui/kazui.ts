@@ -35,14 +35,14 @@ class Clock {
     private minutes: HTMLTableCellElement;
     private seconds: HTMLTableCellElement;
     private time: HTMLTableCellElement;
-    private timeOutFn;
     private isStop: boolean;
     private type: ETypeClock;
     private animationUp: Animation;
     private animationDown: Animation;
-    private today: Date;
     private iconUp: string;
     private iconDown: string;
+    private disabledControl:boolean;
+    private timeOut;
 
     /**
     * constructor 
@@ -52,9 +52,8 @@ class Clock {
         this.element = element;
         this.iconUp = 'fa fa-chevron-up';
         this.iconDown = 'fa fa-chevron-down';
-        this.today = new Date();
-        this.animationUp = new Animation('ui-ease-in', 'ui-fade-in-up', 'ui-0-2s');
-        this.animationDown = new Animation('ui-ease-in', 'ui-fade-in-down', 'ui-0-2s');        
+        this.animationUp = new Animation('ui-ease-in', 'ui-fade-in-up', 'ui-0-2s',200);
+        this.animationDown = new Animation('ui-ease-in', 'ui-fade-in-down', 'ui-0-2s',200);        
         this.isStop = true;
         this.create();
     }
@@ -133,10 +132,7 @@ class Clock {
          */
         tr = document.createElement('tr');
         tr.className = 'bg-primary';
-        this.hour.textContent = '00';
-        this.minutes.textContent = '00';
-        this.seconds.textContent = '00';
-        this.time.textContent = '--';
+        this.clearTime();
         tr.appendChild(this.hour);
         tr.appendChild(this.minutes);
         tr.appendChild(this.seconds);
@@ -163,14 +159,37 @@ class Clock {
         this.table.appendChild(tbody);
     }
     /**
+    * clear clock
+    * @method clearTime
+    */    
+    private clearTime(){
+        this.hour.textContent = '00';
+        this.minutes.textContent = '00';
+        this.seconds.textContent = '00';
+        this.time.textContent = '--';
+    }
+    /**
     * add events for Up Controls
     * @method addEventsUpControls
     */
     private addEventsUpControls() {
-        this.upHour.onclick = () => { };
-        this.upMinutes.onclick = () => { };
-        this.upSeconds.onclick = () => { };
-        this.upTime.onclick = () => { };
+        this.upHour.onclick = () => {
+            var max = this.type === ETypeClock.COUNT_DOWN || this.type === ETypeClock.COUNT_UP ? 99 : 59;            
+            this.animationUp.run(this.hour);
+            this.hour.textContent = this.upDigit(this.hour.textContent,max);
+         };
+        this.upMinutes.onclick = () => {                        
+            this.animationUp.run(this.minutes);
+            this.minutes.textContent = this.upDigit(this.minutes.textContent,59);
+         };
+        this.upSeconds.onclick = () => {
+            this.animationUp.run(this.seconds);
+            this.seconds.textContent = this.upDigit(this.seconds.textContent,59);
+         };
+        this.upTime.onclick = () => {
+         this.animationUp.run(this.time);
+         this.time.textContent = this.time.textContent === 'AM' ? 'PM' : 'AM'; 
+        };
     }
     /**
     * add events for Down Controls
@@ -182,26 +201,156 @@ class Clock {
         this.downSeconds.onclick = () => { };
         this.downTime.onclick = () => { };
     }
-
+    
+    /**
+    * Add an zero in front, if the digit is less that ten
+    * @param {any} digit
+    * @return {string} digit fixed
+    * @method fixDigit
+    */    
+    private fixDigit(digit){
+         if(digit < 10) {
+            digit = '0'+digit;
+         }
+         return digit;
+    }
+   /**
+   * hidden time column 
+   * @method hiddenTimeColumn
+   */
+    private hiddenTimeColumn(){
+          if(!this.upTime.classList.contains('hidden')) this.upTime.classList.add('hidden');
+          if(!this.time.classList.contains('hidden')) this.time.classList.add('hidden');
+          if(!this.downTime.classList.contains('hidden')) this.downTime.classList.add('hidden');          
+    }
+   /**
+   * show time column 
+   * @method showTimeColumn
+   */
+    private showTimeColumn(){
+          if(this.upTime.classList.contains('hidden')) this.upTime.classList.remove('hidden');
+          if(this.time.classList.contains('hidden')) this.time.classList.remove('hidden');
+          if(this.downTime.classList.contains('hidden')) this.downTime.classList.remove('hidden');          
+    }
+   /**
+   * Digit increase to the maximum number
+   * @param {any} digit
+   * @param {number} max
+   * @method upDigit
+   */
+   private upDigit(digit,max:number){
+     digit++;
+     if(digit > max)
+           digit = 0;     
+     return this.fixDigit(digit);
+   }
+   /**
+   * Decrement digit to the minimum number and start over
+   * @param {any} digit
+   * @param {number} min
+   * @param {number} start
+   * @method downDigit
+   */
+   private downDigit(digit,min:number,start:number){
+     digit--;
+     if(digit < min)
+           digit = start;     
+     return this.fixDigit(digit);
+   }
     /**
    * Start clock in the standard time
    * @method standardTime
    */
-    public standardTime() {
+    public standardTime() {       
+        this.isStop = false;
         this.type = ETypeClock.STANDARD;
+        this.showTimeColumn(); 
+        this.setDisabledControls(true);       
+        this.runStandardTime();
+    }
+    /**
+   * run clock in the standard time
+   * @method runStandardTime
+   */
+    private runStandardTime() {      
+        var today = new Date();
+        var h:any = today.getHours();        
+        var m:any = today.getMinutes();
+        var s:any = today.getSeconds();
+        var t = h < 12 ? 'AM' : 'PM';
+        if (h > 12) h = h - 12;
+        h = this.fixDigit(h);
+        m = this.fixDigit(m);
+        s = this.fixDigit(s);
+        
+        if(this.seconds.textContent != s){
+             this.animationDown.run(this.seconds);
+             this.seconds.textContent = s;
+        }
+        if(this.minutes.textContent != m){
+             this.animationDown.run(this.minutes);
+             this.minutes.textContent = m;
+        }
+        if(this.hour.textContent != h){
+             this.animationDown.run(this.hour);
+             this.hour.textContent = h;
+        }
+        if(this.time.textContent != t){
+             this.animationDown.run(this.time);
+             this.time.textContent = t;
+        }
+        this.timeOut = setTimeout(()=>{
+            this.runStandardTime();
+        },1000);
     }
     /**
    * Start clock in the military time
-   * @method standardTime
+   * @method militaryTime
    */
-    public militaryTime() {
-        this.type = ETypeClock.MILITARY;
+    public militaryTime() { 
+        this.isStop = false;
+        this.type = ETypeClock.MILITARY;   
+        this.hiddenTimeColumn();
+        this.setDisabledControls(true);
+        this.runMilitaryTime();     
+
+    }
+    /**
+   * Run clock in the military time
+   * @method runMilitaryTime
+   */
+    private runMilitaryTime() {    
+        var today = new Date();
+        var h:any = today.getHours();        
+        var m:any = today.getMinutes();
+        var s:any = today.getSeconds();
+        
+        h = this.fixDigit(h);
+        m = this.fixDigit(m);
+        s = this.fixDigit(s);
+        
+        if(this.seconds.textContent != s){
+             this.animationDown.run(this.seconds);
+             this.seconds.textContent = s;
+        }
+        if(this.minutes.textContent != m){
+             this.animationDown.run(this.minutes);
+             this.minutes.textContent = m;
+        }
+        if(this.hour.textContent != h){
+             this.animationDown.run(this.hour);
+             this.hour.textContent = h;
+        }
+        this.timeOut = setTimeout(()=>{
+            this.runMilitaryTime();
+        },1000);
     }
     /**
    * Start clock with the counting down
    * @method countDown
    */
-    public countDown() {
+    public countDown() {       
+        this.isStop = false;
         this.type = ETypeClock.COUNT_DOWN;
     }
     /**
@@ -209,23 +358,142 @@ class Clock {
    * @method countUp
    */
     public countUp() {
+        this.isStop = false;
         this.type = ETypeClock.COUNT_UP;
     }
-
+   /**
+   * set Date
+   * @param {Date} date
+   * @method setDate
+   */
+    public setDate(date:Date) {       
+        this.isStop = false;
+        this.type = ETypeClock.STANDARD;
+        this.showTimeColumn(); 
+        this.setDisabledControls(true);       
+        this.runStandardTime();
+    }
+    /**
+   * Start clock
+   * @method start
+   */
+   public start(){
+       switch(this.type){
+         case ETypeClock.STANDARD:          
+         break;
+         case ETypeClock.MILITARY:
+         break;
+         case ETypeClock.COUNT_DOWN:
+         break;
+         case ETypeClock.COUNT_UP:
+         break;
+       }
+   }
+   /**
+   * Stop clock
+   * @method stop
+   */
+    public stop() {
+	    if(!this.isStop){
+           if(this.timeOut) {
+	          this.isStop = true;
+	          clearTimeout(this.timeOut);
+	          this.setDisabledControls(false);
+           }
+	    }
+    }    
+    /**
+   * Reset clock
+   * @method reset
+   */
+    public reset() {           
+	    this.stop();
+	    this.clearTime();
+    }
+    /**
+   * Set disabled controls
+   * @param {boolean} disabled
+   * @method setDisabledControls
+   */
+    public setDisabledControls(disabled:boolean){
+       var rowControlsUp:any = this.table.rows[0];
+       var rowControlsDown:any = this.table.rows[2];
+       this.disabledControl = disabled;
+       if(disabled){
+         if(!rowControlsUp.classList.contains('disabled')){
+            rowControlsUp.classList.add('disabled');
+          }
+         if(!rowControlsDown.classList.contains('disabled')){
+            rowControlsDown.classList.add('disabled');
+          }
+       }else{
+	        if(rowControlsUp.classList.contains('disabled')){
+	           rowControlsUp.classList.remove('disabled');
+	        }
+	       if(rowControlsDown.classList.contains('disabled')){
+	          rowControlsDown.classList.remove('disabled');
+	        }
+       }       
+    }
+   /**
+   * Is disabled controls
+   * @returns {boolean} disabled
+   * @method isDisabledControls
+   */
+    public isDisabledControls(){
+        return this.disabledControl;
+    }
+    
+    
 
 }
-
+/**
+ * Animation
+ * @class Animation
+ */
 class Animation {
-    public type;
-    public fn;
-    public time;
-
-    constructor(type, fn, time) {
+    public type:string;
+    public fn:string;
+    public time:string;
+    public ms:number;
+    public timeOut;
+    /**
+    * constructor 
+    * @param {string} type
+    * @param {string} fn
+    * @param {string} time
+    * @param {number} ms 
+    */
+    constructor(type:string, fn:string, time:string,ms:number) {
         this.type = type;
         this.fn = fn;
-        this.time = time;
+        this.time = time;        
+        this.ms = ms;
     }
-
+    /**
+   * Run animation
+   * @param {HTMLElement} element
+   * @param {Function} callback
+   * @method run
+   */
+    public run(element:HTMLElement,callBack?){
+         element.classList.add(this.type);
+         element.classList.add(this.fn);
+         element.classList.add(this.time);
+         this.timeOut = setTimeout(() =>{
+	         element.classList.remove(this.type);
+	         element.classList.remove(this.fn);
+	         element.classList.remove(this.time);
+	         if(callBack) callBack();
+         },this.ms);           
+    }
+   /**
+   * Stop animation
+   * @method stop
+   */
+    public stop(){
+      if(this.timeOut) clearTimeout(this.timeOut);
+    }
 }
 
 enum ETypeCalendar {
@@ -264,12 +532,12 @@ class Calendar {
     constructor(element: HTMLElement, options) {
         this.element = element;
         this.options = options;
-        this.animationIn = new Animation('ui-ease', 'ui-fade-in-down', 'ui-0-5s');
-        this.animationOut = new Animation('ui-ease', 'ui-fade-out-up', 'ui-0-5s');
-        this.animationNext = new Animation('ui-ease', 'ui-flip-out-y', 'ui-0-2s');
-        this.animationBack = new Animation('ui-ease', 'ui-flip-out-y', 'ui-0-2s');
-        this.animationUp = new Animation('ui-ease', 'ui-flip-out-x', 'ui-0-2s');
-        this.animationDown = new Animation('ui-ease', 'ui-flip-out-x', 'ui-0-2s');
+        this.animationIn = new Animation('ui-ease', 'ui-fade-in-down', 'ui-0-5s',500);
+        this.animationOut = new Animation('ui-ease', 'ui-fade-out-up', 'ui-0-5s',500);
+        this.animationNext = new Animation('ui-ease', 'ui-flip-out-y', 'ui-0-2s',200);
+        this.animationBack = new Animation('ui-ease', 'ui-flip-out-y', 'ui-0-2s',200);
+        this.animationUp = new Animation('ui-ease', 'ui-flip-out-x', 'ui-0-2s',200);
+        this.animationDown = new Animation('ui-ease', 'ui-flip-out-x', 'ui-0-2s',200);
         this.setOptions();
         this.displayDate = this.today.clone();
         this.displayDate.setDate(1);

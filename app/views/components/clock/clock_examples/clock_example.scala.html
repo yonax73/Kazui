@@ -1,277 +1,172 @@
 
 <div class="row">
-    <div class="col-md-12 col-sm-12">
-        <div id="alert-clock-example"></div>
-    </div>
+	<div class="col-md-12 col-sm-12">
+		<div id="alert-clock-example"></div>
+	</div>
 </div>
 <div class="row">
-    <div class="col-md-12 col-sm-12">
-        <div id="clock"></div>
-
-        <div class="ui-clock">
-            <div class="panel panel-primary">
-                <div class="ui-clock panel-body">
-                    <table class="ui-clock table table-condensed ">
-                        <tbody>
-                            <tr class="ui-clock-controls text-primary">
-                                <td id="upHour">
-                                    <i class="fa fa-chevron-up"></i>
-                                </td>
-
-                                <td>
-                                    <i class="fa fa-chevron-up"></i>
-                                </td>
-
-                                <td id="upSeconds">
-                                    <i class="fa fa-chevron-up"></i>
-                                </td>
-
-                                <td>
-                                    <i class="fa fa-chevron-up"></i>
-                                </td>
-                            </tr>
-                            <tr class="bg-primary">
-                                <td id="hour">00</td>
-
-                                <td id="minutes">00</td>
-
-                                <td id="seconds">00</td>
-
-                                <td id="time">--</td>
-                            </tr>
-                            <tr class="ui-clock-controls text-primary">
-                                <td id="downHour">
-                                    <i class="fa fa-chevron-down"></i>
-                                </td>
-
-                                <td>
-                                    <i class="fa fa-chevron-down"></i>
-                                </td>
-
-                                <td id="downSeconds">
-                                    <i class="fa fa-chevron-down"></i>
-                                </td>
-
-                                <td>
-                                    <i class="fa fa-chevron-down"></i>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
+	<div class="col-md-12 col-sm-12">
+		<div id="clock"></div>
+	</div>
 </div>
 <div class="row">
-    <div class="col-md-12 col-sm-12">
-        <!--<button class="btn btn-primary btn-block" id="btnStop" type="button">Stop</button>-->
-        <button class="btn btn-primary btn-block" id="btnChangeHour" type="button">Change Hour</button>
-        <button class="btn btn-primary btn-block" id="btnCountsDown" type="button">Counts Down</button>
-        <button class="btn btn-primary btn-block" id="btnStart" type="button">Start</button>
-
-
-    </div>
+	<div class="col-md-12 col-sm-12">
+		<button type="button" id="btnClockTimeStop"
+			class="btn btn-primary btn-block btn-xs">Stop</button>
+		<button type="button" id="btnClockTimeReset"
+			class="btn btn-primary btn-block  btn-xs">Reset</button>
+		<button class="btn btn-primary btn-block btn-xs" id="btnStandardTime"
+			type="button">Standard Time</button>
+		<button class="btn btn-primary btn-block btn-xs" id="btnMilitaryTime"
+			type="button">Military Time</button>
+		<button class="btn btn-primary btn-block btn-xs" id="btnCountUp"
+			type="button">Count Up</button>
+		<button class="btn btn-primary btn-block btn-xs" id="btnCountDown"
+			type="button">Count Down</button>
+	</div>
 </div>
 <script>
+	var clock = new Clock(document.getElementById('clock'));
+	clock.militaryTime();
 
-    var clock = new Clock(document.getElementById('clock'));
+	document.getElementById('btnClockTimeStop').onclick = function() {
+		clock.stop();
+	};
+	document.getElementById('btnClockTimeReset').onclick = function() {
+		clock.reset();
+	};
 
-    var handleTime = null;    
-    function startTimeAnimation() {
-        var today = new Date();
-        var h = today.getHours();
-        var t = h < 12 ? 'AM' : 'PM';
-        var m = today.getMinutes();
-        var s = today.getSeconds();
-        if (h > 12) h = h - 12;
-        h = checkTime(h);
-        m = checkTime(m);
-        s = checkTime(s);
-        var time = document.getElementById('time');
-        var seconds = document.getElementById('seconds');
-        var minutes = document.getElementById('minutes');
-        var hours = document.getElementById('hour');
-        if (seconds.textContent != s) {
-            animationDown(seconds);
-            seconds.textContent = s;
-        }
-        if (minutes.textContent != m) {
-            animationDown(minutes);
-            minutes.textContent = m;
-        }
-        if (hours.textContent != h) {
-            animationDown(hours);
-            hours.textContent = h;
-        }
-        if (time.textContent != t) {
-            animationDown(time);
-            time.textContent = t;
-        }
-        handleTime = setTimeout(function () {
-            startTimeAnimation();
-        }, 1000);
-    }
-    function animationDown(element) {
-        element.classList.add('ui-ease-in');
-        element.classList.add('ui-0-2s');
-        element.classList.add('ui-fade-in-down');
-        setTimeout(function () {
-            element.classList.remove('ui-ease-in');
-            element.classList.remove('ui-0-2s');
-            element.classList.remove('ui-fade-in-down');
-        }, 200);
-    }
-    function animationUp(element) {
-        element.classList.add('ui-ease-in');
-        element.classList.add('ui-0-2s');
-        element.classList.add('ui-fade-in-up');
-        setTimeout(function () {
-            element.classList.remove('ui-ease-in');
-            element.classList.remove('ui-0-2s');
-            element.classList.remove('ui-fade-in-up');
-        }, 200);
-    }
-    function checkTime(i) {
-        if (i < 10) { i = '0' + i };  // add zero in front of numbers < 10
-        return i;
-    }
+	document.getElementById('btnStandardTime').onclick = function() {
+		clock.reset();
+		clock.standardTime();
+	};
 
-    startTimeAnimation();
+	document.getElementById('btnMilitaryTime').onclick = function() {
+		clock.reset();
+		clock.militaryTime();
+	};
 
+	function stop() {
+		if (handleTime != null)
+			clearTimeout(handleTime);
+	}
+	function reset() {
+		stop();
+		var time = document.getElementById('time');
+		var seconds = document.getElementById('seconds');
+		var minutes = document.getElementById('minutes');
+		var hours = document.getElementById('hour');
+		time.textContent = '--';
+		seconds.textContent = '00';
+		minutes.textContent = '00';
+		hours.textContent = '00';
+	}
 
+	function countTimeDown(callBack) {
 
-    document.getElementById('btnChangeHour').onclick = function () {
-        stop();
-    };
+		var seconds = document.getElementById('seconds');
+		var minutes = document.getElementById('minutes');
+		var hours = document.getElementById('hour');
+		var isStop = hours.textContent === '00' && minutes.textContent === '00'
+				&& seconds.textContent === '00';
+		console.log(isStop)
+		if (isStop) {
+			stop();
+			callBack();
+		} else {
 
-    function stop() {
-        if (handleTime != null)
-            clearTimeout(handleTime);
-        
+			if (seconds.textContent > 0) {
+				animationDown(seconds);
+				seconds.textContent = downMinutesSeconds(seconds.textContent);
+			}
+			if (minutes.textContent > 0) {
 
-    }
-    function reset() {
-        stop();
-        var time = document.getElementById('time');
-        var seconds = document.getElementById('seconds');
-        var minutes = document.getElementById('minutes');
-        var hours = document.getElementById('hour');
-        time.textContent = '--';
-        seconds.textContent = '00';
-        minutes.textContent = '00';
-        hours.textContent = '00';
-    }
+			}
+			if (hours.textContent > 0) {
 
-    function countTimeDown(callBack) {
+			}
+			handleTime = setTimeout(function() {
+				countTimeDown(callBack);
+			}, 1000);
+		}
 
-        var seconds = document.getElementById('seconds');
-        var minutes = document.getElementById('minutes');
-        var hours = document.getElementById('hour');
-        var isStop = hours.textContent === '00' && minutes.textContent === '00' && seconds.textContent === '00';console.log(isStop)
-        if (isStop) {
-            stop();
-            callBack();
-        } else {
+	}
 
-            if (seconds.textContent > 0) {
-                animationDown(seconds);
-                seconds.textContent = downMinutesSeconds(seconds.textContent);
-            }
-            if (minutes.textContent > 0) {
+	function now() {
+	}
 
-            }
-            if (hours.textContent > 0) {
+	function start() {
 
-            }
-            handleTime = setTimeout(function () {
-                countTimeDown(callBack);
-            }, 1000);
-        }
+		countTimeDown(function() {
+			alert('time!!!');
+		});
+	}
 
+	document.getElementById('btnStart').onclick = function() {
+		start();
+	}
 
-    }
+	document.getElementById('btnCountsDown').onclick = function() {
+		reset();
+	}
 
-    function now() {
-    }
+	//     document.getElementById('upHour').onclick = function () {
+	//         var hours = document.getElementById('hour');
+	//         animationUp(hours);
+	//         hours.textContent = upHour(hours.textContent);
+	//     }
 
-    function start() {
+	//     document.getElementById('downHour').onclick = function () {
+	//         var hours = document.getElementById('hour');
+	//         animationDown(hours);
+	//         hours.textContent = downHour(hours.textContent);
+	//     }
 
-        countTimeDown(function () {
-            alert('time!!!');
-        });
-    }
+	//     document.getElementById('upSeconds').onclick = function () {
+	//         var sec = document.getElementById('seconds');
+	//         animationUp(sec);
+	//         sec.textContent = upMinutesSeconds(sec.textContent);
+	//     }
 
-    document.getElementById('btnStart').onclick = function () {
-        start();
-    }
+	//     document.getElementById('downSeconds').onclick = function () {
+	//         var sec = document.getElementById('seconds');
+	//         animationDown(sec);
+	//         sec.textContent = downMinutesSeconds(sec.textContent);
+	//     }
 
-    document.getElementById('btnCountsDown').onclick = function () {
-        reset();
-    }
+	//     function upHour(hour) {
+	//         hour++;
+	//         if (hour > 12) {
+	//             hour = 1;
+	//         }
+	//         hour = checkTime(hour);
+	//         return hour;
+	//     }
 
-    document.getElementById('upHour').onclick = function () {
-        var hours = document.getElementById('hour');
-        animationUp(hours);
-        hours.textContent = upHour(hours.textContent);
-    }
+	//     function downHour(hour) {
+	//         hour--;
+	//         if (hour < 1) {
+	//             hour = 12;
+	//         }
+	//         hour = checkTime(hour);
+	//         return hour;
+	//     }
 
-    document.getElementById('downHour').onclick = function () {
-        var hours = document.getElementById('hour');
-        animationDown(hours);
-        hours.textContent = downHour(hours.textContent);
-    }
+	//     function upMinutesSeconds(time) {
+	//         time++;
+	//         if (time > 59) {
+	//             time = 0;
+	//         }
+	//         time = checkTime(time);
+	//         return time;
+	//     }
 
-    document.getElementById('upSeconds').onclick = function () {
-        var sec = document.getElementById('seconds');
-        animationUp(sec);
-        sec.textContent = upMinutesSeconds(sec.textContent);
-    }
-
-    document.getElementById('downSeconds').onclick = function () {
-        var sec = document.getElementById('seconds');
-        animationDown(sec);
-        sec.textContent = downMinutesSeconds(sec.textContent);
-    }
-
-    function upHour(hour) {
-        hour++;
-        if (hour > 12) {
-            hour = 1;
-        }
-        hour = checkTime(hour);
-        return hour;
-    }
-
-    function downHour(hour) {
-        hour--;
-        if (hour < 1) {
-            hour = 12;
-        }
-        hour = checkTime(hour);
-        return hour;
-    }
-
-    function upMinutesSeconds(time) {
-        time++;
-        if (time > 59) {
-            time = 0;
-        }
-        time = checkTime(time);
-        return time;
-    }
-
-    function downMinutesSeconds(time) {
-        time--;
-        if (time < 0) {
-            time = 59;
-        }
-        time = checkTime(time);
-        return time;
-    }
-
-
-
+	//     function downMinutesSeconds(time) {
+	//         time--;
+	//         if (time < 0) {
+	//             time = 59;
+	//         }
+	//         time = checkTime(time);
+	//         return time;
+	//     }
 </script>
