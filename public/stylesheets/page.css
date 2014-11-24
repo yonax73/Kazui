@@ -99,8 +99,8 @@ body,h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
     padding: 3px;
 }
 .mobile.example-calendar-mobile {
-    height: 32em;
-    max-height: 32em;
+    height: 35em;
+    max-height: 35em;
     max-width: 20em;
 }
 .page-header {

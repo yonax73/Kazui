@@ -6,189 +6,235 @@
 * http://www.kazui.io/purchase/license-agreement/kazui-complete
 * If you do not own a commercial license, this file shall be governed by the trial license terms.
 */
+@import url(http://fonts.googleapis.com/css?family=Orbitron);
 @import url('font-awesome.min.css');
-
 @import url('animations.css');
 
 .ui-mask {
-	background: none repeat scroll 0 0 transparent;
-	bottom: 0;
-	left: 0;
-	position: absolute;
-	right: 0;
-	top: 0;
+    background: none repeat scroll 0 0 transparent;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
 }
 /*
 *NavBar
 */
-.ui-navbar .nav,.ui-navbar .dropup,.ui-navbar .dropdown,.ui-navbar .collapse
-	{
-	position: static;
+.ui-navbar .nav, .ui-navbar .dropup, .ui-navbar .dropdown, .ui-navbar .collapse {
+    position: static;
 }
 
-.ui-navbar .navbar-inner,.ui-navbar .container {
-	position: relative;
+.ui-navbar .navbar-inner, .ui-navbar .container {
+    position: relative;
 }
 
 .ui-navbar .dropdown-menu {
-	left: auto;
+    left: auto;
 }
 
-.ui-navbar .dropdown-menu>li {
-	display: block;
-}
+    .ui-navbar .dropdown-menu > li {
+        display: block;
+    }
 
 .ui-navbar .dropdown-submenu .dropdown-menu {
-	left: 100%;
+    left: 100%;
 }
 
 .ui-navbar .nav.pull-right .dropdown-menu {
-	right: 0;
+    right: 0;
 }
 
 .ui-navbar .ui-navbar-content {
-	padding: 20px 30px;
-	*zoom: 1;
+    padding: 20px 30px;
+    *zoom: 1;
 }
 
-.ui-navbar .ui-navbar-content:before,.ui-navbar .ui-navbar-content:after
-	{
-	display: table;
-	content: "";
-	line-height: 0;
-	width: 100vh;
-}
+    .ui-navbar .ui-navbar-content:before, .ui-navbar .ui-navbar-content:after {
+        display: table;
+        content: "";
+        line-height: 0;
+        width: 100vh;
+    }
 
-.ui-navbar .ui-navbar-content:after {
-	clear: both;
-}
+    .ui-navbar .ui-navbar-content:after {
+        clear: both;
+    }
 
-.ui-navbar.navbar .nav>li>.dropdown-menu:after,.ui-navbar.navbar .nav>li>.dropdown-menu:before
-	{
-	display: none;
+.ui-navbar.navbar .nav > li > .dropdown-menu:after, .ui-navbar.navbar .nav > li > .dropdown-menu:before {
+    display: none;
 }
 
 .ui-navbar .dropdown.ui-navbar-fullwidth .dropdown-menu {
-	width: 100%;
-	left: 0;
-	right: 0;
+    width: 100%;
+    left: 0;
+    right: 0;
 }
 /*
 * Select
 */
 .ui-select {
-	position: relative;
-	cursor: default;
+    position: relative;
+    cursor: default;
 }
 
-.ui-select .has-feedback .form-control-feedback {
-	top: 0;
-}
+    .ui-select .has-feedback .form-control-feedback {
+        top: 0;
+    }
 
-.ui-select.disabled,.ui-select.read-only {
-	cursor: not-allowed;
-}
+    .ui-select.disabled, .ui-select.read-only {
+        cursor: not-allowed;
+    }
 
-.ui-select .form-group {
-	margin-bottom: 0;
-}
+    .ui-select .form-group {
+        margin-bottom: 0;
+    }
 
-.ui-select ul {
-	background: none repeat scroll 0 0 #fff; /*bg input**/
-	border-bottom: 1px solid;
-	border-left: 1px solid;
-	border-right: 1px solid;
-	border-color: #cccccc; /**Borde color del input*/
-	display: none;
-	height: auto;
-	list-style: outside none none;
-	margin: 0;
-	min-height: 80px;
-	overflow: auto;
-	padding: 0;
-	position: absolute;
-	text-indent: 0.85em;
-	width: 100%;
-	z-index: 999;
-}
+    .ui-select ul {
+        background: none repeat scroll 0 0 #fff; /*bg input**/
+        border-bottom: 1px solid;
+        border-left: 1px solid;
+        border-right: 1px solid;
+        border-color: #cccccc; /**Borde color del input*/
+        display: none;
+        height: auto;
+        list-style: outside none none;
+        margin: 0;
+        min-height: 80px;
+        overflow: auto;
+        padding: 0;
+        position: absolute;
+        text-indent: 0.85em;
+        width: 100%;
+        z-index: 999;
+    }
 
-.ui-select ul.open {
-	display: list-item;
-}
+        .ui-select ul.open {
+            display: list-item;
+        }
 
-.ui-select li {
-	padding-bottom: 0.15em;
-}
+    .ui-select li {
+        padding-bottom: 0.15em;
+    }
 
-.ui-select li:hover {
-	background-color: #f9f9f9; /*color navabar default active focus**/
-	color: #555555; /*color navabar default active focus**/
-}
+        .ui-select li:hover {
+            background-color: #f9f9f9; /*color navabar default active focus**/
+            color: #555555; /*color navabar default active focus**/
+        }
 
 /*
 * Calendar
 */
-.ui-calendar>.btn-group.btn-group-justified {
-	padding-bottom: 5px;
+.ui-calendar > .btn-group.btn-group-justified {
+    padding-bottom: 5px;
 }
 
-.ui-calendar.panel>.panel-body {
-	padding: 5px;
-	overflow: hidden;
+.ui-calendar.panel > .panel-body {
+    padding: 5px;
+    overflow: hidden;
 }
 
 .ui-calendar table {
-	margin: 0px;
+    margin: 0px;
 }
 
-.ui-calendar table tbody tr td {
-	border: medium none;
-	cursor: default;
-}
+    .ui-calendar table tbody tr td {
+        border: medium none;
+        cursor: default;
+    }
 
-.ui-calendar table tbody td:hover {
-	opacity: 0.6;
-}
+    .ui-calendar table tbody td:hover {
+        opacity: 0.6;
+    }
 
-.ui-calendar table thead th,.ui-calendar table tbody td {
-	text-align: center;
-}
+    .ui-calendar table thead th, .ui-calendar table tbody td {
+        text-align: center;
+    }
 
-.ui-calendar table tbody td.bg-primary {
-	font-weight: bold;
-}
+        .ui-calendar table tbody td.bg-primary {
+            font-weight: bold;
+        }
 
 .ui-calendar-input {
-	position: absolute;
-	margin-right: 15px;
-	z-index: 9;
+    position: absolute;
+    margin-right: 15px;
+    z-index: 9;
 }
 
-.ui-calendar-input .panel-main {
-	box-shadow: 1px 2px 3px gray;
+    .ui-calendar-input .panel-main {
+        box-shadow: 1px 2px 3px gray;
+    }
+
+/*Clock*/
+.ui-clock {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 16px;
+    font-weight: bolder;
+}
+
+    .ui-clock > .panel {
+        background: none repeat scroll 0 0 transparent;
+    }
+
+    .ui-clock.panel-body {
+        padding: 0px;
+    }
+
+    .ui-clock table {
+        margin: 0;
+        padding: 0;
+    }
+
+.table.ui-clock td:last-child {
+    border: none;
+}
+
+.ui-clock tr.ui-clock-controls td {
+    border-bottom: none;
+    border-left: none;
+    border-top: none;
+    cursor: pointer;
+    font-size: 60%;
+    padding: 2px;
+}
+
+.table.ui-clock td {
+    border-bottom: none;
+    border-left: none;
+    border-top: none;
+    border-right: 1px solid;
+    cursor: default;
+    font-size: 120%;
+    max-width: 20px;
+    min-width: 20px;
+    text-align: center;
+    width: 20px;
 }
 
 
 @media ( max-width : 969px) {
-	/*
+    /*
 *Navbar
 */
-	.ui-navbar .dropdown.ui-navbar-fullwidth .dropdown-menu {
-		width: auto;
-	}
-	.ui-navbar .ui-navbar-content {
-		padding-left: 0;
-		padding-right: 0;
-	}
-	.ui-navbar .dropdown-menu>li>ul {
-		display: block;
-	}
-/*Calendar*/	
-	.ui-calendar .table.table-condensed td {
-    font-size: 90%;
-    padding: 3px;
-}
-.ui-calendar table thead th{
-	font-size: 90%;
-}
+    .ui-navbar .dropdown.ui-navbar-fullwidth .dropdown-menu {
+        width: auto;
+    }
+
+    .ui-navbar .ui-navbar-content {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .ui-navbar .dropdown-menu > li > ul {
+        display: block;
+    }
+    /*Calendar*/
+    .ui-calendar .table.table-condensed td {
+        font-size: 90%;
+        padding: 3px;
+    }
+
+    .ui-calendar table thead th {
+        font-size: 90%;
+    }
 }

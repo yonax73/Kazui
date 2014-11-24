@@ -15,7 +15,7 @@
         <button type="button" id="btnSelectGetValue" class="btn btn-primary btn-block">Get value</button>        
         <div class="checkbox pull-right" >
             <label>
-                <input type="checkbox" value="disabled" id="btnSelectDisabled">
+                <input type="checkbox" value="disabled" id="chkSelectDisabled">
                 Disabled
             </label>        
         </div>
@@ -39,7 +39,7 @@
         if (!items.isDisabled())
         alertSelectExample.info('Value is: ' + items.getValue());
     }
-    document.getElementById('btnSelectDisabled').onclick = function () {
+    document.getElementById('chkSelectDisabled').onclick = function () {
         items.setDisabled(this.checked);
     }
 

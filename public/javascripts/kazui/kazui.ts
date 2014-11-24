@@ -6,23 +6,232 @@
 * http://www.kazui.io/purchase/license-agreement/kazui-complete
 * If you do not own a commercial license, this file shall be governed by the trial license terms.
 */
-class Animation {
-  public type;
-  public fn;
-  public time;
-    
-  constructor(type,fn,time){
-     this.type = type;
-     this.fn = fn;
-     this.time = time;
-  }
-    
+
+enum ETypeClock {
+    STANDARD,
+    MILITARY,
+    COUNT_DOWN,
+    COUNT_UP
+}
+/**
+ * Clock
+ * @class Clock
+ */
+class Clock {
+
+    private element: HTMLElement;
+    private panel: HTMLDivElement;
+    private panelBody: HTMLDivElement;
+    private table: HTMLTableElement;
+    private upHour: HTMLTableCellElement;
+    private upMinutes: HTMLTableCellElement;
+    private upSeconds: HTMLTableCellElement;
+    private upTime: HTMLTableCellElement;
+    private downHour: HTMLTableCellElement;
+    private downMinutes: HTMLTableCellElement;
+    private downSeconds: HTMLTableCellElement;
+    private downTime: HTMLTableCellElement;
+    private hour: HTMLTableCellElement;
+    private minutes: HTMLTableCellElement;
+    private seconds: HTMLTableCellElement;
+    private time: HTMLTableCellElement;
+    private timeOutFn;
+    private isStop: boolean;
+    private type: ETypeClock;
+    private animationUp: Animation;
+    private animationDown: Animation;
+    private today: Date;
+    private iconUp: string;
+    private iconDown: string;
+
+    /**
+    * constructor 
+    * @param {HTMLElement} element
+    */
+    constructor(element: HTMLElement) {
+        this.element = element;
+        this.iconUp = 'fa fa-chevron-up';
+        this.iconDown = 'fa fa-chevron-down';
+        this.today = new Date();
+        this.animationUp = new Animation('ui-ease-in', 'ui-fade-in-up', 'ui-0-2s');
+        this.animationDown = new Animation('ui-ease-in', 'ui-fade-in-down', 'ui-0-2s');        
+        this.isStop = true;
+        this.create();
+    }
+
+    /**
+    * Create HTML
+    * @method create
+    */
+    private create() {
+        /**
+         * Create HTMLElements.
+         */
+        this.panel = document.createElement('div');
+        this.panelBody = document.createElement('div');
+        this.createTable();
+        /**
+         * add classes.
+         */
+        this.element.className = 'ui-clock';
+        this.panel.className = 'panel panel-primary';
+        this.panelBody.className = 'ui-clock panel-body';
+        /**
+         * append Nodes.
+         */
+        this.panelBody.appendChild(this.table);
+        this.panel.appendChild(this.panelBody);
+        this.element.appendChild(this.panel);
+    }
+    /**
+    * Create Table HTML
+    * @method createTable
+    */
+    private createTable() {
+        /**
+         * Create HTMLElements.
+         */
+        this.table = document.createElement('table');
+        var tbody = document.createElement('tbody');
+        var tr = document.createElement('tr');
+        this.upHour = document.createElement('td');
+        this.upMinutes = document.createElement('td');
+        this.upSeconds = document.createElement('td');
+        this.upTime = document.createElement('td');
+        this.downHour = document.createElement('td');
+        this.downMinutes = document.createElement('td');
+        this.downSeconds = document.createElement('td');
+        this.downTime = document.createElement('td');
+        this.hour = document.createElement('td');
+        this.minutes = document.createElement('td');
+        this.seconds = document.createElement('td');
+        this.time = document.createElement('td');
+        var iconUp = document.createElement('i');
+        var iconDown = document.createElement('i');
+        /**
+         * add classes.
+         */
+        this.table.className = 'ui-clock table table-condensed';
+        tr.className = 'ui-clock-controls text-primary';
+        iconUp.className = this.iconUp;
+        iconDown.className = this.iconDown;
+        /**
+         * create row for up controls
+         */
+        this.upHour.appendChild(iconUp.cloneNode());
+        this.upMinutes.appendChild(iconUp.cloneNode());
+        this.upSeconds.appendChild(iconUp.cloneNode());
+        this.upTime.appendChild(iconUp.cloneNode());
+        tr.appendChild(this.upHour);
+        tr.appendChild(this.upMinutes);
+        tr.appendChild(this.upSeconds);
+        tr.appendChild(this.upTime);
+        tbody.appendChild(tr);
+        this.addEventsUpControls();
+        /**
+         * create row for display the time
+         */
+        tr = document.createElement('tr');
+        tr.className = 'bg-primary';
+        this.hour.textContent = '00';
+        this.minutes.textContent = '00';
+        this.seconds.textContent = '00';
+        this.time.textContent = '--';
+        tr.appendChild(this.hour);
+        tr.appendChild(this.minutes);
+        tr.appendChild(this.seconds);
+        tr.appendChild(this.time);
+        tbody.appendChild(tr);
+        /**
+         * create row for down controls
+         */
+        tr = document.createElement('tr');
+        tr.className = 'ui-clock-controls text-primary';
+        this.downHour.appendChild(iconDown.cloneNode());
+        this.downMinutes.appendChild(iconDown.cloneNode());
+        this.downSeconds.appendChild(iconDown.cloneNode());
+        this.downTime.appendChild(iconDown.cloneNode());
+        tr.appendChild(this.downHour);
+        tr.appendChild(this.downMinutes);
+        tr.appendChild(this.downSeconds);
+        tr.appendChild(this.downTime);
+        tbody.appendChild(tr);
+        this.addEventsDownControls();
+        /**
+         * add node tbody
+         */
+        this.table.appendChild(tbody);
+    }
+    /**
+    * add events for Up Controls
+    * @method addEventsUpControls
+    */
+    private addEventsUpControls() {
+        this.upHour.onclick = () => { };
+        this.upMinutes.onclick = () => { };
+        this.upSeconds.onclick = () => { };
+        this.upTime.onclick = () => { };
+    }
+    /**
+    * add events for Down Controls
+    * @method addEventsDownControls
+    */
+    private addEventsDownControls() {
+        this.downHour.onclick = () => { };
+        this.downMinutes.onclick = () => { };
+        this.downSeconds.onclick = () => { };
+        this.downTime.onclick = () => { };
+    }
+
+    /**
+   * Start clock in the standard time
+   * @method standardTime
+   */
+    public standardTime() {
+        this.type = ETypeClock.STANDARD;
+    }
+    /**
+   * Start clock in the military time
+   * @method standardTime
+   */
+    public militaryTime() {
+        this.type = ETypeClock.MILITARY;
+    }
+    /**
+   * Start clock with the counting down
+   * @method countDown
+   */
+    public countDown() {
+        this.type = ETypeClock.COUNT_DOWN;
+    }
+    /**
+   * Start clock with the counting up
+   * @method countUp
+   */
+    public countUp() {
+        this.type = ETypeClock.COUNT_UP;
+    }
+
+
 }
 
-enum ETypeCalendar{
-   DAY,
-   MONTH,
-   YEAR
+class Animation {
+    public type;
+    public fn;
+    public time;
+
+    constructor(type, fn, time) {
+        this.type = type;
+        this.fn = fn;
+        this.time = time;
+    }
+
+}
+
+enum ETypeCalendar {
+    DAY,
+    MONTH,
+    YEAR
 }
 
 class Calendar {
@@ -41,26 +250,30 @@ class Calendar {
     private btnNext;
     private selectedCell;
     private element: HTMLElement;
-    private legend:HTMLElement;
+    private legend: HTMLElement;
     private options;
     private title;
-    private animationNext:Animation;
-    private animationBack:Animation;
-    private animationUp:Animation;
-    private animationDown:Animation;
-    private type:ETypeCalendar= ETypeCalendar.DAY;
+    private animationIn: Animation;
+    private animationOut: Animation;
+    private animationNext: Animation;
+    private animationBack: Animation;
+    private animationUp: Animation;
+    private animationDown: Animation;
+    private type: ETypeCalendar = ETypeCalendar.DAY;
 
     constructor(element: HTMLElement, options) {
         this.element = element;
         this.options = options;
-        this.animationNext = new Animation('ui-ease','ui-flip-out-y','ui-0-2s');
-        this.animationBack = new Animation('ui-ease','ui-flip-out-y','ui-0-2s');
-        this.animationUp = new Animation('ui-ease','ui-flip-out-x','ui-0-2s');
-        this.animationDown = new Animation('ui-ease','ui-flip-out-x','ui-0-2s');
+        this.animationIn = new Animation('ui-ease', 'ui-fade-in-down', 'ui-0-5s');
+        this.animationOut = new Animation('ui-ease', 'ui-fade-out-up', 'ui-0-5s');
+        this.animationNext = new Animation('ui-ease', 'ui-flip-out-y', 'ui-0-2s');
+        this.animationBack = new Animation('ui-ease', 'ui-flip-out-y', 'ui-0-2s');
+        this.animationUp = new Animation('ui-ease', 'ui-flip-out-x', 'ui-0-2s');
+        this.animationDown = new Animation('ui-ease', 'ui-flip-out-x', 'ui-0-2s');
         this.setOptions();
         this.displayDate = this.today.clone();
-        this.displayDate.setDate(1);     
-        this.data={};   
+        this.displayDate.setDate(1);
+        this.data = {};
         this.dataDay();
         this.createCalendar();
         this.calendarDay();
@@ -141,13 +354,13 @@ class Calendar {
     }
 
     private dataMonth() {
-         var year = this.displayDate.getFullYear();
+        var year = this.displayDate.getFullYear();
         this.data.year = year;
-        this.data.currentMonth = year === this.today.getFullYear() ? this.today.getMonth() : 0; 
+        this.data.currentMonth = year === this.today.getFullYear() ? this.today.getMonth() : 0;
         this.type = ETypeCalendar.MONTH;
     }
-   
-    private dataYear(){
+
+    private dataYear() {
         var year = this.displayDate.getFullYear();
         var limitYear = year + 11;
         this.data.year = year;
@@ -155,7 +368,7 @@ class Calendar {
         this.data.range = year + ' - ' + limitYear;
         this.type = ETypeCalendar.YEAR;
     }
-    
+
     private createCalendar() {
         var row = document.createElement('div');
         var col = document.createElement('div');
@@ -205,42 +418,42 @@ class Calendar {
         /*
         * back Button
         */
-         var btnGroup = document.createElement('div');
-         btnGroup.className = 'btn-group';
-         this.btnBack = document.createElement('button');
-         this.btnBack.type = 'button';
-         this.btnBack.className = 'btn btn-default';
-         var i = document.createElement('i');
-         i.className ='fa fa-chevron-circle-left';
-         this.btnBack.appendChild(i);
-         btnGroup.appendChild(this.btnBack);
-         btnGroupJustified.appendChild(btnGroup);
+        var btnGroup = document.createElement('div');
+        btnGroup.className = 'btn-group';
+        this.btnBack = document.createElement('button');
+        this.btnBack.type = 'button';
+        this.btnBack.className = 'btn btn-default';
+        var i = document.createElement('i');
+        i.className = 'fa fa-chevron-circle-left';
+        this.btnBack.appendChild(i);
+        btnGroup.appendChild(this.btnBack);
+        btnGroupJustified.appendChild(btnGroup);
         /*
         * current Button
         */
-         btnGroup = document.createElement('div');
-         btnGroup.className = 'btn-group';
-         this.btnCurrent = document.createElement('button');
-         this.btnCurrent.type = 'button';
-         this.btnCurrent.className = 'btn btn-default';
-         i = document.createElement('i');
-         i.className ='fa fa-circle';
-         this.btnCurrent.appendChild(i);
-         btnGroup.appendChild(this.btnCurrent);
-         btnGroupJustified.appendChild(btnGroup);
+        btnGroup = document.createElement('div');
+        btnGroup.className = 'btn-group';
+        this.btnCurrent = document.createElement('button');
+        this.btnCurrent.type = 'button';
+        this.btnCurrent.className = 'btn btn-default';
+        i = document.createElement('i');
+        i.className = 'fa fa-circle';
+        this.btnCurrent.appendChild(i);
+        btnGroup.appendChild(this.btnCurrent);
+        btnGroupJustified.appendChild(btnGroup);
         /*
         * next Button
         */
-         btnGroup = document.createElement('div');
-         btnGroup.className = 'btn-group';
-         this.btnNext = document.createElement('button');
-         this.btnNext.type = 'button';
-         this.btnNext.className = 'btn btn-default';
-         i = document.createElement('i');
-         i.className ='fa fa-chevron-circle-right';
-         this.btnNext.appendChild(i);
-         btnGroup.appendChild(this.btnNext);
-         btnGroupJustified.appendChild(btnGroup);        
+        btnGroup = document.createElement('div');
+        btnGroup.className = 'btn-group';
+        this.btnNext = document.createElement('button');
+        this.btnNext.type = 'button';
+        this.btnNext.className = 'btn btn-default';
+        i = document.createElement('i');
+        i.className = 'fa fa-chevron-circle-right';
+        this.btnNext.appendChild(i);
+        btnGroup.appendChild(this.btnNext);
+        btnGroupJustified.appendChild(btnGroup);
 
         colButtons.appendChild(btnGroupJustified);
         row.appendChild(colTitle);
@@ -269,7 +482,7 @@ class Calendar {
         */
         this.table = document.createElement('table');
         this.table.className = 'table table-condensed';
-        var thead = document.createElement('thead');     
+        var thead = document.createElement('thead');
         this.tbody = document.createElement('tbody');
         this.table.appendChild(thead);
         this.table.appendChild(this.tbody);
@@ -281,23 +494,22 @@ class Calendar {
     }
 
 
-    private clearTable(callback,animation:Animation){     
-          this.table.classList.add(animation.type);
-          this.table.classList.add(animation.fn);
-          this.table.classList.add(animation.time);      
-       setTimeout(()=>{
-	         this.table.classList.remove(animation.type);
-             this.table.classList.remove(animation.fn);
-	         this.table.classList.remove(animation.time);	         
-	         this.table.tHead.removeChildren();   
-	         this.tbody.removeChildren();           
-           callback(this);
-       },200);
-         
+    private clearTable(callback, animation: Animation) {
+        this.table.classList.add(animation.type);
+        this.table.classList.add(animation.fn);
+        this.table.classList.add(animation.time);
+        setTimeout(() => {
+            this.table.classList.remove(animation.type);
+            this.table.classList.remove(animation.fn);
+            this.table.classList.remove(animation.time);
+            this.table.tHead.removeChildren();
+            this.tbody.removeChildren();
+            callback(this);
+        }, 200);
     }
-    
-    private calendarDay(self?) { 
-        if(!self) self = this;   
+
+    private calendarDay(self?) {
+        if (!self) self = this;
         self.title.textContent = self.data.month.text + ' ' + self.data.year;
         /*
         * add event to change view type by months.
@@ -305,43 +517,43 @@ class Calendar {
         self.title.onclick = (e) => {
             e.preventDefault();
             self.displayDate.setDate(1);
-            self.dataMonth();     
-            self.clearTable(self.calendarMonth,self.animationUp);            
+            self.dataMonth();
+            self.clearTable(self.calendarMonth, self.animationUp);
         }
         /*
         * add Event to navigation
-        */        
-        self.btnBack.onclick = ()=>{
+        */
+        self.btnBack.onclick = () => {
             self.displayDate.setDate(1);
             self.displayDate.previousMonth();
             self.dataDay();
-            self.clearTable(self.calendarDay,self.animationBack);            
-        }        
-        self.btnCurrent.onclick = ()=>{
-	        /*
-	        * If not is the current month,
-	        * go to current month.
-	        */
-	        var dMonth = self.displayDate.getMonth();
-	        var month = self.today.getMonth();
-	        if (!(dMonth === month && self.today.getFullYear() === self.displayDate.getFullYear())) {
-	            self.displayDate = self.today.clone();
-	            self.displayDate.setDate(1);
-	            self.dataDay();
-                self.clearTable(self.calendarDay,self.animationUp);
-	        }
+            self.clearTable(self.calendarDay, self.animationBack);
         }
-        self.btnNext.onclick =()=>{
+        self.btnCurrent.onclick = () => {
+            /*
+            * If not is the current month,
+            * go to current month.
+            */
+            var dMonth = self.displayDate.getMonth();
+            var month = self.today.getMonth();
+            if (!(dMonth === month && self.today.getFullYear() === self.displayDate.getFullYear())) {
+                self.displayDate = self.today.clone();
+                self.displayDate.setDate(1);
+                self.dataDay();
+                self.clearTable(self.calendarDay, self.animationUp);
+            }
+        }
+        self.btnNext.onclick = () => {
             self.displayDate.setDate(1);
             self.displayDate.nextMonth();
             self.dataDay();
-            self.clearTable(self.calendarDay,self.animationNext);            
-        }         
+            self.clearTable(self.calendarDay, self.animationNext);
+        }
         self.loadLegendMatchMedia();
-       /*
-        * Create the days of previous month, current month and next month,
-        * with a total of 42 days
-        */
+        /*
+         * Create the days of previous month, current month and next month,
+         * with a total of 42 days
+         */
         var mod = 1;
         var axuTr = document.createElement('tr');
         var currentDay = self.data.currentDay;
@@ -368,27 +580,27 @@ class Calendar {
             * Add event, if  is input option 
             * then change self value for the selected date.                
             */
-           
-            td.onclick = function () { 
-               self.selectCell(this);                  
-	           if (this.classList.contains('text-muted')) {     //no is current month
-	             if (this.textContent > 20) {                   //is previous month	                      
-				        self.displayDate.setDate(1);
-			            self.displayDate.previousMonth();
-			            self.dataDay();
-			            self.displayDate.setDate(this.textContent);
-			            self.data.currentDay =  self.displayDate.getDate();
-			            self.clearTable(self.calendarDay,self.animationBack);    
-	               } else {                                    //is next month	                      
-				        self.displayDate.setDate(1);
-			            self.displayDate.nextMonth();
-			            self.dataDay();
-			            self.displayDate.setDate(this.textContent);
-			            self.data.currentDay =  self.displayDate.getDate();
-			            self.clearTable(self.calendarDay,self.animationNext);    	                         
-	               }
-	            }
-            	 if (self.options && self.options.isInput) {
+
+            td.onclick = function () {
+                self.selectCell(this);
+                if (this.classList.contains('text-muted')) {     //no is current month
+                    if (this.textContent > 20) {                   //is previous month	                      
+                        self.displayDate.setDate(1);
+                        self.displayDate.previousMonth();
+                        self.dataDay();
+                        self.displayDate.setDate(this.textContent);
+                        self.data.currentDay = self.displayDate.getDate();
+                        self.clearTable(self.calendarDay, self.animationBack);
+                    } else {                                    //is next month	                      
+                        self.displayDate.setDate(1);
+                        self.displayDate.nextMonth();
+                        self.dataDay();
+                        self.displayDate.setDate(this.textContent);
+                        self.data.currentDay = self.displayDate.getDate();
+                        self.clearTable(self.calendarDay, self.animationNext);
+                    }
+                }
+                if (self.options && self.options.isInput) {
                     self.displayDate.setDate(this.textContent);
                     var tmpInput = self.options.input;
                     tmpInput.value = self.displayDate.format(tmpInput.dataset.date);
@@ -409,46 +621,46 @@ class Calendar {
             }
             mod++;
         }
-     }
+    }
     /*
     * Load the legend of the days of week
     */
-     private loadLegend(array){
-       if(this.type === ETypeCalendar.DAY){
-            if(this.legend) this.legend.removeChildren();
-		    this.legend = document.createElement('tr');
-		    this.table.tHead.appendChild(this.legend);
-		    for (var i = 0; i < 7; i++) {
-		        var th = document.createElement('th');
-		        th.textContent =array[i];
-		        this.legend.appendChild(th);
-		    }
-		 }        
-     }
+    private loadLegend(array) {
+        if (this.type === ETypeCalendar.DAY) {
+            if (this.legend) this.legend.removeChildren();
+            this.legend = document.createElement('tr');
+            this.table.tHead.appendChild(this.legend);
+            for (var i = 0; i < 7; i++) {
+                var th = document.createElement('th');
+                th.textContent = array[i];
+                this.legend.appendChild(th);
+            }
+        }
+    }
 
     private calendarMonth(self?) {
-         if(!self) self = this;  
-         self.title.text = self.data.year;
-         /*
-         * add event to change view type by range years.
-         */
-         self.title.onclick = (e)=> {
-             e.preventDefault();
-             self.dataYear();             
-             self.clearTable(self.calendarYear,self.animationUp);             
-         }     
+        if (!self) self = this;
+        self.title.text = self.data.year;
+        /*
+        * add event to change view type by range years.
+        */
+        self.title.onclick = (e) => {
+            e.preventDefault();
+            self.dataYear();
+            self.clearTable(self.calendarYear, self.animationUp);
+        }
         /*
         * add Event to navigation
-        */        
-        self.btnBack.onclick = ()=>{
+        */
+        self.btnBack.onclick = () => {
             var year = self.displayDate.getFullYear() - 1;
             if (year > self.yearGregorian) {
                 self.displayDate = new Date(year, 0, 1);
                 self.dataMonth();
-                self.clearTable(self.calendarMonth,self.animationBack);                
+                self.clearTable(self.calendarMonth, self.animationBack);
             }
-        }        
-        self.btnCurrent.onclick = ()=>{
+        }
+        self.btnCurrent.onclick = () => {
             /*
             * If not is the current year,
             * go to current year.
@@ -456,128 +668,128 @@ class Calendar {
             if (self.displayDate.getFullYear() !== self.today.getFullYear()) {
                 self.displayDate = self.today.clone();
                 self.dataMonth();
-                self.clearTable(self.calendarMonth,self.animationUp);
+                self.clearTable(self.calendarMonth, self.animationUp);
             }
         }
-        self.btnNext.onclick =()=>{
+        self.btnNext.onclick = () => {
             self.displayDate = new Date(self.displayDate.getFullYear() + 1, 0, 1);
             self.dataMonth();
-            self.clearTable(self.calendarMonth,self.animationNext);
+            self.clearTable(self.calendarMonth, self.animationNext);
         }
-         
+
             /*
             * Create all months of a year.            
             */
             var tr = document.createElement('tr');
-            var mod = 1;
-            var currentMonth = self.data.currentMonth;
-            for (var j = 0; j < 12; j++) {
-                var td = document.createElement('td');
-                /*
-                * If the j is the current day,
-                * make the background darker.
-                */
-                if (j === currentMonth) {
-                    td.className = 'bg-primary';
-                }
-                td.textContent = self.abbMonths[j];
-                tr.appendChild(td);
-                /*
-                * add event to go to month selected.
-                */                
-                td.onclick = function () {
-                    self.displayDate.setMonth(self.abbMonths.indexOf(this.textContent));
-                    self.displayDate.setDate(1);
-                    self.dataDay();
-                    self.clearTable(self.calendarDay,self.animationDown);                    
-                }
+        var mod = 1;
+        var currentMonth = self.data.currentMonth;
+        for (var j = 0; j < 12; j++) {
+            var td = document.createElement('td');
+            /*
+            * If the j is the current day,
+            * make the background darker.
+            */
+            if (j === currentMonth) {
+                td.className = 'bg-primary';
+            }
+            td.textContent = self.abbMonths[j];
+            tr.appendChild(td);
+            /*
+            * add event to go to month selected.
+            */
+            td.onclick = function () {
+                self.displayDate.setMonth(self.abbMonths.indexOf(this.textContent));
+                self.displayDate.setDate(1);
+                self.dataDay();
+                self.clearTable(self.calendarDay, self.animationDown);
+            }
                 /*
                 * If mod is greater than zero and is module of 3,
                 * add new row.
                 */
                 if (mod > 1 && mod % 3 === 0) {
-                    self.tbody.appendChild(tr);
-                    tr = document.createElement('tr');
-                }
-                mod++;
+                self.tbody.appendChild(tr);
+                tr = document.createElement('tr');
             }
-                 
+            mod++;
+        }
+
     }
-    
-    
+
+
     private calendarYear(self?) {
-          if(!self)self = this;          
-	      self.title.text = self.data.range;
-	      self.title.onclick = (e) =>{
-	          e.preventDefault();
-	     }
+        if (!self) self = this;
+        self.title.text = self.data.range;
+        self.title.onclick = (e) => {
+            e.preventDefault();
+        }
         /*
         * add Event to navigation
-        */        
-        self.btnBack.onclick = ()=>{
+        */
+        self.btnBack.onclick = () => {
             var year = self.displayDate.getFullYear() - 12;
             if (year <= self.yearGregorian) {
                 year = self.yearGregorian;
             }
             self.displayDate = new Date(year, 0, 1);
             self.dataYear();
-            self.clearTable(self.calendarYear,self.animationBack);
-        }        
-        self.btnCurrent.onclick = ()=>{
-             /*
-            * If not is the current year,
-            * go to current range year.
-            */
+            self.clearTable(self.calendarYear, self.animationBack);
+        }
+        self.btnCurrent.onclick = () => {
+            /*
+           * If not is the current year,
+           * go to current range year.
+           */
             if (self.displayDate.getFullYear() !== self.today.getFullYear()) {
                 self.displayDate = self.today.clone();
                 self.dataYear();
-                self.clearTable(self.calendarYear,self.animationUp);                
+                self.clearTable(self.calendarYear, self.animationUp);
             }
         }
-        self.btnNext.onclick =()=>{
+        self.btnNext.onclick = () => {
             self.displayDate = new Date(self.displayDate.getFullYear() + 12, 0, 1);
             self.dataYear();
-            self.clearTable(self.calendarYear,self.animationNext);
+            self.clearTable(self.calendarYear, self.animationNext);
         }
 
             /*
             * Create range year.            
             */
             var tr = document.createElement('tr');
-            var mod = 1;
-            var year = self.data.year;
-            var currentYear = self.data.currentYear;
-            for (var j = 0; j < 12; j++) {
-                var td = document.createElement('td');
-                /*
-                * If the j is the current day,
-                * make the background darker.
-                */
-                if (year === currentYear) {
-                    td.className = 'bg-primary';
-                }
-                td.textContent = (year++).toString();
-                tr.appendChild(td);
-                /*
-                * add event to go to year selected.
-                */
-                
-                td.onclick = function () {
-                    self.displayDate.setFullYear(this.textContent);
-                    self.dataMonth();
-                    self.clearTable(self.calendarMonth,self.animationDown);                    
-                }
+        var mod = 1;
+        var year = self.data.year;
+        var currentYear = self.data.currentYear;
+        for (var j = 0; j < 12; j++) {
+            var td = document.createElement('td');
+            /*
+            * If the j is the current day,
+            * make the background darker.
+            */
+            if (year === currentYear) {
+                td.className = 'bg-primary';
+            }
+            td.textContent = (year++).toString();
+            tr.appendChild(td);
+            /*
+            * add event to go to year selected.
+            */
+
+            td.onclick = function () {
+                self.displayDate.setFullYear(this.textContent);
+                self.dataMonth();
+                self.clearTable(self.calendarMonth, self.animationDown);
+            }
                 /*
                 * If mod is greater than zero and is module of 3,
                 * add new row.
                 */
                 if (mod > 1 && mod % 3 === 0) {
-                    self.tbody.appendChild(tr);
-                    tr = document.createElement('tr');
-                }
-                mod++;
-            }	       
-     }
+                self.tbody.appendChild(tr);
+                tr = document.createElement('tr');
+            }
+            mod++;
+        }
+    }
 
     private setOptions() {
         if (this.options) {
@@ -586,9 +798,9 @@ class Calendar {
             }
         }
     }
-    
-    private displayDateFromValue(){
-            if (this.options && this.options.isInput) {
+
+    private displayDateFromValue() {
+        if (this.options && this.options.isInput) {
             var input = this.options.input;
             var value = input.value;
             if (!value.isEmpty()) {
@@ -597,61 +809,122 @@ class Calendar {
                 var col = this.displayDate.getDay();
                 var row = this.displayDate.getWeekOfMonth();
                 this.displayDate.setDate(1);
-                this.dataDay();                
-                this.clearTable(this.calendarDay,this.animationUp);                
+                this.dataDay();
+                this.clearTable(this.calendarDay, this.animationUp);
                 var cell = this.table.rows[row].cells[col];
                 this.selectCell(cell);
             }
         }
-    } 
-    
-    private selectCell(cell:HTMLElement){
+    }
+
+    private selectCell(cell: HTMLElement) {
         this.selectedCell.classList.remove('bg-primary');
         cell.classList.add('bg-primary');
         this.selectedCell = cell;
-    }   
-    
-    /* JavaScript Media Queries */
-    private mediaQuery(){		
-		if (matchMedia) {
-			var mq = window.matchMedia("(max-width: 969px)");
-			var self = this;
-			mq.addListener(function(){
-		      	if(mq.matches){
-		    	   self.loadLegend(self.abbDays);
-		    	}else{
-		    	  self.loadLegend(self.days);
-		    	}	
-			});					
-		}
-    }
-    
-    private loadLegendMatchMedia(){
-        var mq = window.matchMedia("(max-width: 969px)");
-    	if(mq.matches){
-    	   this.loadLegend(this.abbDays);
-    	}else{
-    	  this.loadLegend(this.days);
-    	}		
     }
 
-    public open(callback) {
+    /* JavaScript Media Queries */
+    private mediaQuery() {
+        if (matchMedia) {
+            var mq = window.matchMedia("(max-width: 969px)");
+            var self = this;
+            mq.addListener(function () {
+                if (mq.matches) {
+                    self.loadLegend(self.abbDays);
+                } else {
+                    self.loadLegend(self.days);
+                }
+            });
+        }
+    }
+
+    private loadLegendMatchMedia() {
+        var mq = window.matchMedia("(max-width: 969px)");
+        if (mq.matches) {
+            this.loadLegend(this.abbDays);
+        } else {
+            this.loadLegend(this.days);
+        }
+    }
+
+    public refresh() {
+        this.dataDay();
+        this.clearTable(this.calendarDay, this.animationUp);
+    }
+
+    public open(callback?) {
         this.element.classList.remove('hidden');
-        this.displayDateFromValue();
-        if (callback) callback();        
-     }
+        this.element.classList.add(this.animationIn.type);
+        this.element.classList.add(this.animationIn.fn);
+        this.element.classList.add(this.animationIn.time);
+        setTimeout(() => {
+            this.element.classList.remove(this.animationIn.type);
+            this.element.classList.remove(this.animationIn.fn);
+            this.element.classList.remove(this.animationIn.time);
+            this.displayDateFromValue();
+            if (callback) callback();
+        }, 500);
+    }
 
     public close(callback?) {
-        this.element.classList.add('hidden');
-        if (callback) callback();
-     }
+        this.element.classList.add(this.animationOut.type);
+        this.element.classList.add(this.animationOut.fn);
+        this.element.classList.add(this.animationOut.time);
+        setTimeout(() => {
+            this.element.classList.remove(this.animationOut.type);
+            this.element.classList.remove(this.animationOut.fn);
+            this.element.classList.remove(this.animationOut.time);
+            this.element.classList.add('hidden');
+            if (callback) callback();
+        }, 500);
+    }
 
     public isOpen() {
-       return !this.element.classList.contains('hidden');
+        return !this.element.classList.contains('hidden');
     }
-    
-    public getDate(){
-       return this.displayDate;
+
+    public getDate() {
+        this.displayDate.setDate(this.selectedCell.textContent);
+        return this.displayDate;
+    }
+
+    public setAnimationIn(animationFn) {
+        this.animationIn.fn = animationFn;
+    }
+
+    public setAnimationOut(animationFn) {
+        this.animationOut.fn = animationFn;
+    }
+
+    public setLegendDaysWeek(strDays: string) {
+        this.days = strDays.split(',');
+        this.abbDays = new Array();
+        var i = 0;
+        while (i < 7) {
+            this.abbDays.push(this.days[i].charAt(0));
+            i++;
+        }
+    }
+
+    public setLegendMonths(strMonths: string) {
+        var months = strMonths.split(',');
+        //@overwrite Date.getMonthName()
+        Date.prototype.getMonthName = function () {
+            var month_names = months;
+            return month_names[this.getMonth()];
+        }
+        var i = 0;
+        this.abbMonths = new Array();
+        while (i < 12) {
+            this.abbMonths.push(months[i].substring(0, 3));
+            i++;
+        }
+        var mAbbrs = this.abbMonths;
+        //@overwrite Date.getMonthAbbr()
+        Date.prototype.getMonthAbbr = function () {
+            var month_abbrs = mAbbrs;
+            return month_abbrs[this.getMonth()];
+        }
     }
 
 }
@@ -1560,7 +1833,7 @@ Date.prototype.parse = function (dateString, pattern) {
     return date;
 };
 
-interface Element{
+interface Element {
     removeChildren();
 }
 Element.prototype.removeChildren = function () {

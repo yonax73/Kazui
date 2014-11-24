@@ -2,17 +2,19 @@
 <p class="text-color">Kazui extiende los m&eacute;todos del objeto <code>Date</code> para trabajar con fechas de una forma m&aacute;s f&aacute;cil.</p>
 <h3>M&eacute;todos disponibles.</h3>
 <table class="table text-color">
-   <thead>
-      <th>Nombre</th>
-      <th>Descripci&oacute;n</th>
-   </thead>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripci&oacute;n</th>
+        </tr>
+    </thead>
     <tbody>
         <tr>
             <td>
                 <code class="ui-method">getMonthName()</code>
             </td>
             <td>
-               Retorna el nombre del mes.
+                Retorna el nombre del mes.
             </td>
         </tr>
         <tr>
@@ -20,7 +22,7 @@
                 <code class="ui-method">getMonthAbbr()</code>
             </td>
             <td>
-               Retorna el nombre del mes abreviado.
+                Retorna el nombre del mes abreviado.
             </td>
         </tr>
         <tr>
@@ -28,7 +30,7 @@
                 <code class="ui-method">getDayFull()</code>
             </td>
             <td>
-               Retorna el nombre del d&iacute;a de la semana.
+                Retorna el nombre del d&iacute;a de la semana.
             </td>
         </tr>
         <tr>
@@ -36,7 +38,7 @@
                 <code class="ui-method">getDayAbbr()</code>
             </td>
             <td>
-               Retorna el nombre del d&iacute;a de la semana abreviado.
+                Retorna el nombre del d&iacute;a de la semana abreviado.
             </td>
         </tr>
         <tr>
@@ -44,7 +46,7 @@
                 <code class="ui-method">getDayOfYear()</code>
             </td>
             <td>
-               Retorna el  d&iacute;a del a&ntilde;o (1-365)
+                Retorna el  d&iacute;a del a&ntilde;o (1-365)
             </td>
         </tr>
         <tr>
@@ -52,7 +54,7 @@
                 <code class="ui-method">getDaySuffix()</code>
             </td>
             <td>
-               Retorna el sufijo del d&iacute;a (st,nd,rd,th).
+                Retorna el sufijo del d&iacute;a (st,nd,rd,th).
             </td>
         </tr>
         <tr>
@@ -60,7 +62,7 @@
                 <code class="ui-method">getWeekOfYear()</code>
             </td>
             <td>
-               Retorna la semana del a&ntilde;o.
+                Retorna la semana del a&ntilde;o.
             </td>
         </tr>
         <tr>
@@ -68,7 +70,7 @@
                 <code class="ui-method">getWeekOfMonth()</code>
             </td>
             <td>
-               Retorna la semana del mes.
+                Retorna la semana del mes.
             </td>
         </tr>
         <tr>
@@ -76,7 +78,7 @@
                 <code class="ui-method">isLeapYear()</code>
             </td>
             <td>
-               Retorna verdadero si es a&ntilde;o bisiesto.
+                Retorna verdadero si es a&ntilde;o bisiesto.
             </td>
         </tr>
         <tr>
@@ -84,7 +86,7 @@
                 <code class="ui-method">getMonthDayCount()</code>
             </td>
             <td>
-               Retorna el n&uacute;mero de d&iacute;as que tiene un mes.
+                Retorna el n&uacute;mero de d&iacute;as que tiene un mes.
             </td>
         </tr>
         <tr>
@@ -92,7 +94,7 @@
                 <code class="ui-method">previousMonth()</code>
             </td>
             <td>
-               Retrocede un mes.
+                Retrocede un mes.
             </td>
         </tr>
         <tr>
@@ -100,7 +102,7 @@
                 <code class="ui-method">nextMonth()</code>
             </td>
             <td>
-               Avanza un mes.
+                Avanza un mes.
             </td>
         </tr>
         <tr>
@@ -108,33 +110,33 @@
                 <code class="ui-method">clone()</code>
             </td>
             <td>
-               Retorna un clon de la fecha.
+                Retorna un clon de la fecha.
             </td>
         </tr>
-       <tr>
+        <tr>
             <td>
                 <code class="ui-method">isValid()</code>
             </td>
             <td>
-               Retorna verdadero si la fecha es valid&aacute;.
+                Retorna verdadero si la fecha es valid&aacute;.
             </td>
         </tr>
-       <tr>
+        <tr>
             <td>
                 <code class="ui-method">format('m/d/Y h:i:s')</code>
             </td>
             <td>
-               Retorna la fecha formateada.
-               <small><a href="#extend-date-formats" class="link-color" target="_blank">Ver formatos</a></small>.
+                Retorna la fecha formateada.
+                <small><a href="#extend-date-formats" class="link-color" target="_blank">Ver formatos</a></small>.
             </td>
         </tr>
-       <tr>
+        <tr>
             <td>
                 <code class="ui-method">parse('date','m/d/Y h:i:s')</code>
             </td>
             <td>
-               Convierte un <code>String</code> a <code>Date</code>.Toma como referencia el formato.
-               <small><a href="#extend-date-formats" class="link-color" target="_blank">Ver formatos</a></small>.
+                Convierte un <code>String</code> a <code>Date</code>.Toma como referencia el formato.
+                <small><a href="#extend-date-formats" class="link-color" target="_blank">Ver formatos</a></small>.
             </td>
         </tr>
     </tbody>
@@ -142,108 +144,108 @@
 <h3 id="extend-date-formats">Formatos.</h3>
 <p class="text-color">Puedes combinar los car&aacute;cteres de formato como quieras <code>m/d/Y h:i:s</code> usando cualquier separador <code>-</code>,<code>/</code>,<code>:</code>, etc.</p>
 <table class="table text-color">
-   <thead>
-       <tr>
-          <th>Formato Car&aacute;cter</th>
-          <th>Descripci&oacute;n</th>
-       </tr>
-   </thead>
+    <thead>
+        <tr>
+            <th>Formato Car&aacute;cter</th>
+            <th>Descripci&oacute;n</th>
+        </tr>
+    </thead>
     <tbody>
         <tr>
-          <td><code class="ui-method">d</code></td>
-          <td>D&iacute;a del mes como n&uacute;mero. <code>01</code>,<code>02</code>,<code>03</code>...<code>10</code>...<code>n</code>.</td>
+            <td><code class="ui-method">d</code></td>
+            <td>D&iacute;a del mes como n&uacute;mero. <code>01</code>,<code>02</code>,<code>03</code>...<code>10</code>...<code>n</code>.</td>
         </tr>
         <tr>
-          <td><code class="ui-method">D</code></td>
-          <td>Nombre del d&iacute;a de la semana abreviado. <code>Sun</code>,<code>Mon</code>,<code>Tue</code>...<code>Sat</code>.</td>
+            <td><code class="ui-method">D</code></td>
+            <td>Nombre del d&iacute;a de la semana abreviado. <code>Sun</code>,<code>Mon</code>,<code>Tue</code>...<code>Sat</code>.</td>
         </tr>
         <tr>
-          <td><code class="ui-method">j</code></td>
-          <td>D&iacute;a del mes como n&uacute;mero,sin el cero adelante. <code>1</code>,<code>2</code>,<code>3</code>...<code>10</code>...<code>n</code>.</td>
+            <td><code class="ui-method">j</code></td>
+            <td>D&iacute;a del mes como n&uacute;mero,sin el cero adelante. <code>1</code>,<code>2</code>,<code>3</code>...<code>10</code>...<code>n</code>.</td>
         </tr>
         <tr>
-          <td><code class="ui-method">l</code></td>
-          <td>Nombre del d&iacute;a de la semana. <code>Sunday</code>,<code>Monday</code>,<code>Tuesday</code>...<code>Saturday</code>.</td>
+            <td><code class="ui-method">l</code></td>
+            <td>Nombre del d&iacute;a de la semana. <code>Sunday</code>,<code>Monday</code>,<code>Tuesday</code>...<code>Saturday</code>.</td>
         </tr>
         <tr>
-          <td><code class="ui-method">S</code></td>
-          <td>Sufijo del d&iacute;a del mes.<code>st</code>,<code>nd</code>,<code>rd</code>,<code>th</code>.</td>
+            <td><code class="ui-method">S</code></td>
+            <td>Sufijo del d&iacute;a del mes.<code>st</code>,<code>nd</code>,<code>rd</code>,<code>th</code>.</td>
         </tr>
         <tr>
-          <td><code class="ui-method">w</code></td>
-          <td>D&iacute;a de la semana como n&uacute;mero, empezando el Domingo como cero.<code>0</code>,<code>1</code>,<code>2</code>...<code>6</code>.</td>
+            <td><code class="ui-method">w</code></td>
+            <td>D&iacute;a de la semana como n&uacute;mero, empezando el Domingo como cero.<code>0</code>,<code>1</code>,<code>2</code>...<code>6</code>.</td>
         </tr>
         <tr>
-          <td><code class="ui-method">z</code></td>
-          <td>D&iacute;a del a&ntilde;o como n&uacute;mero.<code>(1-365)</code>.</td>
+            <td><code class="ui-method">z</code></td>
+            <td>D&iacute;a del a&ntilde;o como n&uacute;mero.<code>(1-365)</code>.</td>
         </tr>
         <tr>
-          <td><code class="ui-method">W</code></td>
-          <td>Semana del a&ntilde;o como n&uacute;mero.</td>
+            <td><code class="ui-method">W</code></td>
+            <td>Semana del a&ntilde;o como n&uacute;mero.</td>
         </tr>
         <tr>
-          <td><code class="ui-method">F</code></td>
-          <td>Nombre del mes. <code>January</code>,<code>February</code>...<code>December</code>.</td>
-        </tr>
-         <tr>
-          <td><code class="ui-method">m</code></td>
-          <td>N&uacute;mero del mes, empezando enero como 01. <code>01</code>,<code>02</code>...<code>12</code>.</td>
+            <td><code class="ui-method">F</code></td>
+            <td>Nombre del mes. <code>January</code>,<code>February</code>...<code>December</code>.</td>
         </tr>
         <tr>
-          <td><code class="ui-method">F</code></td>
-          <td>Nombre del mes abreviado. <code>Jan</code>,<code>Feb</code>...<code>Dec</code>.</td>
-        </tr>
-         <tr>
-          <td><code class="ui-method">m</code></td>
-          <td>N&uacute;mero del mes, empezando enero como 1,sin el cero adelante.<code>1</code>,<code>2</code>...<code>12</code>.</td>
-        </tr>
-         <tr>
-          <td><code class="ui-method">t</code></td>
-          <td>El total de d&iacute;as del mes.</td>
-        </tr>
-         <tr>
-          <td><code class="ui-method">L</code></td>
-          <td><code>1</code> si es a&ntilde;o bisiesto, sino <code>0</code>.</td>
-        </tr>
-         <tr>
-          <td><code class="ui-method">Y</code></td>
-          <td>a&ntilde;o completo como n&uacute;mero.<code>2014</code></td>
-        </tr>
-         <tr>
-          <td><code class="ui-method">y</code></td>
-          <td>&Uacute;ltimos dos d&iacute;gitos del a&ntilde;o. <code>14</code></td>
-        </tr>
-         <tr>
-          <td><code class="ui-method">a</code></td>
-          <td>Siglas de la hora en base a un reloj de 12 horas, en min&uacute;sculas.<code>am</code>,<code>pm</code></td>
-        </tr>
-         <tr>
-          <td><code class="ui-method">A</code></td>
-          <td>Siglas de la hora en base a un reloj de 12 horas, en may&uacute;sculas.<code>AM</code>,<code>PM</code></td>
-        </tr>
-         <tr>
-          <td><code class="ui-method">g</code></td>
-          <td>Hora en base a un reloj de 12 horas.<code>(0-12)</code>,<code>(12-0)</code></td>
-        </tr>
-         <tr>
-          <td><code class="ui-method">G</code></td>
-          <td>Hora en base a un reloj de 24 horas sin cero.</td>
-        </tr>
-         <tr>
-          <td><code class="ui-method">h</code></td>
-          <td>Hora en base a un reloj de 12 horas.<code>(0-12)</code>,<code>(12-0)</code></td>
-        </tr>
-         <tr>
-          <td><code class="ui-method">H</code></td>
-          <td>Hora en base a un reloj de 24 horas.<code>(0-23)</code></td>
+            <td><code class="ui-method">m</code></td>
+            <td>N&uacute;mero del mes, empezando enero como 01. <code>01</code>,<code>02</code>...<code>12</code>.</td>
         </tr>
         <tr>
-          <td><code class="ui-method">i</code></td>
-          <td>Minutos.<code>00</code>,<code>01</code>,<code>02</code>...<code>59</code></td>
+            <td><code class="ui-method">M</code></td>
+            <td>Nombre del mes abreviado. <code>Jan</code>,<code>Feb</code>...<code>Dec</code>.</td>
         </tr>
         <tr>
-          <td><code class="ui-method">s</code></td>
-          <td>Segundos.<code>00</code>,<code>01</code>,<code>02</code>...<code>59</code></td>
+            <td><code class="ui-method">n</code></td>
+            <td>N&uacute;mero del mes, empezando enero como 1,sin el cero adelante.<code>1</code>,<code>2</code>...<code>12</code>.</td>
+        </tr>
+        <tr>
+            <td><code class="ui-method">t</code></td>
+            <td>El total de d&iacute;as del mes.</td>
+        </tr>
+        <tr>
+            <td><code class="ui-method">L</code></td>
+            <td><code>1</code> si es a&ntilde;o bisiesto, sino <code>0</code>.</td>
+        </tr>
+        <tr>
+            <td><code class="ui-method">Y</code></td>
+            <td>a&ntilde;o completo como n&uacute;mero.<code>2014</code></td>
+        </tr>
+        <tr>
+            <td><code class="ui-method">y</code></td>
+            <td>&Uacute;ltimos dos d&iacute;gitos del a&ntilde;o. <code>14</code></td>
+        </tr>
+        <tr>
+            <td><code class="ui-method">a</code></td>
+            <td>Siglas de la hora en base a un reloj de 12 horas, en min&uacute;sculas.<code>am</code>,<code>pm</code></td>
+        </tr>
+        <tr>
+            <td><code class="ui-method">A</code></td>
+            <td>Siglas de la hora en base a un reloj de 12 horas, en may&uacute;sculas.<code>AM</code>,<code>PM</code></td>
+        </tr>
+        <tr>
+            <td><code class="ui-method">g</code></td>
+            <td>Hora en base a un reloj de 12 horas.<code>(0-12)</code>,<code>(12-0)</code></td>
+        </tr>
+        <tr>
+            <td><code class="ui-method">G</code></td>
+            <td>Hora en base a un reloj de 24 horas sin cero.</td>
+        </tr>
+        <tr>
+            <td><code class="ui-method">h</code></td>
+            <td>Hora en base a un reloj de 12 horas.<code>(0-12)</code>,<code>(12-0)</code></td>
+        </tr>
+        <tr>
+            <td><code class="ui-method">H</code></td>
+            <td>Hora en base a un reloj de 24 horas.<code>(0-23)</code></td>
+        </tr>
+        <tr>
+            <td><code class="ui-method">i</code></td>
+            <td>Minutos.<code>00</code>,<code>01</code>,<code>02</code>...<code>59</code></td>
+        </tr>
+        <tr>
+            <td><code class="ui-method">s</code></td>
+            <td>Segundos.<code>00</code>,<code>01</code>,<code>02</code>...<code>59</code></td>
         </tr>
     </tbody>
- </table>
+</table>
