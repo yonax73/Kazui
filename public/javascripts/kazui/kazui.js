@@ -148,7 +148,7 @@ var Clock = (function () {
     Clock.prototype.addEventsUpControls = function () {
         var _this = this;
         this.upHour.onclick = function () {
-            var max = _this.type === 2 /* COUNT_DOWN */ || _this.type === 3 /* COUNT_UP */ ? 99 : 59;
+            var max = _this.type === 2 /* COUNT_DOWN */ || _this.type === 3 /* COUNT_UP */ ? 99 : _this.type === 1 /* MILITARY */ ? 23 : 12;
             _this.animationUp.run(_this.hour);
             _this.hour.textContent = _this.upDigit(_this.hour.textContent, max);
         };
@@ -170,13 +170,23 @@ var Clock = (function () {
     * @method addEventsDownControls
     */
     Clock.prototype.addEventsDownControls = function () {
+        var _this = this;
         this.downHour.onclick = function () {
+            var start = _this.type === 2 /* COUNT_DOWN */ || _this.type === 3 /* COUNT_UP */ ? 99 : _this.type === 1 /* MILITARY */ ? 23 : 12;
+            _this.animationDown.run(_this.hour);
+            _this.hour.textContent = _this.downDigit(_this.hour.textContent, 0, start);
         };
         this.downMinutes.onclick = function () {
+            _this.animationDown.run(_this.minutes);
+            _this.minutes.textContent = _this.downDigit(_this.minutes.textContent, 0, 59);
         };
         this.downSeconds.onclick = function () {
+            _this.animationDown.run(_this.seconds);
+            _this.seconds.textContent = _this.downDigit(_this.seconds.textContent, 0, 59);
         };
         this.downTime.onclick = function () {
+            _this.animationDown.run(_this.time);
+            _this.time.textContent = _this.time.textContent === 'AM' ? 'PM' : 'AM';
         };
     };
     /**
@@ -329,19 +339,92 @@ var Clock = (function () {
     };
     /**
    * Start clock with the counting down
+   * @param {function} callBack
    * @method countDown
    */
-    Clock.prototype.countDown = function () {
+    Clock.prototype.countDown = function (callBack) {
         this.isStop = false;
         this.type = 2 /* COUNT_DOWN */;
+        this.hiddenTimeColumn();
+        this.setDisabledControls(false);
+        if (callBack)
+            this.callBackCountDown = callBack;
+    };
+    /**
+   * Run clock in the counting down
+   * @method runCountDown
+   */
+    Clock.prototype.runCountDown = function () {
+        var _this = this;
+        this.isStop = this.hour.textContent === '00' && this.minutes.textContent === '00' && this.seconds.textContent === '00';
+        if (this.isStop) {
+            this.isStop = false; //restart isStop in FALSE
+            this.stop();
+            if (this.callBackCountDown)
+                this.callBackCountDown();
+            return false;
+        }
+        else {
+            if (parseInt(this.seconds.textContent) > 0) {
+                this.animationDown.run(this.seconds);
+                this.seconds.textContent = this.downDigit(this.seconds.textContent, 0, 59);
+            }
+            if (parseInt(this.minutes.textContent) > 0) {
+                this.animationDown.run(this.minutes);
+                this.minutes.textContent = this.downDigit(this.minutes.textContent, 0, 59);
+            }
+            if (parseInt(this.hour.textContent) > 0) {
+                this.animationDown.run(this.hour);
+                this.hour.textContent = this.downDigit(this.hour.textContent, 0, 99);
+            }
+        }
+        this.timeOut = setTimeout(function () {
+            _this.runCountDown();
+        }, 1000);
     };
     /**
    * Start clock with the counting up
    * @method countUp
    */
-    Clock.prototype.countUp = function () {
+    Clock.prototype.countUp = function (callBack) {
         this.isStop = false;
         this.type = 3 /* COUNT_UP */;
+        this.hiddenTimeColumn();
+        this.setDisabledControls(false);
+        if (callBack)
+            this.callBackCountUp = callBack;
+    };
+    /**
+   * Run clock in the counting up
+   * @method runCountUp
+   */
+    Clock.prototype.runCountUp = function () {
+        var _this = this;
+        this.isStop = this.hour.textContent === '00' && this.minutes.textContent === '00' && this.seconds.textContent === '00';
+        if (this.isStop) {
+            this.isStop = false; //restart isStop in FALSE
+            this.stop();
+            if (this.callBackCountDown)
+                this.callBackCountDown();
+            return false;
+        }
+        else {
+            if (parseInt(this.seconds.textContent) > 0) {
+                this.animationDown.run(this.seconds);
+                this.seconds.textContent = this.downDigit(this.seconds.textContent, 0, 59);
+            }
+            if (parseInt(this.minutes.textContent) > 0) {
+                this.animationDown.run(this.minutes);
+                this.minutes.textContent = this.downDigit(this.minutes.textContent, 0, 59);
+            }
+            if (parseInt(this.hour.textContent) > 0) {
+                this.animationDown.run(this.hour);
+                this.hour.textContent = this.downDigit(this.hour.textContent, 0, 99);
+            }
+        }
+        this.timeOut = setTimeout(function () {
+            _this.runCountDown();
+        }, 1000);
     };
     /**
     * set Date
@@ -360,12 +443,18 @@ var Clock = (function () {
    * @method start
    */
     Clock.prototype.start = function () {
+        this.isStop = false;
         switch (this.type) {
             case 0 /* STANDARD */:
+                this.setDisabledControls(true);
+                this.runStandardTime();
                 break;
             case 1 /* MILITARY */:
+                this.setDisabledControls(true);
+                this.runMilitaryTime();
                 break;
             case 2 /* COUNT_DOWN */:
+                this.runCountDown();
                 break;
             case 3 /* COUNT_UP */:
                 break;
@@ -378,8 +467,8 @@ var Clock = (function () {
     Clock.prototype.stop = function () {
         if (!this.isStop) {
             if (this.timeOut) {
-                this.isStop = true;
                 clearTimeout(this.timeOut);
+                this.isStop = true;
                 this.setDisabledControls(false);
             }
         }

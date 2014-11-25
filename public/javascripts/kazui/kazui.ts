@@ -43,6 +43,7 @@ class Clock {
     private iconDown: string;
     private disabledControl:boolean;
     private timeOut;
+    private callBackCountDown;
 
     /**
     * constructor 
@@ -174,7 +175,8 @@ class Clock {
     */
     private addEventsUpControls() {
         this.upHour.onclick = () => {
-            var max = this.type === ETypeClock.COUNT_DOWN || this.type === ETypeClock.COUNT_UP ? 99 : 59;            
+            var max = this.type === ETypeClock.COUNT_DOWN || this.type === ETypeClock.COUNT_UP ? 99 :
+                      this.type === ETypeClock.MILITARY ? 23 : 12;            
             this.animationUp.run(this.hour);
             this.hour.textContent = this.upDigit(this.hour.textContent,max);
          };
@@ -196,10 +198,24 @@ class Clock {
     * @method addEventsDownControls
     */
     private addEventsDownControls() {
-        this.downHour.onclick = () => { };
-        this.downMinutes.onclick = () => { };
-        this.downSeconds.onclick = () => { };
-        this.downTime.onclick = () => { };
+        this.downHour.onclick = () => {
+            var start = this.type === ETypeClock.COUNT_DOWN || this.type === ETypeClock.COUNT_UP ? 99 :
+                      this.type === ETypeClock.MILITARY ? 23 : 12;            
+            this.animationDown.run(this.hour);
+            this.hour.textContent = this.downDigit(this.hour.textContent,0,start);
+         };
+        this.downMinutes.onclick = () => {
+            this.animationDown.run(this.minutes);
+            this.minutes.textContent = this.downDigit(this.minutes.textContent,0,59);
+         };
+        this.downSeconds.onclick = () => {
+            this.animationDown.run(this.seconds);
+            this.seconds.textContent = this.downDigit(this.seconds.textContent,0,59); 
+        };
+        this.downTime.onclick = () => {
+            this.animationDown.run(this.time);
+            this.time.textContent = this.time.textContent === 'AM' ? 'PM' : 'AM'; 
+        };
     }
     
     /**
@@ -347,11 +363,45 @@ class Clock {
     }
     /**
    * Start clock with the counting down
+   * @param {function} callBack 
    * @method countDown
    */
-    public countDown() {       
+    public countDown(callBack?) {
         this.isStop = false;
         this.type = ETypeClock.COUNT_DOWN;
+        this.hiddenTimeColumn();
+        this.setDisabledControls(false);
+        if(callBack) this.callBackCountDown = callBack;
+    }
+    /**
+   * Run clock in the counting down
+   * @method runCountDown
+   */
+    private runCountDown() {    
+        this.isStop = this.hour.textContent === '00' && this.minutes.textContent === '00' && this.seconds.textContent === '00';
+        if(this.isStop){
+            this.isStop = false;           //restart isStop in FALSE
+            this.stop();
+            if(this.callBackCountDown) this.callBackCountDown();
+            return false;
+        }else{           
+           if(parseInt(this.seconds.textContent) > 0){
+               this.animationDown.run(this.seconds);
+               this.seconds.textContent = this.downDigit(this.seconds.textContent,0,59);
+           }
+           if(parseInt(this.minutes.textContent) > 0){
+               this.animationDown.run(this.minutes);
+               this.minutes.textContent = this.downDigit(this.minutes.textContent,0,59);
+           }
+           if(parseInt(this.hour.textContent) > 0){
+               this.animationDown.run(this.hour);
+               this.hour.textContent = this.downDigit(this.hour.textContent,0,99);
+           }
+           
+        } 
+        this.timeOut = setTimeout(()=>{
+            this.runCountDown();
+        },1000);
     }
     /**
    * Start clock with the counting up
@@ -360,6 +410,32 @@ class Clock {
     public countUp() {
         this.isStop = false;
         this.type = ETypeClock.COUNT_UP;
+        this.hiddenTimeColumn();
+        this.setDisabledControls(false);
+    }
+    /**
+   * Run clock in the counting up
+   * @method runCountUp
+   */
+    private runCountUp() {   
+
+             
+           if(parseInt(this.seconds.textContent) > 0){
+               this.animationUp.run(this.seconds);
+               this.seconds.textContent = this.upDigit(this.seconds.textContent,59);
+           }
+           if(parseInt(this.minutes.textContent) > 0){
+               this.animationUp.run(this.minutes);
+               this.minutes.textContent = this.upDigit(this.minutes.textContent,59);
+           }
+           if(parseInt(this.hour.textContent) > 0){
+               this.animationUp.run(this.hour);
+               this.hour.textContent = this.upDigit(this.hour.textContent,99);
+           }           
+
+        this.timeOut = setTimeout(()=>{
+            this.runCountUp();
+        },1000);
     }
    /**
    * set Date
@@ -378,12 +454,18 @@ class Clock {
    * @method start
    */
    public start(){
+        this.isStop = false;
        switch(this.type){
-         case ETypeClock.STANDARD:          
+         case ETypeClock.STANDARD:     
+            this.setDisabledControls(true);       
+            this.runStandardTime();          
          break;
-         case ETypeClock.MILITARY:
+         case ETypeClock.MILITARY:    
+             this.setDisabledControls(true);     
+             this.runMilitaryTime();
          break;
-         case ETypeClock.COUNT_DOWN:
+         case ETypeClock.COUNT_DOWN:     
+             this.runCountDown();
          break;
          case ETypeClock.COUNT_UP:
          break;
@@ -395,9 +477,9 @@ class Clock {
    */
     public stop() {
 	    if(!this.isStop){
-           if(this.timeOut) {
-	          this.isStop = true;
+           if(this.timeOut) {        
 	          clearTimeout(this.timeOut);
+	          this.isStop = true;
 	          this.setDisabledControls(false);
            }
 	    }
@@ -443,6 +525,10 @@ class Clock {
     public isDisabledControls(){
         return this.disabledControl;
     }
+    
+    public getTime(){}
+    
+    public getDate(){}
     
     
 

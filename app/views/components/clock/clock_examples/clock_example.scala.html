@@ -15,6 +15,8 @@
 			class="btn btn-primary btn-block btn-xs">Stop</button>
 		<button type="button" id="btnClockTimeReset"
 			class="btn btn-primary btn-block  btn-xs">Reset</button>
+		<button type="button" id="btnClockTimeStart"
+			class="btn btn-primary btn-block  btn-xs">Start</button>
 		<button class="btn btn-primary btn-block btn-xs" id="btnStandardTime"
 			type="button">Standard Time</button>
 		<button class="btn btn-primary btn-block btn-xs" id="btnMilitaryTime"
@@ -26,6 +28,7 @@
 	</div>
 </div>
 <script>
+    var alertClock = new Alert(document.getElementById('alert-clock-example'));
 	var clock = new Clock(document.getElementById('clock'));
 	clock.militaryTime();
 
@@ -34,6 +37,10 @@
 	};
 	document.getElementById('btnClockTimeReset').onclick = function() {
 		clock.reset();
+	};
+
+	document.getElementById('btnClockTimeStart').onclick = function() {
+		clock.start();		
 	};
 
 	document.getElementById('btnStandardTime').onclick = function() {
@@ -45,128 +52,13 @@
 		clock.reset();
 		clock.militaryTime();
 	};
-
-	function stop() {
-		if (handleTime != null)
-			clearTimeout(handleTime);
-	}
-	function reset() {
-		stop();
-		var time = document.getElementById('time');
-		var seconds = document.getElementById('seconds');
-		var minutes = document.getElementById('minutes');
-		var hours = document.getElementById('hour');
-		time.textContent = '--';
-		seconds.textContent = '00';
-		minutes.textContent = '00';
-		hours.textContent = '00';
-	}
-
-	function countTimeDown(callBack) {
-
-		var seconds = document.getElementById('seconds');
-		var minutes = document.getElementById('minutes');
-		var hours = document.getElementById('hour');
-		var isStop = hours.textContent === '00' && minutes.textContent === '00'
-				&& seconds.textContent === '00';
-		console.log(isStop)
-		if (isStop) {
-			stop();
-			callBack();
-		} else {
-
-			if (seconds.textContent > 0) {
-				animationDown(seconds);
-				seconds.textContent = downMinutesSeconds(seconds.textContent);
-			}
-			if (minutes.textContent > 0) {
-
-			}
-			if (hours.textContent > 0) {
-
-			}
-			handleTime = setTimeout(function() {
-				countTimeDown(callBack);
-			}, 1000);
-		}
-
-	}
-
-	function now() {
-	}
-
-	function start() {
-
-		countTimeDown(function() {
-			alert('time!!!');
+	
+	document.getElementById('btnCountDown').onclick = function() {
+		clock.reset();
+		clock.countDown(function(){
+			alertClock.warning('Time Out!!!');			
 		});
-	}
+	};
 
-	document.getElementById('btnStart').onclick = function() {
-		start();
-	}
 
-	document.getElementById('btnCountsDown').onclick = function() {
-		reset();
-	}
-
-	//     document.getElementById('upHour').onclick = function () {
-	//         var hours = document.getElementById('hour');
-	//         animationUp(hours);
-	//         hours.textContent = upHour(hours.textContent);
-	//     }
-
-	//     document.getElementById('downHour').onclick = function () {
-	//         var hours = document.getElementById('hour');
-	//         animationDown(hours);
-	//         hours.textContent = downHour(hours.textContent);
-	//     }
-
-	//     document.getElementById('upSeconds').onclick = function () {
-	//         var sec = document.getElementById('seconds');
-	//         animationUp(sec);
-	//         sec.textContent = upMinutesSeconds(sec.textContent);
-	//     }
-
-	//     document.getElementById('downSeconds').onclick = function () {
-	//         var sec = document.getElementById('seconds');
-	//         animationDown(sec);
-	//         sec.textContent = downMinutesSeconds(sec.textContent);
-	//     }
-
-	//     function upHour(hour) {
-	//         hour++;
-	//         if (hour > 12) {
-	//             hour = 1;
-	//         }
-	//         hour = checkTime(hour);
-	//         return hour;
-	//     }
-
-	//     function downHour(hour) {
-	//         hour--;
-	//         if (hour < 1) {
-	//             hour = 12;
-	//         }
-	//         hour = checkTime(hour);
-	//         return hour;
-	//     }
-
-	//     function upMinutesSeconds(time) {
-	//         time++;
-	//         if (time > 59) {
-	//             time = 0;
-	//         }
-	//         time = checkTime(time);
-	//         return time;
-	//     }
-
-	//     function downMinutesSeconds(time) {
-	//         time--;
-	//         if (time < 0) {
-	//             time = 59;
-	//         }
-	//         time = checkTime(time);
-	//         return time;
-	//     }
 </script>
