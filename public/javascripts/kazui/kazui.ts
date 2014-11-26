@@ -11,7 +11,9 @@ enum ETypeClock {
     STANDARD,
     MILITARY,
     COUNT_DOWN,
-    COUNT_UP
+    COUNT_UP,
+    CUSTOM_STANDARD,
+    CUSTOM_MILITARY    
 }
 /**
  * Clock
@@ -42,8 +44,12 @@ class Clock {
     private iconUp: string;
     private iconDown: string;
     private disabledControl: boolean;
+    private hiddenControl :boolean;
+    private hiddenSeconds:boolean;
     private timeOut;
     private callBackCountDown;
+    private date:Date;
+    
 
     /**
     * constructor 
@@ -328,7 +334,6 @@ class Clock {
         this.hiddenTimeColumn();
         this.setDisabledControls(true);
         this.runMilitaryTime();
-
     }
     /**
    * Run clock in the military time
@@ -377,24 +382,27 @@ class Clock {
    * @method runCountDown
    */
     private runCountDown() {
-        this.isStop = this.getHours() === '00' && this.getMinutes() === '00' && this.getSeconds();
+        this.isStop = this.getHours() === '00' && this.getMinutes() === '00' && this.getSeconds() === '00';
         if (this.isStop) {
             this.isStop = false;           //restart isStop in FALSE
             this.stop();
             if (this.callBackCountDown) this.callBackCountDown();
             return false;
         } else {
-            if (this.getSeconds() > 0) {
-                this.animationDown.run(this.seconds);
-                this.seconds.textContent = this.downDigit(this.getSeconds(), 0, 59);
-            }
-            if (this.getMinutes() > 0) {
+            var lap = this.getSeconds() === '00';
+            this.animationDown.run(this.seconds);
+            this.seconds.textContent = this.downDigit(this.getSeconds(), 0, 59);
+            if(lap){
+                lap = false;        
                 this.animationDown.run(this.minutes);
+                lap = this.getMinutes()==='00';
                 this.minutes.textContent = this.downDigit(this.getMinutes(), 0, 59);
-            }
-            if (this.getHours() > 0) {
-                this.animationDown.run(this.hour);
-                this.hour.textContent = this.downDigit(this.getHours(), 0, 99);
+            
+                if(lap && this.getHours() > 0){
+                   lap = false;
+                   this.animationDown.run(this.hour);
+                   this.hour.textContent = this.downDigit(this.getHours(), 0, 99);
+                }
             }
         }
         this.timeOut = setTimeout(() => {
@@ -416,34 +424,112 @@ class Clock {
    * @method runCountUp
    */
     private runCountUp() {
-        if (parseInt(this.seconds.textContent) > 0) {
-            this.animationUp.run(this.seconds);
-            this.seconds.textContent = this.upDigit(this.seconds.textContent, 59);
-        }
-        if (parseInt(this.minutes.textContent) > 0) {
-            this.animationUp.run(this.minutes);
-            this.minutes.textContent = this.upDigit(this.minutes.textContent, 59);
-        }
-        if (parseInt(this.hour.textContent) > 0) {
-            this.animationUp.run(this.hour);
-            this.hour.textContent = this.upDigit(this.hour.textContent, 99);
-        }
-
+            var lap= this.getSeconds()==='59'; 
+            this.animationUp.run(this.seconds);                       
+            this.seconds.textContent = this.upDigit(this.getSeconds(),59);
+            if(lap) {
+                lap = false;
+                this.animationUp.run(this.minutes);
+                lap = this.getMinutes() === '59';
+                this.minutes.textContent = this.upDigit(this.getMinutes(),59);
+                if(lap){
+                   lap = false;
+                   this.animationUp.run(this.hour);
+                   this.hour.textContent = this.upDigit(this.getHours(),99);     
+                }
+            }
         this.timeOut = setTimeout(() => {
             this.runCountUp();
         }, 1000);
     }
     /**
-    * set Date
+    * set Standard time
     * @param {Date} date
-    * @method setDate
+    * @method setStandarTime
     */
-    public setDate(date: Date) {
+    public setStandarTime(date: Date) {    
+        if(date){
+           this.seconds.textContent = this.fixDigit(date.getSeconds());
+           this.minutes.textContent = this.fixDigit(date.getMinutes());
+           this.hour.textContent = this.fixDigit(date.getHours());
+        }
+        var h: any = this.getHours();
+        this.time.textContent = h < 12 ? 'AM' : 'PM';        
+        if (h > 12) h = h - 12;
+        else if (h === 0) h = 12;
+        h = this.fixDigit(h);   
+        this.hour.textContent = h;    
         this.isStop = false;
-        this.type = ETypeClock.STANDARD;
+        this.type = ETypeClock.CUSTOM_STANDARD;
         this.showTimeColumn();
         this.setDisabledControls(true);
-        this.runStandardTime();
+        this.runCustomStandarTime();
+    }
+   /**
+   * Run clock in the custom standar time
+   * @method runCustomStandarTime
+   */
+    private runCustomStandarTime() {
+            var lap= this.getSeconds()==='59'; 
+            this.animationUp.run(this.seconds);                       
+            this.seconds.textContent = this.upDigit(this.getSeconds(),59);
+            if(lap) {
+                lap = false;
+                this.animationUp.run(this.minutes);
+                lap = this.getMinutes() === '59';
+                this.minutes.textContent = this.upDigit(this.getMinutes(),59);
+                if(lap){
+                   lap = false;
+                   this.animationUp.run(this.hour);
+                   if(this.getHours() === '12'){
+                     this.time.textContent = this.getTimeForStandarClock() === 'AM' ? 'PM' : 'AM';
+                   }   
+                   this.hour.textContent = this.upDigit(this.getHours(),12);     
+                }
+            }
+        this.timeOut = setTimeout(() => {
+            this.runCustomStandarTime();
+        }, 1000);
+    }
+    /**
+    * set Military time
+    * @param {Date} date
+    * @method setMilitaryTime
+    */
+    public setMilitaryTime(date: Date) {    
+        if(date){
+           this.seconds.textContent = this.fixDigit(date.getSeconds());
+           this.minutes.textContent = this.fixDigit(date.getMinutes());
+           this.hour.textContent = this.fixDigit(date.getHours());
+        }    
+        this.isStop = false;
+        this.type = ETypeClock.CUSTOM_MILITARY;
+        this.hiddenTimeColumn();
+        this.setDisabledControls(true);
+        this.runCustomStandarTime();
+    }
+   /**
+   * Run clock in the custom military time
+   * @method runCustomMilitaryTime
+   */
+    private runCustomMilitaryTime() {
+            var lap= this.getSeconds()==='59'; 
+            this.animationUp.run(this.seconds);                       
+            this.seconds.textContent = this.upDigit(this.getSeconds(),59);
+            if(lap) {
+                lap = false;
+                this.animationUp.run(this.minutes);
+                lap = this.getMinutes() === '59';
+                this.minutes.textContent = this.upDigit(this.getMinutes(),59);
+                if(lap){
+                   lap = false;
+                   this.animationUp.run(this.hour);     
+                   this.hour.textContent = this.upDigit(this.getHours(),23);     
+                }
+            }
+        this.timeOut = setTimeout(() => {
+            this.runCustomMilitaryTime();
+        }, 1000);
     }
     /**
    * Start clock
@@ -464,7 +550,16 @@ class Clock {
                 this.runCountDown();
                 break;
             case ETypeClock.COUNT_UP:
+                 this.runCountUp();                 
                 break;
+           case ETypeClock.CUSTOM_STANDARD:
+               this.setDisabledControls(true);
+               this.runCustomStandarTime();
+            break;
+           case ETypeClock.CUSTOM_MILITARY:
+               this.setDisabledControls(true);
+               this.runCustomMilitaryTime();
+            break;
         }
     }
     /**
@@ -520,6 +615,80 @@ class Clock {
     */
     public isDisabledControls() {
         return this.disabledControl;
+    }
+    /**
+   * Set hidden controls
+   * @param {boolean} hidden
+   * @method setHiddenControls
+   */
+    public setHiddenControls(hidden: boolean) {
+        var rowControlsUp: any = this.table.rows[0];
+        var rowControlsDown: any = this.table.rows[2];
+        this.hiddenControl= hidden;
+        if (hidden) {
+            if (!rowControlsUp.classList.contains('hidden')) {
+                rowControlsUp.classList.add('hidden');
+            }
+            if (!rowControlsDown.classList.contains('hidden')) {
+                rowControlsDown.classList.add('hidden');
+            }
+        } else {
+            if (rowControlsUp.classList.contains('hidden')) {
+                rowControlsUp.classList.remove('hidden');
+            }
+            if (rowControlsDown.classList.contains('hidden')) {
+                rowControlsDown.classList.remove('hidden');
+            }
+        }
+    }
+    /**
+    * Is hidden controls
+    * @returns {boolean} hidden
+    * @method isHiddenControls
+    */
+    public isHiddenControls() {
+        return this.hiddenControl;
+    }
+        /**
+   * Set hidden Seconds
+   * @param {boolean} hidden
+   * @method setHiddenSeconds
+   */
+    public setHiddenSeconds(hidden: boolean) {
+        var rowControlsUp: any = this.table.rows[0];
+        var cellControlsUp = rowControlsUp.cells[2];
+        var rowControlsDown: any = this.table.rows[2];
+        var cellControlsDown = rowControlsDown.cells[2];
+        this.hiddenSeconds= hidden;
+        if (hidden) {
+            if (!cellControlsUp.classList.contains('hidden')) {
+                cellControlsUp.classList.add('hidden');
+            }            
+            if (!this.seconds.classList.contains('hidden')) {
+                this.seconds.classList.add('hidden');
+            }
+            if (!cellControlsDown.classList.contains('hidden')) {
+                cellControlsDown.classList.add('hidden');
+            }
+        } else {
+            if (cellControlsUp.classList.contains('hidden')) {
+                cellControlsUp.classList.remove('hidden');
+            }
+            if (this.seconds.classList.contains('hidden')) {
+                this.seconds.classList.remove('hidden');
+            }
+            if (cellControlsDown.classList.contains('hidden')) {
+                cellControlsDown.classList.remove('hidden');
+            }
+        }
+    }
+    /**
+    * Is hidden seconds
+    * @returns {boolean} hidden
+    * @method isHiddenSeconds
+    */
+    public isHiddenSeconds() {
+        return this.hiddenSeconds;
     }
     /**
     * get DateTime

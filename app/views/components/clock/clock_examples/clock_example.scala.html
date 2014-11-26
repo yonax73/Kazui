@@ -25,6 +25,16 @@
 			type="button">Count Up</button>
 		<button class="btn btn-primary btn-block btn-xs" id="btnCountDown"
 			type="button">Count Down</button>
+		<button class="btn btn-primary btn-block btn-xs" id="btnClockGetDateTime"
+			type="button">Date Time</button>
+		<button class="btn btn-primary btn-block btn-xs" id="btnClockStandardTimeLondon"
+			type="button">Clock London</button>
+<!-- 	    <label class="label-control"> -->
+<!-- 	       <input class="checkBox" id="chkClockHiddenControls"type="checkbox">Hidden Controls -->
+<!-- 	    </label> -->
+<!-- 	     <label class="label-control"> -->
+<!-- 	       <input class="checkBox" id="chkClockHiddenSeconds"type="checkbox">Hidden Seconds -->
+<!-- 	    </label> -->
 	</div>
 </div>
 <script>
@@ -58,6 +68,30 @@
 		clock.countDown(function(){
 			alertClock.warning('Time Out!!!');			
 		});
+	};
+	
+	document.getElementById('btnCountUp').onclick = function() {
+		clock.reset();
+		clock.countUp();
+	};
+	
+	document.getElementById('btnClockGetDateTime').onclick = function() {
+		alertClock.info(clock.getDateTime());
+	};
+	
+// 	document.getElementById('chkClockHiddenControls').onclick = function() {
+// 		clock.setHiddenControls(this.checked);
+// 	};
+	
+// 	document.getElementById('chkClockHiddenSeconds').onclick = function() {
+// 		clock.setHiddenSeconds(this.checked);
+// 	};
+	
+	document.getElementById('btnClockStandardTimeLondon').onclick = function(){
+		clock.reset();
+		var dateLondon = new Date();
+		dateLondon.setHours(dateLondon.getHours()+5);
+		clock.setMilitaryTime(dateLondon);
 	};
 
 
