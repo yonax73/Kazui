@@ -1537,6 +1537,22 @@ enum ETypeSelect {
     ICON,
     IMAGE
 }
+
+class State {     
+     public old = null;
+     public current = null;
+          
+     constructor(old?,current?){
+        if(old) this.old = old;
+        if(current) this.current = current;
+     }
+     
+     public exchange(value){
+        this.old = this.current;
+        this.current = value;
+     }     
+}
+
 class Select {
 
     private formGroup = document.createElement('div');
@@ -1545,10 +1561,9 @@ class Select {
     private mask = document.createElement('div');
     private ico = document.createElement('i');
     private icoItem: HTMLElement;
+    private imgItem:HTMLImageElement;
     private items = document.createElement('ul');
-    private element: HTMLElement = null;
-    private oldItem: HTMLElement = null;
-    private currentItem: HTMLElement = null;
+    private element: HTMLElement = null;    
     private open = false;
     private disabled = false;
     private readOnly = false;
@@ -1559,8 +1574,9 @@ class Select {
     private animaOut: Animation;
     private type = ETypeSelect.SIMPLE;
     private options = null;
-    private currentClassItemIcon;
-    private oldClassItemIcon;
+    private itemSate:State;
+    private itemIconState:State;
+    private itemImageState:State;
 
     constructor(htmlElement: HTMLElement, data, options) {
         this.element = htmlElement;
@@ -1568,6 +1584,7 @@ class Select {
         if (options) this.setOptions(options);
         this.animaIn = new Animation('ui-ease-in', 'ui-0-2s', 'ui-fade-in-down', 200);
         this.animaOut = new Animation('ui-ease-out', 'ui-0-2s', 'ui-fade-out-up', 200);
+        this.itemSate = new State();
         this.formGroup.className = 'form-group  has-feedback';
         this.hidden.type = 'hidden';
         if (this.element.getAttribute('data-name')) this.hidden.name = this.element.getAttribute('data-name');
@@ -1617,9 +1634,11 @@ class Select {
         this.options = options;
         if (options.icon) {
             this.type = ETypeSelect.ICON;
+            this.itemIconState = new State();
         } else if (options.image) {
-            this.type = ETypeSelect.IMAGE
-            }
+             this.type = ETypeSelect.IMAGE;
+             this.itemImageState = new State();
+        }
     }
 
     private config() {
@@ -1630,9 +1649,14 @@ class Select {
                 this.icoItem = document.createElement('i');
                 this.icoItem.className = 'form-control-ui-icon fa';
                 this.formGroup.appendChild(this.icoItem);
-                break;
+               break;
             case ETypeSelect.IMAGE:
-                break;
+                this.formGroup.classList.add('has-ui-image'); 
+                this.items.classList.add('ui-image-lu');               
+                this.imgItem = document.createElement('img');
+                this.imgItem.className = 'form-control-ui-image';
+                this.formGroup.appendChild(this.imgItem);                 
+               break;
         }
     }
 
@@ -1642,6 +1666,7 @@ class Select {
             var item = this.data[i];
             var li = document.createElement('li');
             if (item.icon) this.addIcon(li, item.icon);
+            else if (item.image) this.addImage(li, item.image);
             li.appendChild(document.createTextNode(item.value));
             li.tabIndex = i;
             li.setAttribute('data-option', item.option);
@@ -1654,8 +1679,8 @@ class Select {
             }
             li.onkeyup = function (e) {
                 if (e) {
-                    if (e.keyCode == 13) {
-                        self.changeValue(self.currentItem);
+                    if (e.keyCode == 13) {                        
+                        self.changeValue(self.itemSate.current);
                         self.toggle();
                     }
                     if (e.keyCode == 38) {
@@ -1667,8 +1692,7 @@ class Select {
                 }
             }
            this.items.appendChild(li);
-            if (item.selected) {
-                if (this.isTypeIcon()) this.currentClassItemIcon = item.icon;
+            if (item.selected) {                
                 this.selectItem(item.option);
             }
         }
@@ -1679,6 +1703,13 @@ class Select {
         tmpIcon.className = 'fa fa-li';
         tmpIcon.classList.add(classIcon);
         element.appendChild(tmpIcon);
+    }
+    
+    private addImage(element:HTMLElement,src:string){
+        var tmpImg = document.createElement('img');
+        tmpImg.className = 'ui-image-item';
+        tmpImg.src= src;
+        element.appendChild(tmpImg);        
     }
 
     private animationIn() {
@@ -1693,30 +1724,35 @@ class Select {
     }
 
     private changeValue(htmlElement: HTMLElement) {
-        this.oldItem = this.currentItem;
-        this.currentItem = htmlElement;
-        this.input.value = this.currentItem.textContent;
-        this.input.setAttribute('data-option', this.currentItem.getAttribute('data-option'));
+        this.itemSate.exchange(htmlElement);
+        this.input.value = this.itemSate.current.textContent;
+        this.input.setAttribute('data-option', this.itemSate.current.getAttribute('data-option'));
         this.hidden.value = this.input.value;
         this.input.onchange();
-        this.oldItem.classList.remove('bg-primary');
-        this.currentItem.classList.add('bg-primary');
-        //?
-        if (this.isTypeIcon()) {
-            if (this.oldClassItemIcon) this.icoItem.classList.remove(this.oldClassItemIcon);
-            this.oldClassItemIcon = this.currentClassItemIcon;
-            var tmpIcon: any = this.currentItem.getElementsByClassName('fa')[0];
-            this.currentClassItemIcon = tmpIcon.classList.item(2); console.log(tmpIcon.classList.item(2));
-            this.icoItem.classList.add(this.currentClassItemIcon);
-        } 
-
+        this.itemSate.old.classList.remove('bg-primary');
+        this.itemSate.current.classList.add('bg-primary');
+        if (this.isTypeIcon()) {               
+           this.changeIconItem();
+        }else if(this.isTypeImage()){
+           this.changeImageItem(); 
+        }
         this.input.focus();
-
+    }
+    
+    private changeIconItem(){   
+        this.itemIconState.exchange(this.getIconItem());
+        this.icoItem.classList.remove(this.itemIconState.old);
+        this.icoItem.classList.add(this.itemIconState.current);
+    }
+    
+    private changeImageItem(){
+        this.itemImageState.exchange(this.getImageItem());
+        this.imgItem.src = this.itemImageState.current;
     }
 
     private next() {
-        if (!this.disabled && !this.readOnly && this.currentItem) {
-            var item = this.currentItem.nextElementSibling;
+        if (!this.disabled && !this.readOnly && this.itemSate.current) {
+            var item = this.itemSate.current.nextElementSibling;
             if (item) {
                 this.changeValue(<HTMLElement>item);
             }
@@ -1724,8 +1760,8 @@ class Select {
     }
 
     private previous() {
-        if (!this.disabled && !this.readOnly && this.currentItem) {
-            var item = this.currentItem.previousSibling;
+        if (!this.disabled && !this.readOnly && this.itemSate.current) {
+            var item = this.itemSate.current.previousSibling;
             if (item) {
                 this.changeValue(<HTMLElement>item);
             }
@@ -1754,11 +1790,11 @@ class Select {
                 Select.clear();
                 this.animationIn();
                 this.open = true;
-                if (!this.currentItem) {
-                    this.currentItem = this.items.getElementsByTagName('li')[0];
-                    this.currentItem.classList.add('bg-primary');
+                if (!this.itemSate.current) {
+                    this.itemSate.current = this.items.getElementsByTagName('li')[0];
+                    this.itemSate.current.classList.add('bg-primary');
                 }
-                this.currentItem.focus();
+                this.itemSate.current.focus();
                 this.input.focus();
             }
         }
@@ -1774,25 +1810,22 @@ class Select {
                     var item = lis[i];
                     i++;
                     if (item.getAttribute('data-option') == option) {
-                        this.oldItem = this.currentItem;
-                        this.currentItem = item;
+                        this.itemSate.exchange(item);
                         found = true;
                     }
                 } while (!found && i < this.length);
                 if (found) {
-                    this.input.value = this.currentItem.textContent;
-                    this.input.setAttribute('data-option', this.currentItem.getAttribute('data-option'));
+                    this.input.value = this.itemSate.current.textContent;
+                    this.input.setAttribute('data-option', this.itemSate.current.getAttribute('data-option'));
                     this.hidden.value = this.input.value;
-                    if (this.isTypeIcon()) {
-                        if (this.oldClassItemIcon) this.icoItem.classList.remove(this.oldClassItemIcon);
-                        this.oldClassItemIcon = this.currentClassItemIcon;
-                        var tmpIcon: any = this.currentItem.getElementsByClassName('fa')[0];
-                        this.currentClassItemIcon = tmpIcon.classList.item(2); console.log(tmpIcon.classList.item(2));
-                        this.icoItem.classList.add(this.currentClassItemIcon);
+                    if (this.isTypeIcon()) {                        
+                       this.changeIconItem();
+                    }else if(this.isTypeImage()){
+                       this.changeImageItem(); 
                     } 
-                    this.currentItem.focus();
-                    if (this.oldItem) this.oldItem.classList.remove('bg-primary');
-                    this.currentItem.classList.add('bg-primary');
+                    this.itemSate.current.focus();
+                    if (this.itemSate.old) this.itemSate.old.classList.remove('bg-primary');
+                    this.itemSate.current.classList.add('bg-primary');
                 }
             }
         }
@@ -1836,11 +1869,43 @@ class Select {
             return this.input.getAttribute('data-option');
         }
     }
-    //getico getimage
+    
     public isOpen() {
         if (!this.disabled && !this.readOnly) {
             return this.open;
         }
+    }
+    
+    /**
+    * get Icon Item Class
+    * @returns {string} class Icon
+    * @method getIconItem
+    */
+    public getIconItem(){
+      var tmpIcon:any = this.itemSate.current.getElementsByClassName('fa')[0]; 
+      return tmpIcon.classList.item(2);  
+    }
+    
+    /**
+    * get Image Item src
+    * @returns {string} src
+    * @method getImageItem
+    */
+    public getImageItem(){
+      var tmpImg:any = this.itemSate.current.getElementsByClassName('ui-image-item')[0]; 
+      return tmpImg.src;
+    }
+    /**
+    * set Data
+    * @param {[JSON]} data
+    * @param {JSON} options
+    * @method setDate
+    */
+    public setDate(data,options){
+        this.data = data;
+        if (options) this.setOptions(options);
+        this.config();
+        this.fill();
     }
 
     public isDisabled() {

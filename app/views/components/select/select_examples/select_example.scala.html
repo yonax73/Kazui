@@ -11,6 +11,12 @@
 <br />
 <div class="row">
     <div class="col-md-12 col-sm-12">
+        <div id="select-images-example" class="ui-select"></div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12">
         <button type="button" id="btnSelectGetOption" class="btn btn-primary btn-block">Get option</button>
         <button type="button" id="btnSelectGetValue" class="btn btn-primary btn-block">Get value</button>
         <div class="checkbox pull-right">
@@ -32,8 +38,15 @@
     ], {icon:true});
 
     document.getElementById('btnSelectGetOption').onclick = function () {
-        if (!items.isDisabled())
-            alertSelectExample.info('Option is: ' + items.getOption());
+        /*if (!items.isDisabled())
+            alertSelectExample.info('Option is: ' + items.getOption());*/
+    	items.setDate( [
+    	                { option: 1, value: 'Beth Stewart', image: '/assets/images/profile/prof-1.jpg' },
+    	                { option: 2, value: 'Norma Bailey', image: '/assets/images/profile/prof-2.jpg' },
+    	                { option: 3, value: 'Riley Richards', image: '/assets/images/profile/prof-3.jpg' },
+    	                { option: 4, value: 'Brittany Hunt', image: '/assets/images/profile/prof-4.jpg', selected: true },
+    	                { option: 5, value: 'Diane Richardson', image: '/assets/images/profile/prof-5.jpg' }
+    	            ], {image:true}); 
     }
     document.getElementById('btnSelectGetValue').onclick = function () {
         if (!items.isDisabled())
@@ -42,5 +55,15 @@
     document.getElementById('chkSelectDisabled').onclick = function () {
         items.setDisabled(this.checked);
     }
+    
+    var profiles = new Select(document.getElementById('select-images-example'), [
+        { option: 1, value: 'Beth Stewart', image: '/assets/images/profile/prof-1.jpg' },
+        { option: 2, value: 'Norma Bailey', image: '/assets/images/profile/prof-2.jpg' },
+        { option: 3, value: 'Riley Richards', image: '/assets/images/profile/prof-3.jpg' },
+        { option: 4, value: 'Brittany Hunt', image: '/assets/images/profile/prof-4.jpg', selected: true },
+        { option: 5, value: 'Diane Richardson', image: '/assets/images/profile/prof-5.jpg' }
+    ], {image:true});
+    
+    profiles.setHeight('120px');
 
 </script>

@@ -93,10 +93,13 @@ tr.disabled td {
 	top: 0;
 }
 
-.ui-select .has-ui-icon .form-control{
+.ui-select .has-ui-icon .form-control,
+.ui-select .has-ui-image .form-control{
     padding-left:40px;
 }
-.has-ui-icon .form-control-ui-icon {
+
+.has-ui-icon .form-control-ui-icon,
+.has-ui-image .form-control-ui-image {
   display: block;
   height: 34px;
   left: 3px;
@@ -105,6 +108,20 @@ tr.disabled td {
   text-align: center;  
   top:0;
   width: 34px;
+}
+.has-ui-image .form-control-ui-image {
+  padding:0.2em;
+}
+
+.ui-select .ui-image-lu li {
+  padding-left: 0.2em;
+  padding-top: 0.2em;
+}
+
+.ui-image-item {
+  height: 48px;
+  margin-right: 0.5em;
+  width: 48px;
 }
 
 .ui-select.disabled,.ui-select.read-only {
