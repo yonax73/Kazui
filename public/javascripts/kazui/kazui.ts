@@ -13,7 +13,7 @@ enum ETypeClock {
     COUNT_DOWN,
     COUNT_UP,
     CUSTOM_STANDARD,
-    CUSTOM_MILITARY    
+    CUSTOM_MILITARY
 }
 /**
  * Clock
@@ -44,12 +44,12 @@ class Clock {
     private iconUp: string;
     private iconDown: string;
     private disabledControl: boolean;
-    private hiddenControl :boolean;
-    private hiddenSeconds:boolean;
+    private hiddenControl: boolean;
+    private hiddenSeconds: boolean;
     private timeOut;
     private callBackCountDown;
-    private date:Date;
-    
+    private date: Date;
+
 
     /**
     * constructor 
@@ -392,16 +392,16 @@ class Clock {
             var lap = this.getSeconds() === '00';
             this.animationDown.run(this.seconds);
             this.seconds.textContent = this.downDigit(this.getSeconds(), 0, 59);
-            if(lap){
-                lap = false;        
+            if (lap) {
+                lap = false;
                 this.animationDown.run(this.minutes);
-                lap = this.getMinutes()==='00';
+                lap = this.getMinutes() === '00';
                 this.minutes.textContent = this.downDigit(this.getMinutes(), 0, 59);
-            
-                if(lap && this.getHours() > 0){
-                   lap = false;
-                   this.animationDown.run(this.hour);
-                   this.hour.textContent = this.downDigit(this.getHours(), 0, 99);
+
+                if (lap && this.getHours() > 0) {
+                    lap = false;
+                    this.animationDown.run(this.hour);
+                    this.hour.textContent = this.downDigit(this.getHours(), 0, 99);
                 }
             }
         }
@@ -424,20 +424,20 @@ class Clock {
    * @method runCountUp
    */
     private runCountUp() {
-            var lap= this.getSeconds()==='59'; 
-            this.animationUp.run(this.seconds);                       
-            this.seconds.textContent = this.upDigit(this.getSeconds(),59);
-            if(lap) {
+        var lap = this.getSeconds() === '59';
+        this.animationUp.run(this.seconds);
+        this.seconds.textContent = this.upDigit(this.getSeconds(), 59);
+        if (lap) {
+            lap = false;
+            this.animationUp.run(this.minutes);
+            lap = this.getMinutes() === '59';
+            this.minutes.textContent = this.upDigit(this.getMinutes(), 59);
+            if (lap) {
                 lap = false;
-                this.animationUp.run(this.minutes);
-                lap = this.getMinutes() === '59';
-                this.minutes.textContent = this.upDigit(this.getMinutes(),59);
-                if(lap){
-                   lap = false;
-                   this.animationUp.run(this.hour);
-                   this.hour.textContent = this.upDigit(this.getHours(),99);     
-                }
+                this.animationUp.run(this.hour);
+                this.hour.textContent = this.upDigit(this.getHours(), 99);
             }
+        }
         this.timeOut = setTimeout(() => {
             this.runCountUp();
         }, 1000);
@@ -447,46 +447,46 @@ class Clock {
     * @param {Date} date
     * @method setStandarTime
     */
-    public setStandarTime(date: Date) {    
-        if(date){
-           this.seconds.textContent = this.fixDigit(date.getSeconds());
-           this.minutes.textContent = this.fixDigit(date.getMinutes());
-           this.hour.textContent = this.fixDigit(date.getHours());
+    public setStandarTime(date: Date) {
+        if (date) {
+            this.seconds.textContent = this.fixDigit(date.getSeconds());
+            this.minutes.textContent = this.fixDigit(date.getMinutes());
+            this.hour.textContent = this.fixDigit(date.getHours());
         }
         var h: any = this.getHours();
-        this.time.textContent = h < 12 ? 'AM' : 'PM';        
+        this.time.textContent = h < 12 ? 'AM' : 'PM';
         if (h > 12) h = h - 12;
         else if (h === 0) h = 12;
-        h = this.fixDigit(h);   
-        this.hour.textContent = h;    
+        h = this.fixDigit(h);
+        this.hour.textContent = h;
         this.isStop = false;
         this.type = ETypeClock.CUSTOM_STANDARD;
         this.showTimeColumn();
         this.setDisabledControls(true);
         this.runCustomStandarTime();
     }
-   /**
-   * Run clock in the custom standar time
-   * @method runCustomStandarTime
-   */
+    /**
+    * Run clock in the custom standar time
+    * @method runCustomStandarTime
+    */
     private runCustomStandarTime() {
-            var lap= this.getSeconds()==='59'; 
-            this.animationUp.run(this.seconds);                       
-            this.seconds.textContent = this.upDigit(this.getSeconds(),59);
-            if(lap) {
+        var lap = this.getSeconds() === '59';
+        this.animationDown.run(this.seconds);
+        this.seconds.textContent = this.upDigit(this.getSeconds(), 59);
+        if (lap) {
+            lap = false;
+            this.animationDown.run(this.minutes);
+            lap = this.getMinutes() === '59';
+            this.minutes.textContent = this.upDigit(this.getMinutes(), 59);
+            if (lap) {
                 lap = false;
-                this.animationUp.run(this.minutes);
-                lap = this.getMinutes() === '59';
-                this.minutes.textContent = this.upDigit(this.getMinutes(),59);
-                if(lap){
-                   lap = false;
-                   this.animationUp.run(this.hour);
-                   if(this.getHours() === '12'){
-                     this.time.textContent = this.getTimeForStandarClock() === 'AM' ? 'PM' : 'AM';
-                   }   
-                   this.hour.textContent = this.upDigit(this.getHours(),12);     
+                this.animationDown.run(this.hour);
+                if (this.getHours() === '12') {
+                    this.time.textContent = this.getTimeForStandarClock() === 'AM' ? 'PM' : 'AM';
                 }
+                this.hour.textContent = this.upDigit(this.getHours(), 12);
             }
+        }
         this.timeOut = setTimeout(() => {
             this.runCustomStandarTime();
         }, 1000);
@@ -496,37 +496,37 @@ class Clock {
     * @param {Date} date
     * @method setMilitaryTime
     */
-    public setMilitaryTime(date: Date) {    
-        if(date){
-           this.seconds.textContent = this.fixDigit(date.getSeconds());
-           this.minutes.textContent = this.fixDigit(date.getMinutes());
-           this.hour.textContent = this.fixDigit(date.getHours());
-        }    
+    public setMilitaryTime(date: Date) {
+        if (date) {
+            this.seconds.textContent = this.fixDigit(date.getSeconds());
+            this.minutes.textContent = this.fixDigit(date.getMinutes());
+            this.hour.textContent = this.fixDigit(date.getHours());
+        }
         this.isStop = false;
         this.type = ETypeClock.CUSTOM_MILITARY;
         this.hiddenTimeColumn();
         this.setDisabledControls(true);
         this.runCustomStandarTime();
     }
-   /**
-   * Run clock in the custom military time
-   * @method runCustomMilitaryTime
-   */
+    /**
+    * Run clock in the custom military time
+    * @method runCustomMilitaryTime
+    */
     private runCustomMilitaryTime() {
-            var lap= this.getSeconds()==='59'; 
-            this.animationUp.run(this.seconds);                       
-            this.seconds.textContent = this.upDigit(this.getSeconds(),59);
-            if(lap) {
+        var lap = this.getSeconds() === '59';
+        this.animationDown.run(this.seconds);
+        this.seconds.textContent = this.upDigit(this.getSeconds(), 59);
+        if (lap) {
+            lap = false;
+            this.animationDown.run(this.minutes);
+            lap = this.getMinutes() === '59';
+            this.minutes.textContent = this.upDigit(this.getMinutes(), 59);
+            if (lap) {
                 lap = false;
-                this.animationUp.run(this.minutes);
-                lap = this.getMinutes() === '59';
-                this.minutes.textContent = this.upDigit(this.getMinutes(),59);
-                if(lap){
-                   lap = false;
-                   this.animationUp.run(this.hour);     
-                   this.hour.textContent = this.upDigit(this.getHours(),23);     
-                }
+                this.animationDown.run(this.hour);
+                this.hour.textContent = this.upDigit(this.getHours(), 23);
             }
+        }
         this.timeOut = setTimeout(() => {
             this.runCustomMilitaryTime();
         }, 1000);
@@ -550,16 +550,16 @@ class Clock {
                 this.runCountDown();
                 break;
             case ETypeClock.COUNT_UP:
-                 this.runCountUp();                 
+                this.runCountUp();
                 break;
-           case ETypeClock.CUSTOM_STANDARD:
-               this.setDisabledControls(true);
-               this.runCustomStandarTime();
-            break;
-           case ETypeClock.CUSTOM_MILITARY:
-               this.setDisabledControls(true);
-               this.runCustomMilitaryTime();
-            break;
+            case ETypeClock.CUSTOM_STANDARD:
+                this.setDisabledControls(true);
+                this.runCustomStandarTime();
+                break;
+            case ETypeClock.CUSTOM_MILITARY:
+                this.setDisabledControls(true);
+                this.runCustomMilitaryTime();
+                break;
         }
     }
     /**
@@ -624,7 +624,7 @@ class Clock {
     public setHiddenControls(hidden: boolean) {
         var rowControlsUp: any = this.table.rows[0];
         var rowControlsDown: any = this.table.rows[2];
-        this.hiddenControl= hidden;
+        this.hiddenControl = hidden;
         if (hidden) {
             if (!rowControlsUp.classList.contains('hidden')) {
                 rowControlsUp.classList.add('hidden');
@@ -649,21 +649,21 @@ class Clock {
     public isHiddenControls() {
         return this.hiddenControl;
     }
-        /**
-   * Set hidden Seconds
-   * @param {boolean} hidden
-   * @method setHiddenSeconds
-   */
+    /**
+* Set hidden Seconds
+* @param {boolean} hidden
+* @method setHiddenSeconds
+*/
     public setHiddenSeconds(hidden: boolean) {
         var rowControlsUp: any = this.table.rows[0];
         var cellControlsUp = rowControlsUp.cells[2];
         var rowControlsDown: any = this.table.rows[2];
         var cellControlsDown = rowControlsDown.cells[2];
-        this.hiddenSeconds= hidden;
+        this.hiddenSeconds = hidden;
         if (hidden) {
             if (!cellControlsUp.classList.contains('hidden')) {
                 cellControlsUp.classList.add('hidden');
-            }            
+            }
             if (!this.seconds.classList.contains('hidden')) {
                 this.seconds.classList.add('hidden');
             }
@@ -756,14 +756,14 @@ class Clock {
     * @method isStandardTime
     */
     public isStandardTime() {
-        return this.type === ETypeClock.STANDARD;
+        return this.type === ETypeClock.STANDARD || this.type === ETypeClock.CUSTOM_STANDARD;
     }
     /**    
     * @returns {boolean} return true if the type is military time
     * @method isMilitaryTime
     */
     public isMilitaryTime() {
-        return this.type === ETypeClock.MILITARY;
+        return this.type === ETypeClock.MILITARY || this.type === ETypeClock.CUSTOM_MILITARY;
     }
     /**    
     * @returns {boolean} return true if the type is count down
@@ -779,10 +779,6 @@ class Clock {
     public isCountUp() {
         return this.type === ETypeClock.COUNT_UP;
     }
-
-
-
-
 
 
 }
@@ -1536,6 +1532,11 @@ class Calendar {
 
 }
 
+enum ETypeSelect {
+    SIMPLE,
+    ICON,
+    IMAGE
+}
 class Select {
 
     private formGroup = document.createElement('div');
@@ -1543,6 +1544,7 @@ class Select {
     private input: any = document.createElement('input');
     private mask = document.createElement('div');
     private ico = document.createElement('i');
+    private icoItem: HTMLElement;
     private items = document.createElement('ul');
     private element: HTMLElement = null;
     private oldItem: HTMLElement = null;
@@ -1553,10 +1555,19 @@ class Select {
     private data: Array<any> = null;
     private length = 0;
     private icono = 'fa-angle-down';
+    private animaIn: Animation;
+    private animaOut: Animation;
+    private type = ETypeSelect.SIMPLE;
+    private options = null;
+    private currentClassItemIcon;
+    private oldClassItemIcon;
 
-    constructor(htmlElement: HTMLElement, data) {
+    constructor(htmlElement: HTMLElement, data, options) {
         this.element = htmlElement;
         this.data = data;
+        if (options) this.setOptions(options);
+        this.animaIn = new Animation('ui-ease-in', 'ui-0-2s', 'ui-fade-in-down', 200);
+        this.animaOut = new Animation('ui-ease-out', 'ui-0-2s', 'ui-fade-out-up', 200);
         this.formGroup.className = 'form-group  has-feedback';
         this.hidden.type = 'hidden';
         if (this.element.getAttribute('data-name')) this.hidden.name = this.element.getAttribute('data-name');
@@ -1598,7 +1609,31 @@ class Select {
         this.element.appendChild(this.formGroup);
         this.items.className = 'ui-select-items';
         this.element.appendChild(this.items);
+        this.config();
         this.fill();
+    }
+
+    private setOptions(options) {
+        this.options = options;
+        if (options.icon) {
+            this.type = ETypeSelect.ICON;
+        } else if (options.image) {
+            this.type = ETypeSelect.IMAGE
+            }
+    }
+
+    private config() {
+        switch (this.type) {
+            case ETypeSelect.ICON:
+                this.formGroup.classList.add('has-ui-icon');    
+                this.items.classList.add('fa-lu');
+                this.icoItem = document.createElement('i');
+                this.icoItem.className = 'form-control-ui-icon fa';
+                this.formGroup.appendChild(this.icoItem);
+                break;
+            case ETypeSelect.IMAGE:
+                break;
+        }
     }
 
     private fill() {
@@ -1606,7 +1641,8 @@ class Select {
         for (var i = 0; i < this.length; i++) {
             var item = this.data[i];
             var li = document.createElement('li');
-            li.textContent = item.value;
+            if (item.icon) this.addIcon(li, item.icon);
+            li.appendChild(document.createTextNode(item.value));
             li.tabIndex = i;
             li.setAttribute('data-option', item.option);
             var self = this;
@@ -1632,33 +1668,28 @@ class Select {
             }
            this.items.appendChild(li);
             if (item.selected) {
+                if (this.isTypeIcon()) this.currentClassItemIcon = item.icon;
                 this.selectItem(item.option);
             }
         }
     }
 
+    private addIcon(element: HTMLElement, classIcon: string) {
+        var tmpIcon = document.createElement('i');
+        tmpIcon.className = 'fa fa-li';
+        tmpIcon.classList.add(classIcon);
+        element.appendChild(tmpIcon);
+    }
+
     private animationIn() {
         this.items.classList.add('open');
-        this.items.classList.add('ui-ease-in');
-        this.items.classList.add('ui-0-2s');
-        this.items.classList.add('ui-fade-in-down');
-        setTimeout(() => {
-            this.items.classList.remove('ui-ease-in');
-            this.items.classList.remove('ui-0-2s');
-            this.items.classList.remove('ui-fade-in-down');
-        }, 200);
+        this.animaIn.run(this.items);
     }
 
     private animationOut() {
-        this.items.classList.add('ui-ease-out');
-        this.items.classList.add('ui-0-2s');
-        this.items.classList.add('ui-fade-out-up');
-        setTimeout(() => {
-            this.items.classList.remove('ui-ease-out');
-            this.items.classList.remove('ui-0-2s');
-            this.items.classList.remove('ui-fade-out-up');
+        this.animaOut.run(this.items, () => {
             this.items.classList.remove('open');
-        }, 200);
+        });
     }
 
     private changeValue(htmlElement: HTMLElement) {
@@ -1670,6 +1701,15 @@ class Select {
         this.input.onchange();
         this.oldItem.classList.remove('bg-primary');
         this.currentItem.classList.add('bg-primary');
+        //?
+        if (this.isTypeIcon()) {
+            if (this.oldClassItemIcon) this.icoItem.classList.remove(this.oldClassItemIcon);
+            this.oldClassItemIcon = this.currentClassItemIcon;
+            var tmpIcon: any = this.currentItem.getElementsByClassName('fa')[0];
+            this.currentClassItemIcon = tmpIcon.classList.item(2); console.log(tmpIcon.classList.item(2));
+            this.icoItem.classList.add(this.currentClassItemIcon);
+        } 
+
         this.input.focus();
 
     }
@@ -1690,6 +1730,18 @@ class Select {
                 this.changeValue(<HTMLElement>item);
             }
         }
+    }
+
+    private isTypeIcon() {
+        return this.type === ETypeSelect.ICON;
+    }
+
+    private isTypeImage() {
+        return this.type === ETypeSelect.IMAGE;
+    }
+
+    private isTypeSimple() {
+        return this.type === ETypeSelect.SIMPLE;
     }
 
     public toggle() {
@@ -1731,6 +1783,13 @@ class Select {
                     this.input.value = this.currentItem.textContent;
                     this.input.setAttribute('data-option', this.currentItem.getAttribute('data-option'));
                     this.hidden.value = this.input.value;
+                    if (this.isTypeIcon()) {
+                        if (this.oldClassItemIcon) this.icoItem.classList.remove(this.oldClassItemIcon);
+                        this.oldClassItemIcon = this.currentClassItemIcon;
+                        var tmpIcon: any = this.currentItem.getElementsByClassName('fa')[0];
+                        this.currentClassItemIcon = tmpIcon.classList.item(2); console.log(tmpIcon.classList.item(2));
+                        this.icoItem.classList.add(this.currentClassItemIcon);
+                    } 
                     this.currentItem.focus();
                     if (this.oldItem) this.oldItem.classList.remove('bg-primary');
                     this.currentItem.classList.add('bg-primary');
@@ -1738,7 +1797,7 @@ class Select {
             }
         }
     }
-
+    //agregarpara icon e image
     public addItem(option, value) {
         if (!this.disabled && !this.readOnly) {
             var li = document.createElement('li');
@@ -1777,7 +1836,7 @@ class Select {
             return this.input.getAttribute('data-option');
         }
     }
-
+    //getico getimage
     public isOpen() {
         if (!this.disabled && !this.readOnly) {
             return this.open;
