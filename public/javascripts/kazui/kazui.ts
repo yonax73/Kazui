@@ -1538,19 +1538,19 @@ enum ETypeSelect {
     IMAGE
 }
 
-class State {     
-     public old = null;
-     public current = null;
-          
-     constructor(old?,current?){
-        if(old) this.old = old;
-        if(current) this.current = current;
-     }
-     
-     public exchange(value){
+class State {
+    public old = null;
+    public current = null;
+
+    constructor(old?, current?) {
+        if (old) this.old = old;
+        if (current) this.current = current;
+    }
+
+    public exchange(value) {
         this.old = this.current;
         this.current = value;
-     }     
+    }
 }
 
 class Select {
@@ -1561,9 +1561,9 @@ class Select {
     private mask = document.createElement('div');
     private ico = document.createElement('i');
     private icoItem: HTMLElement;
-    private imgItem:HTMLImageElement;
+    private imgItem: HTMLImageElement;
     private items = document.createElement('ul');
-    private element: HTMLElement = null;    
+    private element: HTMLElement = null;
     private open = false;
     private disabled = false;
     private readOnly = false;
@@ -1574,9 +1574,9 @@ class Select {
     private animaOut: Animation;
     private type = ETypeSelect.SIMPLE;
     private options = null;
-    private itemSate:State;
-    private itemIconState:State;
-    private itemImageState:State;
+    private itemSate: State;
+    private itemIconState: State;
+    private itemImageState: State;
 
     constructor(htmlElement: HTMLElement, data, options) {
         this.element = htmlElement;
@@ -1636,27 +1636,42 @@ class Select {
             this.type = ETypeSelect.ICON;
             this.itemIconState = new State();
         } else if (options.image) {
-             this.type = ETypeSelect.IMAGE;
-             this.itemImageState = new State();
+            this.type = ETypeSelect.IMAGE;
+            this.itemImageState = new State();
         }
     }
 
-    private config() {
+    private config(clear?) {
         switch (this.type) {
             case ETypeSelect.ICON:
-                this.formGroup.classList.add('has-ui-icon');    
-                this.items.classList.add('fa-lu');
-                this.icoItem = document.createElement('i');
-                this.icoItem.className = 'form-control-ui-icon fa';
-                this.formGroup.appendChild(this.icoItem);
-               break;
+                if (clear) {
+                    this.formGroup.classList.remove('has-ui-icon');
+                    this.items.classList.remove('fa-lu');
+                    this.formGroup.removeChild(this.icoItem);
+                    this.icoItem = null;
+                } else {
+                    this.formGroup.classList.add('has-ui-icon');
+                    this.items.classList.add('fa-lu');
+                    this.icoItem = document.createElement('i');
+                    this.icoItem.className = 'form-control-ui-icon fa';
+                    this.formGroup.appendChild(this.icoItem);
+                }
+
+                break;
             case ETypeSelect.IMAGE:
-                this.formGroup.classList.add('has-ui-image'); 
-                this.items.classList.add('ui-image-lu');               
-                this.imgItem = document.createElement('img');
-                this.imgItem.className = 'form-control-ui-image';
-                this.formGroup.appendChild(this.imgItem);                 
-               break;
+                if (clear) {
+                    this.formGroup.classList.remove('has-ui-image');
+                    this.items.classList.remove('ui-image-lu');
+                    this.formGroup.removeChild(this.imgItem);
+                    this.imgItem = null;
+                } else {
+                    this.formGroup.classList.add('has-ui-image');
+                    this.items.classList.add('ui-image-lu');
+                    this.imgItem = document.createElement('img');
+                    this.imgItem.className = 'form-control-ui-image';
+                    this.formGroup.appendChild(this.imgItem);
+                }
+                break;
         }
     }
 
@@ -1679,7 +1694,7 @@ class Select {
             }
             li.onkeyup = function (e) {
                 if (e) {
-                    if (e.keyCode == 13) {                        
+                    if (e.keyCode == 13) {
                         self.changeValue(self.itemSate.current);
                         self.toggle();
                     }
@@ -1692,7 +1707,7 @@ class Select {
                 }
             }
            this.items.appendChild(li);
-            if (item.selected) {                
+            if (item.selected) {
                 this.selectItem(item.option);
             }
         }
@@ -1704,12 +1719,12 @@ class Select {
         tmpIcon.classList.add(classIcon);
         element.appendChild(tmpIcon);
     }
-    
-    private addImage(element:HTMLElement,src:string){
+
+    private addImage(element: HTMLElement, src: string) {
         var tmpImg = document.createElement('img');
         tmpImg.className = 'ui-image-item';
-        tmpImg.src= src;
-        element.appendChild(tmpImg);        
+        tmpImg.src = src;
+        element.appendChild(tmpImg);
     }
 
     private animationIn() {
@@ -1731,21 +1746,21 @@ class Select {
         this.input.onchange();
         this.itemSate.old.classList.remove('bg-primary');
         this.itemSate.current.classList.add('bg-primary');
-        if (this.isTypeIcon()) {               
-           this.changeIconItem();
-        }else if(this.isTypeImage()){
-           this.changeImageItem(); 
+        if (this.isTypeIcon()) {
+            this.changeIconItem();
+        } else if (this.isTypeImage()) {
+            this.changeImageItem();
         }
         this.input.focus();
     }
-    
-    private changeIconItem(){   
+
+    private changeIconItem() {
         this.itemIconState.exchange(this.getIconItem());
         this.icoItem.classList.remove(this.itemIconState.old);
         this.icoItem.classList.add(this.itemIconState.current);
     }
-    
-    private changeImageItem(){
+
+    private changeImageItem() {
         this.itemImageState.exchange(this.getImageItem());
         this.imgItem.src = this.itemImageState.current;
     }
@@ -1818,11 +1833,11 @@ class Select {
                     this.input.value = this.itemSate.current.textContent;
                     this.input.setAttribute('data-option', this.itemSate.current.getAttribute('data-option'));
                     this.hidden.value = this.input.value;
-                    if (this.isTypeIcon()) {                        
-                       this.changeIconItem();
-                    }else if(this.isTypeImage()){
-                       this.changeImageItem(); 
-                    } 
+                    if (this.isTypeIcon()) {
+                        this.changeIconItem();
+                    } else if (this.isTypeImage()) {
+                        this.changeImageItem();
+                    }
                     this.itemSate.current.focus();
                     if (this.itemSate.old) this.itemSate.old.classList.remove('bg-primary');
                     this.itemSate.current.classList.add('bg-primary');
@@ -1869,31 +1884,31 @@ class Select {
             return this.input.getAttribute('data-option');
         }
     }
-    
+
     public isOpen() {
         if (!this.disabled && !this.readOnly) {
             return this.open;
         }
     }
-    
+
     /**
     * get Icon Item Class
     * @returns {string} class Icon
     * @method getIconItem
     */
-    public getIconItem(){
-      var tmpIcon:any = this.itemSate.current.getElementsByClassName('fa')[0]; 
-      return tmpIcon.classList.item(2);  
+    public getIconItem() {
+        var tmpIcon: any = this.itemSate.current.getElementsByClassName('fa')[0];
+        return tmpIcon.classList.item(2);
     }
-    
+
     /**
     * get Image Item src
     * @returns {string} src
     * @method getImageItem
     */
-    public getImageItem(){
-      var tmpImg:any = this.itemSate.current.getElementsByClassName('ui-image-item')[0]; 
-      return tmpImg.src;
+    public getImageItem() {
+        var tmpImg: any = this.itemSate.current.getElementsByClassName('ui-image-item')[0];
+        return tmpImg.src;
     }
     /**
     * set Data
@@ -1901,7 +1916,15 @@ class Select {
     * @param {JSON} options
     * @method setDate
     */
-    public setDate(data,options){
+    public setDate(data, options) {
+        /**
+        * Clear
+        */
+        this.config(true);
+        this.items.innerHTML = '';
+        /**
+        * Load
+        */
         this.data = data;
         if (options) this.setOptions(options);
         this.config();
