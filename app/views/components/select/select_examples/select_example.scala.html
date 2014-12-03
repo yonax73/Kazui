@@ -8,13 +8,7 @@
         <div id="select-items-example" class="ui-select"></div>
     </div>
 </div>
-<br />
-<div class="row">
-    <div class="col-md-12 col-sm-12">
-        <div id="select-images-example" class="ui-select"></div>
-    </div>
-</div>
-<br />
+<br/>
 <div class="row">
     <div class="col-md-12 col-sm-12">
         <button type="button" id="btnSelectGetOption" class="btn btn-primary btn-block">Get option</button>
@@ -30,26 +24,17 @@
 <script>
     var alertSelectExample = new Alert(document.getElementById('alert-select-example'));
     var items = new Select(document.getElementById('select-items-example'), [
-        { option: 1, value: 'item 1', icon: 'fa-star-o' },
-        { option: 2, value: 'item 2', icon: 'fa-thumb-tack' },
-        { option: 3, value: 'item 3', icon: 'fa-trophy' },
-        { option: 4, value: 'item 4', icon: 'fa-star-o', selected: true },
-        { option: 5, value: 'item 5', icon: 'fa-thumb-tack' }
-    ], { icon: true });
+        { option: 1, value: 'item 1'},
+        { option: 2, value: 'item 2'},
+        { option: 3, value: 'item 3'},
+        { option: 4, value: 'item 4', selected: true },
+        { option: 5, value: 'item 5'}
+    ]);
 
-    items.addItem(6, 'example', { icon: 'fa-star-o' });
-    console.log(items.getItem());
+        document.getElementById('btnSelectGetOption').onclick = function () {
+        if (!items.isDisabled())
+            alertSelectExample.info('Option is: ' + items.getOption());
 
-    document.getElementById('btnSelectGetOption').onclick = function () {
-        /*if (!items.isDisabled())
-            alertSelectExample.info('Option is: ' + items.getOption());*/
-    	items.setDate( [
-    	                { option: 1, value: 'Beth Stewart', image: '/assets/images/profile/prof-1.jpg' },
-    	                { option: 2, value: 'Norma Bailey', image: '/assets/images/profile/prof-2.jpg' },
-    	                { option: 3, value: 'Riley Richards', image: '/assets/images/profile/prof-3.jpg' },
-    	                { option: 4, value: 'Brittany Hunt', image: '/assets/images/profile/prof-4.jpg', selected: true },
-    	                { option: 5, value: 'Diane Richardson', image: '/assets/images/profile/prof-5.jpg' }
-    	            ], {image:true}); 
     }
     document.getElementById('btnSelectGetValue').onclick = function () {
         if (!items.isDisabled())
@@ -58,18 +43,6 @@
     document.getElementById('chkSelectDisabled').onclick = function () {
         items.setDisabled(this.checked);
     }
-    
-    var profiles = new Select(document.getElementById('select-images-example'), [
-        { option: 1, value: 'Beth Stewart', image: '/assets/images/profile/prof-1.jpg' },
-        { option: 2, value: 'Norma Bailey', image: '/assets/images/profile/prof-2.jpg' },
-        { option: 3, value: 'Riley Richards', image: '/assets/images/profile/prof-3.jpg' },
-        { option: 4, value: 'Brittany Hunt', image: '/assets/images/profile/prof-4.jpg', selected: true },
-        { option: 5, value: 'Diane Richardson', image: '/assets/images/profile/prof-5.jpg' }
-    ], {image:true});
-    
-    profiles.setHeight('120px');
 
-    profiles.addItem(6, 'example');
-    console.log(profiles.getItem());
 
 </script>

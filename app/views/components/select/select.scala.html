@@ -21,7 +21,7 @@
 <p class="text-color">Creamos un objeto Select, que recibe como par&aacute;metro el <code>HTMLElement</code> y un <code>array</code> de objetos.</p>
 <pre>
 <code class="language-javascript">
-var items = new Select(document.getElementById('select-items-example'), [
+var items = new Select(document.getElementById('select'), [
     {option: 1, value: 'item 1'},
     {option: 2, value: 'item 2'},
     {option: 3, value: 'item 3'},
@@ -32,7 +32,7 @@ var items = new Select(document.getElementById('select-items-example'), [
 </pre>
 <h3>M&eacute;todos</h3>
 <p class="text-color">
-    Con el objeto ya creado podemos llamar cualquiera de sus m&eacute;todos: <code class="ui-method">select.getOption()</code>.
+    Con el objeto ya creado podemos llamar cualquiera de sus m&eacute;todos: <code class="ui-method">items.getOption()</code>.
 </p>
 <table class="table text-color">
     <thead>
@@ -164,6 +164,7 @@ var items = new Select(document.getElementById('select-items-example'), [
         </tr>
     </tbody>
 </table>
+
 <h3>Eventos</h3>
 <table class="table text-color">
     <thead>
@@ -183,3 +184,23 @@ var items = new Select(document.getElementById('select-items-example'), [
         </tr>
     </tbody>
 </table>
+<div id="kazui-more-example-select">
+   <h3>M&aacute;s ejemplos</h3>
+	<p class="text-color example-header">
+	    Im&aacute;genes e iconos
+	    <span class="pull-right text-color">
+	        <i class="fa fa-desktop" onclick="changeViewExample('desktop','kazui-example-select-icon-images')"></i>
+	        <i class="fa fa-mobile" onclick="changeViewExample('mobile','kazui-example-select-icon-images')"></i>
+	        <a href="http://jsfiddle.net/" target="_blank"><i class="fa fa-pencil-square-o"></i></a>
+	    </span>
+	</p>
+	<div id="kazui-example-select-icon-images" class="example mobile">
+	    @select_examples.select_icon_image_example()
+	</div>
+	<div class="ui-callout ui-callout-info">
+	<h4>En las im&aacute;genes e iconos</h4>
+	  <p class="text-color">Se debe crear el objeto indicando que acepta una im&aacute;gen o un icono <br/>
+	    Para las imagene
+	  </p>
+	</div>
+</div>

@@ -127,3 +127,9 @@ border-radius: 3px;
 .ui-callout-danger h4 {
   color: #dc4437;
 }
+.ui-callout-info{
+	border-left-color:#3872f2; 
+}
+.ui-callout-info h4 {
+  color: #3872f2;
+}
