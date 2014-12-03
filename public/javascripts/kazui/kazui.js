@@ -1894,20 +1894,28 @@ var Select = (function () {
         }
     };
 
-    //agregarpara icon e image
-    Select.prototype.addItem = function (option, value) {
+    Select.prototype.addItem = function (option, value, args) {
         if (!this.disabled && !this.readOnly) {
             var li = document.createElement('li');
-            li.textContent = value;
+            if (args) {
+                if (args.icon && this.isTypeIcon()) {
+                    this.addIcon(li, args.icon);
+                } else if (args.image && this.isTypeImage()) {
+                    this.addImage(li, args.image);
+                }
+            }
+            li.appendChild(document.createTextNode(value));
             li.tabIndex = this.length + 1;
             li.setAttribute('data-option', option);
             this.input.setAttribute('data-option', option);
             var self = this;
             li.onclick = function (e) {
                 self.changeValue(this);
+                self.toggle();
                 e.stopPropagation();
                 return false;
             };
+
             this.items.appendChild(li);
             this.length++;
         }
@@ -1915,10 +1923,26 @@ var Select = (function () {
 
     Select.prototype.getItem = function () {
         if (!this.disabled && !this.readOnly) {
-            return {
-                value: this.input.value,
-                option: this.input.getAttribute('data-option')
-            };
+            if (this.isTypeIcon()) {
+                var tmpIcon = this.itemSate.current.getElementsByClassName('fa')[0];
+                return {
+                    value: this.input.value,
+                    option: this.input.getAttribute('data-option'),
+                    icon: tmpIcon.classList.item(2)
+                };
+            } else if (this.isTypeImage()) {
+                var tmpImg = this.itemSate.current.getElementsByClassName('ui-image-item')[0];
+                return {
+                    value: this.input.value,
+                    option: this.input.getAttribute('data-option'),
+                    image: tmpImg.src
+                };
+            } else {
+                return {
+                    value: this.input.value,
+                    option: this.input.getAttribute('data-option')
+                };
+            }
         }
     };
 
@@ -1946,8 +1970,10 @@ var Select = (function () {
     * @method getIconItem
     */
     Select.prototype.getIconItem = function () {
-        var tmpIcon = this.itemSate.current.getElementsByClassName('fa')[0];
-        return tmpIcon.classList.item(2);
+        if (!this.disabled && !this.readOnly) {
+            var tmpIcon = this.itemSate.current.getElementsByClassName('fa')[0];
+            return tmpIcon.classList.item(2);
+        }
     };
 
     /**
@@ -1956,8 +1982,10 @@ var Select = (function () {
     * @method getImageItem
     */
     Select.prototype.getImageItem = function () {
-        var tmpImg = this.itemSate.current.getElementsByClassName('ui-image-item')[0];
-        return tmpImg.src;
+        if (!this.disabled && !this.readOnly) {
+            var tmpImg = this.itemSate.current.getElementsByClassName('ui-image-item')[0];
+            return tmpImg.src;
+        }
     };
 
     /**
@@ -1967,20 +1995,22 @@ var Select = (function () {
     * @method setDate
     */
     Select.prototype.setDate = function (data, options) {
-        /**
-        * Clear
-        */
-        this.config(true);
-        this.items.innerHTML = '';
+        if (!this.disabled && !this.readOnly) {
+            /**
+            * Clear
+            */
+            this.config(true);
+            this.items.innerHTML = '';
 
-        /**
-        * Load
-        */
-        this.data = data;
-        if (options)
-            this.setOptions(options);
-        this.config();
-        this.fill();
+            /**
+            * Load
+            */
+            this.data = data;
+            if (options)
+                this.setOptions(options);
+            this.config();
+            this.fill();
+        }
     };
 
     Select.prototype.isDisabled = function () {

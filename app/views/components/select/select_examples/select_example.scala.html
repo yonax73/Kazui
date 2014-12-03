@@ -35,7 +35,10 @@
         { option: 3, value: 'item 3', icon: 'fa-trophy' },
         { option: 4, value: 'item 4', icon: 'fa-star-o', selected: true },
         { option: 5, value: 'item 5', icon: 'fa-thumb-tack' }
-    ], {icon:true});
+    ], { icon: true });
+
+    items.addItem(6, 'example', { icon: 'fa-star-o' });
+    console.log(items.getItem());
 
     document.getElementById('btnSelectGetOption').onclick = function () {
         /*if (!items.isDisabled())
@@ -65,5 +68,8 @@
     ], {image:true});
     
     profiles.setHeight('120px');
+
+    profiles.addItem(6, 'example');
+    console.log(profiles.getItem());
 
 </script>

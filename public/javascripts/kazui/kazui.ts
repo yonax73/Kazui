@@ -1845,20 +1845,29 @@ class Select {
             }
         }
     }
-    //agregarpara icon e image
-    public addItem(option, value) {
+
+    public addItem(option, value, args) {
         if (!this.disabled && !this.readOnly) {
             var li = document.createElement('li');
-            li.textContent = value;
+            if (args) {
+                if (args.icon && this.isTypeIcon()) {
+                    this.addIcon(li, args.icon);
+                } else if (args.image && this.isTypeImage()) {
+                    this.addImage(li, args.image);
+                }
+            }            
+            li.appendChild(document.createTextNode(value));
             li.tabIndex = this.length + 1;
             li.setAttribute('data-option', option);
             this.input.setAttribute('data-option', option);
             var self = this;
             li.onclick = function (e) {
                 self.changeValue(this);
+                self.toggle();
                 e.stopPropagation();
                 return false;
             }
+
             this.items.appendChild(li);
             this.length++;
         }
@@ -1866,10 +1875,26 @@ class Select {
 
     public getItem() {
         if (!this.disabled && !this.readOnly) {
-            return {
-                value: this.input.value,
-                option: this.input.getAttribute('data-option')
-            };
+            if (this.isTypeIcon()) {
+                var tmpIcon: any = this.itemSate.current.getElementsByClassName('fa')[0];
+                return {
+                    value: this.input.value,
+                    option: this.input.getAttribute('data-option'),
+                    icon: tmpIcon.classList.item(2)
+                };
+            } else if (this.isTypeImage()) {
+                var tmpImg: any = this.itemSate.current.getElementsByClassName('ui-image-item')[0];
+                return {
+                    value: this.input.value,
+                    option: this.input.getAttribute('data-option'),
+                    image: tmpImg.src
+                };
+            } else {
+                return {
+                    value: this.input.value,
+                    option: this.input.getAttribute('data-option')
+                };
+            }
         }
     }
 
@@ -1897,8 +1922,10 @@ class Select {
     * @method getIconItem
     */
     public getIconItem() {
-        var tmpIcon: any = this.itemSate.current.getElementsByClassName('fa')[0];
-        return tmpIcon.classList.item(2);
+        if (!this.disabled && !this.readOnly) {
+            var tmpIcon: any = this.itemSate.current.getElementsByClassName('fa')[0];
+            return tmpIcon.classList.item(2);
+        }
     }
 
     /**
@@ -1907,8 +1934,10 @@ class Select {
     * @method getImageItem
     */
     public getImageItem() {
-        var tmpImg: any = this.itemSate.current.getElementsByClassName('ui-image-item')[0];
-        return tmpImg.src;
+        if (!this.disabled && !this.readOnly) {
+            var tmpImg: any = this.itemSate.current.getElementsByClassName('ui-image-item')[0];
+            return tmpImg.src;
+        }
     }
     /**
     * set Data
@@ -1917,18 +1946,20 @@ class Select {
     * @method setDate
     */
     public setDate(data, options) {
-        /**
-        * Clear
-        */
-        this.config(true);
-        this.items.innerHTML = '';
-        /**
-        * Load
-        */
-        this.data = data;
-        if (options) this.setOptions(options);
-        this.config();
-        this.fill();
+        if (!this.disabled && !this.readOnly) {
+            /**
+            * Clear
+            */
+            this.config(true);
+            this.items.innerHTML = '';
+            /**
+            * Load
+            */
+            this.data = data;
+            if (options) this.setOptions(options);
+            this.config();
+            this.fill();
+        }
     }
 
     public isDisabled() {
