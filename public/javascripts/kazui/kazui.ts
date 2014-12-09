@@ -1945,13 +1945,12 @@ class Select {
     * @param {JSON} options
     * @method setDate
     */
-    public setDate(data, options) {
+    public setData(data, options) {
         if (!this.disabled && !this.readOnly) {
             /**
             * Clear
             */
-            this.config(true);
-            this.items.innerHTML = '';
+            this.clearData();
             /**
             * Load
             */
@@ -2016,6 +2015,28 @@ class Select {
         }
     }
 
+    public loading() {        
+        if (this.ico.classList.contains(this.icono)) this.ico.classList.remove(this.icono);                    
+        if (!this.ico.classList.contains('fa-spinner')) this.ico.classList.add('fa-spinner');
+        if (!this.ico.classList.contains('fa-spin')) this.ico.classList.add('fa-spin');
+        this.setDisabled(true);
+    }
+
+    public complete() {
+        if (this.ico.classList.contains('fa-spinner')) this.ico.classList.remove('fa-spinner');
+        if (this.ico.classList.contains('fa-spin')) this.ico.classList.remove('fa-spin');
+        if (!this.ico.classList.contains(this.icono)) this.ico.classList.add(this.icono);
+        this.setDisabled(false);
+    }
+
+    public clearData() {
+        this.config(true);
+        this.hidden.value = '';
+        this.input.value = '';
+        this.input.removeAttribute('data-option');
+        this.items.innerHTML = '';
+    }
+
     public onchange(callback) {
         this.input.onchange = callback;
     }
@@ -2027,18 +2048,20 @@ class Select {
             for (var i = 0; i < n; i++) {
                 var select = <HTMLElement> selects[i];
                 var items = select.getElementsByTagName('ul')[0];
-                if (items.classList.contains('open')) {
-                    items.classList.add('ui-ease-out');
-                    items.classList.add('ui-0-2s');
-                    items.classList.add('ui-fade-out-up');
-                    (function (items) {
-                        setTimeout(() => {
-                            items.classList.remove('ui-ease-out');
-                            items.classList.remove('ui-0-2s');
-                            items.classList.remove('ui-fade-out-up');
-                            items.classList.remove('open');
-                        }, 200);
-                    })(items);
+                if (items) {
+                    if (items.classList.contains('open')) {
+                        items.classList.add('ui-ease-out');
+                        items.classList.add('ui-0-2s');
+                        items.classList.add('ui-fade-out-up');
+                        (function (items) {
+                            setTimeout(() => {
+                                items.classList.remove('ui-ease-out');
+                                items.classList.remove('ui-0-2s');
+                                items.classList.remove('ui-fade-out-up');
+                                items.classList.remove('open');
+                            }, 200);
+                        })(items);
+                    }
                 }
             }
         }
@@ -2257,6 +2280,81 @@ class Toggle {
                 }
             }
         }
+    }
+}
+
+enum EHttpStatus {
+    OK = 200,
+    BAD_REQUEST = 400,
+    UNAUTHORIZED = 401,
+    FORBIDDEN = 403,
+    NOT_FOUND = 404,
+    INTERNAL_SERVER_ERROR = 500
+}
+enum EReadyStateStatus {
+    UNINITIALIZED= 0,
+    LOADING = 1,
+    LOADED = 2,
+    INTERACTIVE= 3,
+    COMPLETED =4
+}
+class Http {    
+
+    static get(action, onBeforeSend, onReady, onError) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (onBeforeSend) onBeforeSend();
+            if (this.readyState === EReadyStateStatus.COMPLETED) {
+                if (this.status === EHttpStatus.OK) {
+                   if(onReady) onReady(this);
+                } else {
+                   if (onerror) onError();
+                }
+            }
+        }
+        xhr.open('GET', action);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+        xhr.send();
+    }
+
+    static post(data, action, onBeforeSend, onReady, onError) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (onBeforeSend) onBeforeSend();
+            if (this.readyState === EReadyStateStatus.COMPLETED) {
+                if (this.status === EHttpStatus.OK) {
+                    if (onReady) onReady(this);
+                } else {
+                    if (onerror) onError();
+                }
+            }
+        }
+        xhr.open('POST', action);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+        xhr.send(data);
+    }
+
+    static sendJSON(data, action, onBeforeSend, onReady, onError) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (onBeforeSend) onBeforeSend();
+            if (this.readyState === EReadyStateStatus.COMPLETED) {
+                if (this.status === EHttpStatus.OK) {
+                    if (onReady) onReady(this);
+                } else {
+                    if (onerror) onError();
+                }
+            }
+        }
+        xhr.open('POST', action);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send(data);
+    }
+
+    static put() {
+    }
+
+    static delete() {
     }
 }
 

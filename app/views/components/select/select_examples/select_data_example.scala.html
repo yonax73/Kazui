@@ -1,0 +1,44 @@
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <div id="select-data-categories" class="ui-select"></div>
+    </div>
+</div>
+<br/>
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <div id="select-data-products" class="ui-select"></div>
+    </div>
+</div>
+
+<script>
+    
+    var selectDataCategories = new Select(document.getElementById('select-data-categories'), []);
+    var selectDataProducts = new Select(document.getElementById('select-data-products'), []);
+    selectDataProducts.setDisabled(true);
+    Http.get('/categories', function () {
+        selectDataCategories.loading();
+    }, function (xhr) {
+        selectDataCategories.complete();
+        selectDataCategories.setData(JSON.parse(xhr.responseText));
+        selectDataCategories.selectItem(0);
+    });
+
+    selectDataCategories.onchange(function () {
+        if (selectDataCategories.getOption() > 0) {
+            var data = { categoryId: selectDataCategories.getOption() }
+            Http.sendJSON(JSON.stringify(data), '/products', function () {
+                selectDataProducts.loading();
+            }, function (xhr) {
+                selectDataProducts.complete();
+                selectDataProducts.setData(JSON.parse(xhr.responseText));
+                selectDataProducts.selectItem(0);
+            });
+        } else {
+            selectDataProducts.clearData();
+            selectDataProducts.setDisabled(true);            
+        }
+    });
+    
+
+
+</script>

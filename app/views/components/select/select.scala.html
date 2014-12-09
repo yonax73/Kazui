@@ -52,6 +52,22 @@ var items = new Select(document.getElementById('select'), [
         </tr>
         <tr>
             <td>
+                <code class="ui-method">clearData()</code>
+            </td>
+            <td>
+                Deja el Objeto vacio, sin items.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">complete()</code>
+            </td>
+            <td>
+                Regresa el Objeto a su estado natural. Se debe usar despues de <code>loading()</code>
+            </td>
+        </tr>
+        <tr>
+            <td>
                 <code class="ui-method">focus()</code>
             </td>
             <td>
@@ -116,10 +132,28 @@ var items = new Select(document.getElementById('select'), [
         </tr>
         <tr>
             <td>
+                <code class="ui-method">loading()</code>
+            </td>
+            <td>
+                Estado del Objeto, en el cual esta esperando a que termine de ejecutarse algun evento.
+                Para volver al estado normal usar <code>complete()</code>
+            </td>
+        </tr>
+        <tr>
+            <td>
                 <code class="ui-method">selectItem(option)</code>
             </td>
             <td>
                 Selecciona cualquier item por la opcio&oacute;n.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">setData(data,options)</code>
+            </td>
+            <td>
+                Cambia los items del select, opcional se puede cambiar los opciones de los items, por
+                ejemplo para que acepten imagenes.
             </td>
         </tr>
         <tr>
@@ -185,22 +219,109 @@ var items = new Select(document.getElementById('select'), [
     </tbody>
 </table>
 <div id="kazui-more-example-select">
-   <h3>M&aacute;s ejemplos</h3>
-	<p class="text-color example-header">
-	    Im&aacute;genes e iconos
-	    <span class="pull-right text-color">
-	        <i class="fa fa-desktop" onclick="changeViewExample('desktop','kazui-example-select-icon-images')"></i>
-	        <i class="fa fa-mobile" onclick="changeViewExample('mobile','kazui-example-select-icon-images')"></i>
-	        <a href="http://jsfiddle.net/" target="_blank"><i class="fa fa-pencil-square-o"></i></a>
-	    </span>
-	</p>
-	<div id="kazui-example-select-icon-images" class="example mobile">
-	    @select_examples.select_icon_image_example()
-	</div>
-	<div class="ui-callout ui-callout-info">
-	<h4>En las im&aacute;genes e iconos</h4>
-	  <p class="text-color">Se debe crear el objeto indicando que acepta una im&aacute;gen o un icono <br/>
-	    Para las imagene
-	  </p>
-	</div>
+    <h3>M&aacute;s ejemplos</h3>
+    <p class="text-color example-header">
+        Im&aacute;genes e iconos
+        <span class="pull-right text-color">
+            <i class="fa fa-desktop" onclick="changeViewExample('desktop','kazui-example-select-icon-images')"></i>
+            <i class="fa fa-mobile" onclick="changeViewExample('mobile','kazui-example-select-icon-images')"></i>
+            <a href="http://jsfiddle.net/" target="_blank"><i class="fa fa-pencil-square-o"></i></a>
+        </span>
+    </p>
+    <div id="kazui-example-select-icon-images" class="example mobile">
+        @select_examples.select_icon_image_example()
+    </div>
+    <p class="text-color">
+        Para crear un <code>Select</code> con im&aacute;genes se debe hacer de la siguiente manera:
+    </p>
+    <pre>
+<code class="language-javascript">
+var items = new Select(document.getElementById('select'), [
+        { option: 1, value: 'Beth Stewart', image: '/assets/images/profile/prof-1.jpg' },
+        { option: 2, value: 'Norma Bailey', image: '/assets/images/profile/prof-2.jpg',selected: true }
+    ], {image:true});
+    </code>	
+</pre>
+    <p class="text-color">
+        El &uacute;ltimo par&aacute;metro indica que acepta im&aacute;genes.
+    </p>
+    <h3>M&eacute;todos</h3>
+    <table class="table text-color">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripci&oacute;n</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <code class="ui-method">addItem(option, value,{image:'my/path/img.png'})</code>
+                </td>
+                <td>
+                    Agrega un nuevo item.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <code class="ui-method">getImageItem()</code>
+                </td>
+                <td>
+                    Retorna el <code>src</code> de la im&aacute;gen.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p class="text-color">
+        Para crear un <code>Select</code> con <a class="link-color" href="http://fontawesome.io/" target="_blank">iconos</a> se debe hacer de la siguiente manera:
+    </p>
+    <pre>
+<code class="language-javascript">
+var items = new Select(document.getElementById('select'), [
+        { option: 1, value: 'Beth Stewart', icon: 'fa-star-o' },
+        { option: 2, value: 'Norma Bailey', icon: 'fa-thumb-tack',selected: true }
+    ], {icon:true});
+    </code>	
+</pre>
+    <p class="text-color">
+        El &uacute;ltimo par&aacute;metro indica que acepta iconos.
+    </p>
+    <h3>M&eacute;todos</h3>
+    <table class="table text-color">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripci&oacute;n</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <code class="ui-method">addItem(option, value,{icon:'fontawesome-class'})</code>
+                </td>
+                <td>
+                    Agrega un nuevo item.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <code class="ui-method">getIconItem()</code>
+                </td>
+                <td>
+                    Retorna la <code>class</code> de <a class="link-color" href="http://fontawesome.io/" target="_blank">fontawesome</a>.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p class="text-color example-header">
+        Select en cascada
+        <span class="pull-right text-color">
+            <i class="fa fa-desktop" onclick="changeViewExample('desktop','kazui-example-select-data')"></i>
+            <i class="fa fa-mobile" onclick="changeViewExample('mobile','kazui-example-select-data')"></i>
+            <a href="http://jsfiddle.net/" target="_blank"><i class="fa fa-pencil-square-o"></i></a>
+        </span>
+    </p>
+    <div id="kazui-example-select-data" class="example mobile">
+        @select_examples.select_data_example()
+    </div>
 </div>

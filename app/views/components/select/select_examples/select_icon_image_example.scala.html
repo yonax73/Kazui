@@ -1,11 +1,6 @@
 <div class="row">
     <div class="col-md-12 col-sm-12">
-        <div id="alert-select-example"></div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12 col-sm-12">
-        <div id="select-items-example" class="ui-select"></div>
+        <div id="select-icons-example" class="ui-select"></div>
     </div>
 </div>
 <br />
@@ -14,62 +9,22 @@
         <div id="select-images-example" class="ui-select"></div>
     </div>
 </div>
-<br />
-<div class="row">
-    <div class="col-md-12 col-sm-12">
-        <button type="button" id="btnSelectGetOption" class="btn btn-primary btn-block">Get option</button>
-        <button type="button" id="btnSelectGetValue" class="btn btn-primary btn-block">Get value</button>
-        <div class="checkbox pull-right">
-            <label>
-                <input type="checkbox" value="disabled" id="chkSelectDisabled">
-                Disabled
-            </label>
-        </div>
-    </div>
-</div>
+
 <script>
-    var alertSelectExample = new Alert(document.getElementById('alert-select-example'));
-    var items = new Select(document.getElementById('select-items-example'), [
+    
+    var selectIcons = new Select(document.getElementById('select-icons-example'), [
         { option: 1, value: 'item 1', icon: 'fa-star-o' },
         { option: 2, value: 'item 2', icon: 'fa-thumb-tack' },
         { option: 3, value: 'item 3', icon: 'fa-trophy' },
         { option: 4, value: 'item 4', icon: 'fa-star-o', selected: true },
         { option: 5, value: 'item 5', icon: 'fa-thumb-tack' }
     ], { icon: true });
-
-    items.addItem(6, 'example', { icon: 'fa-star-o' });
-    console.log(items.getItem());
-
-    document.getElementById('btnSelectGetOption').onclick = function () {
-        /*if (!items.isDisabled())
-            alertSelectExample.info('Option is: ' + items.getOption());*/
-    	items.setDate( [
-    	                { option: 1, value: 'Beth Stewart', image: '/assets/images/profile/prof-1.jpg' },
-    	                { option: 2, value: 'Norma Bailey', image: '/assets/images/profile/prof-2.jpg' },
-    	                { option: 3, value: 'Riley Richards', image: '/assets/images/profile/prof-3.jpg' },
-    	                { option: 4, value: 'Brittany Hunt', image: '/assets/images/profile/prof-4.jpg', selected: true },
-    	                { option: 5, value: 'Diane Richardson', image: '/assets/images/profile/prof-5.jpg' }
-    	            ], {image:true}); 
-    }
-    document.getElementById('btnSelectGetValue').onclick = function () {
-        if (!items.isDisabled())
-            alertSelectExample.info('Value is: ' + items.getValue());
-    }
-    document.getElementById('chkSelectDisabled').onclick = function () {
-        items.setDisabled(this.checked);
-    }
     
-    var profiles = new Select(document.getElementById('select-images-example'), [
+    var selectImages = new Select(document.getElementById('select-images-example'), [
         { option: 1, value: 'Beth Stewart', image: '/assets/images/profile/prof-1.jpg' },
         { option: 2, value: 'Norma Bailey', image: '/assets/images/profile/prof-2.jpg' },
         { option: 3, value: 'Riley Richards', image: '/assets/images/profile/prof-3.jpg' },
-        { option: 4, value: 'Brittany Hunt', image: '/assets/images/profile/prof-4.jpg', selected: true },
-        { option: 5, value: 'Diane Richardson', image: '/assets/images/profile/prof-5.jpg' }
-    ], {image:true});
-    
-    profiles.setHeight('120px');
-
-    profiles.addItem(6, 'example');
-    console.log(profiles.getItem());
+        { option: 4, value: 'Brittany Hunt', image: '/assets/images/profile/prof-4.jpg', selected: true }        
+    ], {image:true});    
 
 </script>

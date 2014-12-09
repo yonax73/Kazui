@@ -1994,13 +1994,12 @@ var Select = (function () {
     * @param {JSON} options
     * @method setDate
     */
-    Select.prototype.setDate = function (data, options) {
+    Select.prototype.setData = function (data, options) {
         if (!this.disabled && !this.readOnly) {
             /**
             * Clear
             */
-            this.config(true);
-            this.items.innerHTML = '';
+            this.clearData();
 
             /**
             * Load
@@ -2067,6 +2066,34 @@ var Select = (function () {
         }
     };
 
+    Select.prototype.loading = function () {
+        if (this.ico.classList.contains(this.icono))
+            this.ico.classList.remove(this.icono);
+        if (!this.ico.classList.contains('fa-spinner'))
+            this.ico.classList.add('fa-spinner');
+        if (!this.ico.classList.contains('fa-spin'))
+            this.ico.classList.add('fa-spin');
+        this.setDisabled(true);
+    };
+
+    Select.prototype.complete = function () {
+        if (this.ico.classList.contains('fa-spinner'))
+            this.ico.classList.remove('fa-spinner');
+        if (this.ico.classList.contains('fa-spin'))
+            this.ico.classList.remove('fa-spin');
+        if (!this.ico.classList.contains(this.icono))
+            this.ico.classList.add(this.icono);
+        this.setDisabled(false);
+    };
+
+    Select.prototype.clearData = function () {
+        this.config(true);
+        this.hidden.value = '';
+        this.input.value = '';
+        this.input.removeAttribute('data-option');
+        this.items.innerHTML = '';
+    };
+
     Select.prototype.onchange = function (callback) {
         this.input.onchange = callback;
     };
@@ -2078,18 +2105,20 @@ var Select = (function () {
             for (var i = 0; i < n; i++) {
                 var select = selects[i];
                 var items = select.getElementsByTagName('ul')[0];
-                if (items.classList.contains('open')) {
-                    items.classList.add('ui-ease-out');
-                    items.classList.add('ui-0-2s');
-                    items.classList.add('ui-fade-out-up');
-                    (function (items) {
-                        setTimeout(function () {
-                            items.classList.remove('ui-ease-out');
-                            items.classList.remove('ui-0-2s');
-                            items.classList.remove('ui-fade-out-up');
-                            items.classList.remove('open');
-                        }, 200);
-                    })(items);
+                if (items) {
+                    if (items.classList.contains('open')) {
+                        items.classList.add('ui-ease-out');
+                        items.classList.add('ui-0-2s');
+                        items.classList.add('ui-fade-out-up');
+                        (function (items) {
+                            setTimeout(function () {
+                                items.classList.remove('ui-ease-out');
+                                items.classList.remove('ui-0-2s');
+                                items.classList.remove('ui-fade-out-up');
+                                items.classList.remove('open');
+                            }, 200);
+                        })(items);
+                    }
                 }
             }
         }
@@ -2308,6 +2337,94 @@ var Toggle = (function () {
         }
     };
     return Toggle;
+})();
+
+var EHttpStatus;
+(function (EHttpStatus) {
+    EHttpStatus[EHttpStatus["OK"] = 200] = "OK";
+    EHttpStatus[EHttpStatus["BAD_REQUEST"] = 400] = "BAD_REQUEST";
+    EHttpStatus[EHttpStatus["UNAUTHORIZED"] = 401] = "UNAUTHORIZED";
+    EHttpStatus[EHttpStatus["FORBIDDEN"] = 403] = "FORBIDDEN";
+    EHttpStatus[EHttpStatus["NOT_FOUND"] = 404] = "NOT_FOUND";
+    EHttpStatus[EHttpStatus["INTERNAL_SERVER_ERROR"] = 500] = "INTERNAL_SERVER_ERROR";
+})(EHttpStatus || (EHttpStatus = {}));
+var EReadyStateStatus;
+(function (EReadyStateStatus) {
+    EReadyStateStatus[EReadyStateStatus["UNINITIALIZED"] = 0] = "UNINITIALIZED";
+    EReadyStateStatus[EReadyStateStatus["LOADING"] = 1] = "LOADING";
+    EReadyStateStatus[EReadyStateStatus["LOADED"] = 2] = "LOADED";
+    EReadyStateStatus[EReadyStateStatus["INTERACTIVE"] = 3] = "INTERACTIVE";
+    EReadyStateStatus[EReadyStateStatus["COMPLETED"] = 4] = "COMPLETED";
+})(EReadyStateStatus || (EReadyStateStatus = {}));
+var Http = (function () {
+    function Http() {
+    }
+    Http.get = function (action, onBeforeSend, onReady, onError) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (onBeforeSend)
+                onBeforeSend();
+            if (this.readyState === 4 /* COMPLETED */) {
+                if (this.status === 200 /* OK */) {
+                    if (onReady)
+                        onReady(this);
+                } else {
+                    if (onerror)
+                        onError();
+                }
+            }
+        };
+        xhr.open('GET', action);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+        xhr.send();
+    };
+
+    Http.post = function (data, action, onBeforeSend, onReady, onError) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (onBeforeSend)
+                onBeforeSend();
+            if (this.readyState === 4 /* COMPLETED */) {
+                if (this.status === 200 /* OK */) {
+                    if (onReady)
+                        onReady(this);
+                } else {
+                    if (onerror)
+                        onError();
+                }
+            }
+        };
+        xhr.open('POST', action);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+        xhr.send(data);
+    };
+
+    Http.sendJSON = function (data, action, onBeforeSend, onReady, onError) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (onBeforeSend)
+                onBeforeSend();
+            if (this.readyState === 4 /* COMPLETED */) {
+                if (this.status === 200 /* OK */) {
+                    if (onReady)
+                        onReady(this);
+                } else {
+                    if (onerror)
+                        onError();
+                }
+            }
+        };
+        xhr.open('POST', action);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send(data);
+    };
+
+    Http.put = function () {
+    };
+
+    Http.delete = function () {
+    };
+    return Http;
 })();
 
 var Utils = (function () {
