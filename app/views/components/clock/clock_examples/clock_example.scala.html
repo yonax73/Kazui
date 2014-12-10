@@ -1,102 +1,82 @@
 <style>
     #clock .table.ui-clock tr:not(.ui-clock-controls) td {
-        font-size:80%;
+        font-size: 80%;
+    }
+
+    #btn-group-controls-clock {
+      margin: 0 2px 5px;
+      width: 100%;
+    }
+
+    #btn-group-controls-clock .btn.btn-default {
+        width: 33%;
     }
 </style>
 <div class="row">
-	<div class="col-md-12 col-sm-12">
-		<div id="alert-clock-example"></div>
-	</div>
+    <div class="col-md-12 col-sm-12">
+        <div id="alert-clock-example"></div>
+    </div>
 </div>
 <div class="row">
-	<div class="col-md-12 col-sm-12">
-		<div id="clock"></div>
-	</div>
+    <div class="col-md-12 col-sm-12">
+        <div id="clock"></div>
+    </div>
 </div>
 <div class="row">
-	<div class="col-md-12 col-sm-12">
-		<button type="button" id="btnClockTimeStop"
-			class="btn btn-primary btn-block btn-xs">Stop</button>
-		<button type="button" id="btnClockTimeReset"
-			class="btn btn-primary btn-block  btn-xs">Reset</button>
-		<button type="button" id="btnClockTimeStart"
-			class="btn btn-primary btn-block  btn-xs">Start</button>
-		<button class="btn btn-primary btn-block btn-xs" id="btnStandardTime"
-			type="button">Standard Time</button>
-		<button class="btn btn-primary btn-block btn-xs" id="btnMilitaryTime"
-			type="button">Military Time</button>
-		<button class="btn btn-primary btn-block btn-xs" id="btnCountUp"
-			type="button">Count Up</button>
-		<button class="btn btn-primary btn-block btn-xs" id="btnCountDown"
-			type="button">Count Down</button>
-		<button class="btn btn-primary btn-block btn-xs" id="btnClockGetDateTime"
-			type="button">Date Time</button>
-		<button class="btn btn-primary btn-block btn-xs" id="btnClockStandardTimeLondon"
-			type="button">Clock London</button>
-<!-- 	    <label class="label-control"> -->
-<!-- 	       <input class="checkBox" id="chkClockHiddenControls"type="checkbox">Hidden Controls -->
-<!-- 	    </label> -->
-<!-- 	     <label class="label-control"> -->
-<!-- 	       <input class="checkBox" id="chkClockHiddenSeconds"type="checkbox">Hidden Seconds -->
-<!-- 	    </label> -->
-	</div>
+    <div class="col-md-12 col-sm-12">
+        <div class="btn-group" id="btn-group-controls-clock">
+            <button id="btnClockTimeStart" type="button" class="btn btn-default"><i class="fa fa-play"></i></button>
+            <button id="btnClockTimeStop" type="button" class="btn btn-default"><i class="fa fa-pause"></i></button>            
+            <button id="btnClockTimeReset" type="button" class="btn btn-default"><i class="fa fa-stop"></i></button>
+        </div>
+        <button class="btn btn-primary btn-block btn-xs" id="btnStandardTime"
+                type="button">
+            Standard Time
+        </button>
+        <button class="btn btn-primary btn-block btn-xs" id="btnCountDown"
+                type="button">
+            Count Down
+        </button>
+        <button class="btn btn-primary btn-block btn-xs" id="btnClockGetDateTime"
+                type="button">
+            Date Time
+        </button>
+
+
+
+    </div>
 </div>
 <script>
     var alertClock = new Alert(document.getElementById('alert-clock-example'));
-	var clock = new Clock(document.getElementById('clock'));
-	clock.militaryTime();
+    var clock = new Clock(document.getElementById('clock'));
+    clock.standardTime();
 
-	document.getElementById('btnClockTimeStop').onclick = function() {
-		clock.stop();
-	};
-	document.getElementById('btnClockTimeReset').onclick = function() {
-		clock.reset();
-	};
+    document.getElementById('btnClockTimeStop').onclick = function () {
+        clock.stop();
+    };
+    document.getElementById('btnClockTimeReset').onclick = function () {
+        clock.reset();
+    };
 
-	document.getElementById('btnClockTimeStart').onclick = function() {
-		clock.start();		
-	};
+    document.getElementById('btnClockTimeStart').onclick = function () {
+        clock.start();
+    };
 
-	document.getElementById('btnStandardTime').onclick = function() {
-		clock.reset();
-		clock.standardTime();
-	};
+    document.getElementById('btnStandardTime').onclick = function () {
+        clock.reset();
+        clock.standardTime();
+    };
 
-	document.getElementById('btnMilitaryTime').onclick = function() {
-		clock.reset();
-		clock.militaryTime();
-	};
-	
-	document.getElementById('btnCountDown').onclick = function() {
-		clock.reset();
-		clock.countDown(function(){
-			alertClock.warning('Time Out!!!');			
-		});
-	};
-	
-	document.getElementById('btnCountUp').onclick = function() {
-		clock.reset();
-		clock.countUp();
-	};
-	
-	document.getElementById('btnClockGetDateTime').onclick = function() {
-		alertClock.info(clock.getDateTime());
-	};
-	
-// 	document.getElementById('chkClockHiddenControls').onclick = function() {
-// 		clock.setHiddenControls(this.checked);
-// 	};
-	
-// 	document.getElementById('chkClockHiddenSeconds').onclick = function() {
-// 		clock.setHiddenSeconds(this.checked);
-// 	};
-	
-	document.getElementById('btnClockStandardTimeLondon').onclick = function(){
-		clock.reset();
-		var dateLondon = new Date();
-		dateLondon.setHours(dateLondon.getHours()+5);
-		clock.setMilitaryTime(dateLondon);
-	};
+    document.getElementById('btnCountDown').onclick = function () {
+        clock.reset();
+        clock.countDown(function () {
+            alertClock.warning('Time Out!!!');
+        });
+    };
+
+    document.getElementById('btnClockGetDateTime').onclick = function () {
+        alertClock.info(clock.getDateTime());
+    };
 
 
 </script>

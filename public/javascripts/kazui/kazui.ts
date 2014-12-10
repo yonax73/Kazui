@@ -717,9 +717,8 @@ class Clock {
     */
     public getHours() {
         var h: any = this.hour.textContent;
-        if (this.isStandardTime()) {
-            h = this.time.textContent === 'AM' ? h : h + 12;
-            if (h === 24) h = '00';
+        if (this.isStandardTime()) {            
+            h = h > 12 ? h - 12 : h;            
         }
         return h;
     }

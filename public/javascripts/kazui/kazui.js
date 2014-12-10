@@ -746,9 +746,7 @@ var Clock = (function () {
     Clock.prototype.getHours = function () {
         var h = this.hour.textContent;
         if (this.isStandardTime()) {
-            h = this.time.textContent === 'AM' ? h : h + 12;
-            if (h === 24)
-                h = '00';
+            h = h > 12 ? h - 12 : h;
         }
         return h;
     };
