@@ -1,7 +1,7 @@
 <style>
-    #clock .table.ui-clock tr:not(.ui-clock-controls) td {
+    /*#clock .table.ui-clock tr:not(.ui-clock-controls) td {
         font-size: 80%;
-    }
+    }*/
 
     #btn-group-controls-clock {
       margin: 0 2px 5px;
@@ -9,7 +9,7 @@
     }
 
     #btn-group-controls-clock .btn.btn-default {
-        width: 33%;
+        width: 50%;
     }
 </style>
 <div class="row">
@@ -25,58 +25,43 @@
 <div class="row">
     <div class="col-md-12 col-sm-12">
         <div class="btn-group" id="btn-group-controls-clock">
-            <button id="btnClockTimeStart" type="button" class="btn btn-default"><i class="fa fa-play"></i></button>
-            <button id="btnClockTimeStop" type="button" class="btn btn-default"><i class="fa fa-pause"></i></button>            
-            <button id="btnClockTimeReset" type="button" class="btn btn-default"><i class="fa fa-stop"></i></button>
+            <button id="btnClockTimeControl" type="button" class="btn btn-default"><i class="fa fa-play"></i></button>                 
+            <button id="btnClockTimeReset" type="button" class="btn btn-default"><i class="fa fa fa-refresh"></i></button>
         </div>
-        <button class="btn btn-primary btn-block btn-xs" id="btnStandardTime"
-                type="button">
-            Standard Time
-        </button>
-        <button class="btn btn-primary btn-block btn-xs" id="btnCountDown"
-                type="button">
-            Count Down
-        </button>
-        <button class="btn btn-primary btn-block btn-xs" id="btnClockGetDateTime"
-                type="button">
-            Date Time
-        </button>
-
-
-
     </div>
 </div>
 <script>
     var alertClock = new Alert(document.getElementById('alert-clock-example'));
-    var clock = new Clock(document.getElementById('clock'));
-    clock.standardTime();
-
-    document.getElementById('btnClockTimeStop').onclick = function () {
-        clock.stop();
+    alertClock.animationIn = 'ui-shake';
+    alertClock.info('Count down');
+    var clock = new Clock(document.getElementById('clock'));    
+    clock.countDown(function () {
+        alertClock.warning('Time Out!!!');
+        pause(document.getElementById('btnClockTimeControl'));
+    });
+    document.getElementById('btnClockTimeControl').onclick = function () {
+        if (clock.isStopped()) {
+            start(this);
+            clock.start();
+        } else {
+            clock.stop();
+            pause(this);
+        }        
     };
     document.getElementById('btnClockTimeReset').onclick = function () {
         clock.reset();
+        pause(document.getElementById('btnClockTimeControl'));
     };
 
-    document.getElementById('btnClockTimeStart').onclick = function () {
-        clock.start();
-    };
+    function start(element) {
+        var icon = element.getElementsByTagName('i')[0];
+        icon.classList.remove('fa-play');
+        icon.classList.add('fa-pause');        
+    }
 
-    document.getElementById('btnStandardTime').onclick = function () {
-        clock.reset();
-        clock.standardTime();
-    };
-
-    document.getElementById('btnCountDown').onclick = function () {
-        clock.reset();
-        clock.countDown(function () {
-            alertClock.warning('Time Out!!!');
-        });
-    };
-
-    document.getElementById('btnClockGetDateTime').onclick = function () {
-        alertClock.info(clock.getDateTime());
-    };
-
-
+    function pause(element) {
+        var icon = element.getElementsByTagName('i')[0];
+        icon.classList.remove('fa-pause');
+        icon.classList.add('fa-play');
+    }
 </script>

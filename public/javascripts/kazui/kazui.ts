@@ -371,7 +371,7 @@ class Clock {
    * @method countDown
    */
     public countDown(callBack?) {
-        this.isStop = false;
+        this.isStop = true;
         this.type = ETypeClock.COUNT_DOWN;
         this.hiddenTimeColumn();
         this.setDisabledControls(false);
@@ -414,7 +414,7 @@ class Clock {
    * @method countUp
    */
     public countUp() {
-        this.isStop = false;
+        this.isStop = true;
         this.type = ETypeClock.COUNT_UP;
         this.hiddenTimeColumn();
         this.setDisabledControls(false);
@@ -778,6 +778,11 @@ class Clock {
     public isCountUp() {
         return this.type === ETypeClock.COUNT_UP;
     }
+
+    public isStopped() {
+        return this.isStop;
+    }
+
 
 
 }

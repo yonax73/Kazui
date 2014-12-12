@@ -372,7 +372,7 @@ var Clock = (function () {
     * @method countDown
     */
     Clock.prototype.countDown = function (callBack) {
-        this.isStop = false;
+        this.isStop = true;
         this.type = 2 /* COUNT_DOWN */;
         this.hiddenTimeColumn();
         this.setDisabledControls(false);
@@ -420,7 +420,7 @@ var Clock = (function () {
     * @method countUp
     */
     Clock.prototype.countUp = function () {
-        this.isStop = false;
+        this.isStop = true;
         this.type = 3 /* COUNT_UP */;
         this.hiddenTimeColumn();
         this.setDisabledControls(false);
@@ -812,6 +812,10 @@ var Clock = (function () {
     */
     Clock.prototype.isCountUp = function () {
         return this.type === 3 /* COUNT_UP */;
+    };
+
+    Clock.prototype.isStopped = function () {
+        return this.isStop;
     };
     return Clock;
 })();
