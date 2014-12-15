@@ -229,7 +229,7 @@ class Clock {
     * @method fixDigit
     */
     private fixDigit(digit) {
-        if (digit < 10) {
+        if (digit < 10 && digit.toString().length === 1) {
             digit = '0' + digit;
         }
         return digit;
@@ -447,16 +447,17 @@ class Clock {
     * @param {Date} date
     * @method setStandarTime
     */
-    public setStandarTime(date: Date) {
-        if (date) {
+    public setStandardTime(date: Date) {
+        if (date) {            
             this.seconds.textContent = this.fixDigit(date.getSeconds());
             this.minutes.textContent = this.fixDigit(date.getMinutes());
             this.hour.textContent = this.fixDigit(date.getHours());
-        }
+            this.date = date;
+        }        
         var h: any = this.getHours();
-        this.time.textContent = h < 12 ? 'AM' : 'PM';
+        this.time.textContent = h < 12 ? 'AM' : 'PM';        
         if (h > 12) h = h - 12;
-        else if (h === 0) h = 12;
+        else if (parseInt(h) === 0) h = 12;
         h = this.fixDigit(h);
         this.hour.textContent = h;
         this.isStop = false;
@@ -484,7 +485,8 @@ class Clock {
                 if (this.getHours() === '12') {
                     this.time.textContent = this.getTimeForStandarClock() === 'AM' ? 'PM' : 'AM';
                 }
-                this.hour.textContent = this.upDigit(this.getHours(), 12);
+                var h = this.upDigit(this.getHours(), 12);
+                this.hour.textContent = h === '00' ? '01' : h;
             }
         }
         this.timeOut = setTimeout(() => {
@@ -501,6 +503,7 @@ class Clock {
             this.seconds.textContent = this.fixDigit(date.getSeconds());
             this.minutes.textContent = this.fixDigit(date.getMinutes());
             this.hour.textContent = this.fixDigit(date.getHours());
+            this.date = date;
         }
         this.isStop = false;
         this.type = ETypeClock.CUSTOM_MILITARY;
@@ -696,7 +699,8 @@ class Clock {
     * @method getDateTime
     */
     public getDateTime() {
-        return this.getHours() + ':' + this.getMinutes() + ':' + this.getSeconds();
+        var t = this.isStandardTime() ? this.time.textContent : '';
+        return this.getHours() + ':' + this.getMinutes() + ':' + this.getSeconds() + ' '+t;
     }
     /**
     * get Date
@@ -704,10 +708,8 @@ class Clock {
     * @method getDate
     */
     public getDate() {
-        var date = new Date();
-        if (this.isCountDown() || this.isCountUp()) {
-            date.setHours(this.getHours(), this.getMinutes(), this.getSeconds());
-        }
+        var date = this.isCustom() ? this.date : new Date();
+        date.setHours(this.getHours(), this.getMinutes(), this.getSeconds());        
         return date;
     }
     /**
@@ -757,12 +759,22 @@ class Clock {
     public isStandardTime() {
         return this.type === ETypeClock.STANDARD || this.type === ETypeClock.CUSTOM_STANDARD;
     }
+    public isCustomStandard() {
+        return this.type === ETypeClock.CUSTOM_STANDARD;
+    }
     /**    
     * @returns {boolean} return true if the type is military time
     * @method isMilitaryTime
     */
     public isMilitaryTime() {
         return this.type === ETypeClock.MILITARY || this.type === ETypeClock.CUSTOM_MILITARY;
+    }
+    public isCustomMilitary() {
+        return this.type === ETypeClock.CUSTOM_MILITARY;
+    }
+
+    public isCustom() {
+        return this.isCustomMilitary() || this.isCustomStandard();
     }
     /**    
     * @returns {boolean} return true if the type is count down

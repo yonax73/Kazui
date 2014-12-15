@@ -211,7 +211,7 @@ var Clock = (function () {
     * @method fixDigit
     */
     Clock.prototype.fixDigit = function (digit) {
-        if (digit < 10) {
+        if (digit < 10 && digit.toString().length === 1) {
             digit = '0' + digit;
         }
         return digit;
@@ -456,17 +456,18 @@ var Clock = (function () {
     * @param {Date} date
     * @method setStandarTime
     */
-    Clock.prototype.setStandarTime = function (date) {
+    Clock.prototype.setStandardTime = function (date) {
         if (date) {
             this.seconds.textContent = this.fixDigit(date.getSeconds());
             this.minutes.textContent = this.fixDigit(date.getMinutes());
             this.hour.textContent = this.fixDigit(date.getHours());
+            this.date = date;
         }
         var h = this.getHours();
         this.time.textContent = h < 12 ? 'AM' : 'PM';
         if (h > 12)
             h = h - 12;
-        else if (h === 0)
+        else if (parseInt(h) === 0)
             h = 12;
         h = this.fixDigit(h);
         this.hour.textContent = h;
@@ -497,7 +498,8 @@ var Clock = (function () {
                 if (this.getHours() === '12') {
                     this.time.textContent = this.getTimeForStandarClock() === 'AM' ? 'PM' : 'AM';
                 }
-                this.hour.textContent = this.upDigit(this.getHours(), 12);
+                var h = this.upDigit(this.getHours(), 12);
+                this.hour.textContent = h === '00' ? '01' : h;
             }
         }
         this.timeOut = setTimeout(function () {
@@ -515,6 +517,7 @@ var Clock = (function () {
             this.seconds.textContent = this.fixDigit(date.getSeconds());
             this.minutes.textContent = this.fixDigit(date.getMinutes());
             this.hour.textContent = this.fixDigit(date.getHours());
+            this.date = date;
         }
         this.isStop = false;
         this.type = 5 /* CUSTOM_MILITARY */;
@@ -722,7 +725,8 @@ var Clock = (function () {
     * @method getDateTime
     */
     Clock.prototype.getDateTime = function () {
-        return this.getHours() + ':' + this.getMinutes() + ':' + this.getSeconds();
+        var t = this.isStandardTime() ? this.time.textContent : '';
+        return this.getHours() + ':' + this.getMinutes() + ':' + this.getSeconds() + ' ' + t;
     };
 
     /**
@@ -731,10 +735,8 @@ var Clock = (function () {
     * @method getDate
     */
     Clock.prototype.getDate = function () {
-        var date = new Date();
-        if (this.isCountDown() || this.isCountUp()) {
-            date.setHours(this.getHours(), this.getMinutes(), this.getSeconds());
-        }
+        var date = this.isCustom() ? this.date : new Date();
+        date.setHours(this.getHours(), this.getMinutes(), this.getSeconds());
         return date;
     };
 
@@ -789,6 +791,9 @@ var Clock = (function () {
     Clock.prototype.isStandardTime = function () {
         return this.type === 0 /* STANDARD */ || this.type === 4 /* CUSTOM_STANDARD */;
     };
+    Clock.prototype.isCustomStandard = function () {
+        return this.type === 4 /* CUSTOM_STANDARD */;
+    };
 
     /**
     * @returns {boolean} return true if the type is military time
@@ -796,6 +801,13 @@ var Clock = (function () {
     */
     Clock.prototype.isMilitaryTime = function () {
         return this.type === 1 /* MILITARY */ || this.type === 5 /* CUSTOM_MILITARY */;
+    };
+    Clock.prototype.isCustomMilitary = function () {
+        return this.type === 5 /* CUSTOM_MILITARY */;
+    };
+
+    Clock.prototype.isCustom = function () {
+        return this.isCustomMilitary() || this.isCustomStandard();
     };
 
     /**
