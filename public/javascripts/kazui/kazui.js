@@ -2498,7 +2498,7 @@ var Utils = (function () {
                     case 'password':
                     case 'select':
                     case 'hidden':
-                        serialized.push((name, value));
+                        serialized.push(name + '=' + value);
                         break;
                     default:
                         break;
