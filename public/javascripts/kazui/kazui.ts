@@ -2398,7 +2398,47 @@ class Utils {
         var queryString = '?reload=' + new Date().getTime();
         element.href = href.replace(/\?.*|$/, queryString);
     }
-
+    
+    static serialize(form){
+    	var elems = form.elements;
+		var serialized = [];		
+		var n= elems.length;
+		for (var i = 0; i < n; i ++) {
+			var element = elems[i];
+			var type = element.type;			
+			var value = element.value;
+			var name = element.name;			
+			if(name !== null || name !== undefined || name !== ""){
+				switch (type) {
+				case 'text':
+				case 'radio':
+				case 'checkbox':					            
+	    	    case 'search':
+	    	    case 'email':
+	    	    case 'url':
+	    	    case 'tel':
+	    	    case 'number':
+	    	    case 'range':
+	    	    case 'date':
+	    	    case 'month':
+	    	    case 'week':
+	    	    case 'time':
+	    	    case 'datetime':
+	    	    case 'datetime-local':
+	    	    case 'color':
+	    	    case 'textarea':
+	    	    case 'password':
+	    	    case 'select':   
+				case 'hidden':	
+					serialized.push((name,value));
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		return serialized.join('&');
+    }
 }
 
 
