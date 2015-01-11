@@ -1,162 +1,260 @@
 <h1 class="page-header">Clock</h1>
 <p class="text-color example-header">
- Ejemplo
- <span class="pull-right text-color">
-	<i class="fa fa-desktop" onclick="changeViewExample('desktop', 'kazui-example-clock')"></i>
-	<i class="fa fa-mobile"  onclick="changeViewExample('mobile', 'kazui-example-clock')"></i>
-	 <a href="http://jsfiddle.net/" target="_blank"><i class="fa fa-pencil-square-o"></i></a>
- </span>
+    Ejemplo
+    <span class="pull-right text-color">
+        <i class="fa fa-desktop" onclick="changeViewExample('desktop', 'kazui-example-clock')"></i>
+        <i class="fa fa-mobile" onclick="changeViewExample('mobile', 'kazui-example-clock')"></i>
+        <a href="http://jsfiddle.net/" target="_blank"><i class="fa fa-pencil-square-o"></i></a>
+    </span>
 </p>
-<div id="kazui-example-clock" class="example mobile">  
-  @clock_examples.clock_example()
+<div id="kazui-example-clock" class="example mobile">
+    @clock_examples.clock_example()
 </div>
 <h2>Uso</h2>
-<p class="text-color">El objeto Alert crea  HTML din&aacute;mico para su propia construcci&oacute;n, 
-   solo es necesario agregar una etiqueta HTML con un <code>id</code> para referenciarlo en javascript.</p>
+<p class="text-color">
+    El objeto Alert crea  HTML din&aacute;mico para su propia construcci&oacute;n,
+    solo es necesario agregar una etiqueta HTML con un <code>id</code> para referenciarlo en javascript.
+</p>
 <pre>
-	<code  class="language-markup">
+<code class="language-markup">
 &lt;div id=&quot;alert&quot;&gt;&lt;/div&gt;
 	</code>	
 </pre>
 <h3 class="text-color">Javascript</h3>
 <p class="text-color">Creamos un objeto Alert, que recibe como par&aacute;metro el <code>HTMLElement</code></p>
 <pre>
-	<code  class="language-javascript">
+<code class="language-javascript">
 var objAlert = new Alert(document.getElementById('alert'));
 	</code>	
 </pre>
 <small class="ow-text-danger">*No Crear objeto con nombre <code>alert</code> por que dar&aacute; confilcto con el <code>alert()</code> de javascript.</small>
 <h3>M&eacute;todos</h3>
 <p class="text-color">
- Con el objeto ya creado podemos llamar cualquiera de sus m&eacute;todos: <code class="ui-method">objAlert.danger('message')</code>.
+    Con el objeto ya creado podemos llamar cualquiera de sus m&eacute;todos: <code class="ui-method">objAlert.danger('message')</code>.
 </p>
 <table class="table text-color">
-   <thead>
-     <tr>
-       <th>Nombre</th>
-       <th>Descripci&oacute;n</th>
-      </tr>
-   </thead>
-   <tbody>
-     <tr>
-      <td>
-       <code class="ui-method">success('message')</code>
-      </td>    
-      <td>
-       Muestra una alerta de tipo Success.
-      </td>  
-     </tr>
-     <tr>
-      <td>
-       <code class="ui-method">info('message')</code>
-      </td>    
-      <td>
-       Muestra una alerta de tipo Info.
-      </td>  
-     </tr>
-     <tr>
-      <td>
-       <code class="ui-method">warning('message')</code>
-      </td>    
-      <td>
-       Muestra una alerta de tipo Warning.
-      </td>  
-     </tr>
-     <tr>
-      <td>
-       <code class="ui-method">danger('message')</code>
-      </td>    
-      <td>
-       Muestra una alerta de tipo Danger.
-      </td>  
-     </tr>
-     <tr>
-      <td>
-       <code class="ui-method">wait('message')</code>
-      </td>    
-      <td>
-       Muestra una alerta de tipo Wait.
-      </td>  
-     </tr>
-     <tr>
-      <td>
-       <code class="ui-method">close()</code>
-      </td>    
-      <td>
-       Cierra la alerta.
-      </td>  
-     </tr>
-   </tbody>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripci&oacute;n</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <code class="ui-method">success('message')</code>
+            </td>
+            <td>
+                Muestra una alerta de tipo Success.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">info('message')</code>
+            </td>
+            <td>
+                Muestra una alerta de tipo Info.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">warning('message')</code>
+            </td>
+            <td>
+                Muestra una alerta de tipo Warning.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">danger('message')</code>
+            </td>
+            <td>
+                Muestra una alerta de tipo Danger.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">wait('message')</code>
+            </td>
+            <td>
+                Muestra una alerta de tipo Wait.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="ui-method">close()</code>
+            </td>
+            <td>
+                Cierra la alerta.
+            </td>
+        </tr>
+    </tbody>
 </table>
 <h3>Propiedades</h3>
 <p class="text-color">
- Por medio de las propiedades podemos cambiar los iconos y las animaciones del objeto.
+    Por medio de las propiedades podemos cambiar los iconos y las animaciones del objeto.
 </p>
 <div class="ui-callout ui-callout-danger">
     <h4>En los iconos</h4>
     <p class="text-color">
-         Kazui usa <a class="link-color" href="http://fontawesome.io/" target="_blank">fontawesome</a>.<br/>
-         Se puede acceder a las propiedades y cambiar los iconos del objeto usando la 
-         <code>clase</code> correcta  <code class="ui-method">objAlert.icoSuccess = 'fa-smile-o'</code>   
-    </p>        
-  </div>
-  <table class="table text-color">
+        Kazui usa <a class="link-color" href="http://fontawesome.io/" target="_blank">fontawesome</a>.<br />
+        Se puede acceder a las propiedades y cambiar los iconos del objeto usando la
+        <code>clase</code> correcta  <code class="ui-method">objAlert.icoSuccess = 'fa-smile-o'</code>
+    </p>
+</div>
+<table class="table text-color">
     <thead>
-      <tr>    
-        <th>Nombre</th>
-        <th>Descripci&oacute;n</th>
-     </tr>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripci&oacute;n</th>
+        </tr>
     </thead>
     <tbody>
-     <tr>
-       <td><Code class="ui-method">icoSuccess</Code></td>
-       <td>Icono de alerta tipo Success</td>
-     </tr>
-     <tr>
-       <td><Code class="ui-method">icoInfo</Code></td>
-       <td>Icono de alerta tipo Info</td>
-     </tr>
-     <tr>
-       <td><Code class="ui-method">icoWarning</Code></td>
-       <td>Icono de alerta tipo Warning</td>
-     </tr>
-     <tr>
-       <td><Code class="ui-method">icoDanger</Code></td>
-       <td>Icono de alerta tipo Danger</td>
-     </tr>
-     <tr>
-       <td><Code class="ui-method">icoWait</Code></td>
-       <td>Icono de alerta tipo Wait,usar <a href="http://fontawesome.io/examples/#spinning" class="link-color"  target="_blank">Spinning Icons</a></td>
-     </tr>
-    </tbody>    
-  </table>
-  <div class="ui-callout ui-callout-danger">
+        <tr>
+            <td><code class="ui-method">icoSuccess</code></td>
+            <td>Icono de alerta tipo Success</td>
+        </tr>
+        <tr>
+            <td><code class="ui-method">icoInfo</code></td>
+            <td>Icono de alerta tipo Info</td>
+        </tr>
+        <tr>
+            <td><code class="ui-method">icoWarning</code></td>
+            <td>Icono de alerta tipo Warning</td>
+        </tr>
+        <tr>
+            <td><code class="ui-method">icoDanger</code></td>
+            <td>Icono de alerta tipo Danger</td>
+        </tr>
+        <tr>
+            <td><code class="ui-method">icoWait</code></td>
+            <td>Icono de alerta tipo Wait,usar <a href="http://fontawesome.io/examples/#spinning" class="link-color" target="_blank">Spinning Icons</a></td>
+        </tr>
+    </tbody>
+</table>
+<div class="ui-callout ui-callout-danger">
     <h4>Para las animaciones</h4>
     <p class="text-color">
-         Kazui cuenta con su propia libreria de <a class="link-color" href="#kazui-animations" target="_blank">animaciones</a>.<br/>
-         Tambi&eacute;n se puede acceder a las propiedades y cambiar los iconos del objeto usando la 
-         <code>clase</code> correcta  <code class="ui-method">objAlert.animationIn = 'ui-fade-in'</code>   
-    </p>        
-  </div>
-    <table class="table text-color">
+        Kazui cuenta con su propia libreria de <a class="link-color" href="#kazui-animations" target="_blank">animaciones</a>.<br />
+        Tambi&eacute;n se puede acceder a las propiedades y cambiar los iconos del objeto usando la
+        <code>clase</code> correcta  <code class="ui-method">objAlert.animationIn = 'ui-fade-in'</code>
+    </p>
+</div>
+<table class="table text-color">
     <thead>
-      <tr>    
-        <th>Nombre</th>
-        <th>Descripci&oacute;n</th>
-     </tr>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripci&oacute;n</th>
+        </tr>
     </thead>
     <tbody>
-     <tr>
-       <td><Code class="ui-method">typeAnimation</Code></td>
-       <td>Tipo de animaci&oacute;n a usar: <code>ui-ease</code>,<code>ui-ease-in</code>,etc.</td>
-     </tr>
-     <tr>
-       <td><Code class="ui-method">animationIn</Code></td>
-       <td>Animaci&oacute;n cuando se muestra la alerta: <code>ui-fade-in</code>,<code>ui-fade-in-up</code>,etc.</td>
-     </tr>
-     <tr>
-       <td><Code class="ui-method">animationOut</Code></td>
-       <td>Animaci&oacute;n cuando se cierra la alerta: <code>ui-fade-out</code>,<code>ui-fade-out-up</code>,etc.</td>
-     </tr>
+        <tr>
+            <td><code class="ui-method">typeAnimation</code></td>
+            <td>Tipo de animaci&oacute;n a usar: <code>ui-ease</code>,<code>ui-ease-in</code>,etc.</td>
+        </tr>
+        <tr>
+            <td><code class="ui-method">animationIn</code></td>
+            <td>Animaci&oacute;n cuando se muestra la alerta: <code>ui-fade-in</code>,<code>ui-fade-in-up</code>,etc.</td>
+        </tr>
+        <tr>
+            <td><code class="ui-method">animationOut</code></td>
+            <td>Animaci&oacute;n cuando se cierra la alerta: <code>ui-fade-out</code>,<code>ui-fade-out-up</code>,etc.</td>
+        </tr>
     </tbody>
-  </table>
+</table>
+<div id="kazui-more-example-clock">
+    <h3>M&aacute;s ejemplos</h3>
+    <p class="text-color example-header">
+        Time Zone
+        <span class="pull-right text-color">
+            <i class="fa fa-desktop" onclick="changeViewExample('desktop','kazui-example-select-icon-images')"></i>
+            <i class="fa fa-mobile" onclick="changeViewExample('mobile','kazui-example-select-icon-images')"></i>
+            <a href="http://jsfiddle.net/" target="_blank"><i class="fa fa-pencil-square-o"></i></a>
+        </span>
+    </p>
+    <div id="kazui-example-select-icon-images" class="example mobile">
+        @clock_examples.clock_time_zone_example()
+    </div>
+    <p class="text-color">
+        Para crear un <code>Select</code> con im&aacute;genes se debe hacer de la siguiente manera:
+    </p>
+    <pre>
+<code class="language-javascript">
+var items = new Select(document.getElementById('select'), [
+        { option: 1, value: 'Beth Stewart', image: '/assets/images/profile/prof-1.jpg' },
+        { option: 2, value: 'Norma Bailey', image: '/assets/images/profile/prof-2.jpg',selected: true }
+    ], {image:true});
+    </code>	
+</pre>
+    <p class="text-color">
+        El &uacute;ltimo par&aacute;metro indica que acepta im&aacute;genes.
+    </p>
+    <h3>M&eacute;todos</h3>
+    <table class="table text-color">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripci&oacute;n</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <code class="ui-method">addItem(option, value,{image:'my/path/img.png'})</code>
+                </td>
+                <td>
+                    Agrega un nuevo item.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <code class="ui-method">getImageItem()</code>
+                </td>
+                <td>
+                    Retorna el <code>src</code> de la im&aacute;gen.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p class="text-color">
+        Para crear un <code>Select</code> con <a class="link-color" href="http://fontawesome.io/" target="_blank">iconos</a> se debe hacer de la siguiente manera:
+    </p>
+    <pre>
+<code class="language-javascript">
+var items = new Select(document.getElementById('select'), [
+        { option: 1, value: 'Beth Stewart', icon: 'fa-star-o' },
+        { option: 2, value: 'Norma Bailey', icon: 'fa-thumb-tack',selected: true }
+    ], {icon:true});
+    </code>	
+</pre>
+    <p class="text-color">
+        El &uacute;ltimo par&aacute;metro indica que acepta iconos.
+    </p>
+    <h3>M&eacute;todos</h3>
+    <table class="table text-color">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripci&oacute;n</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <code class="ui-method">addItem(option, value,{icon:'fontawesome-class'})</code>
+                </td>
+                <td>
+                    Agrega un nuevo item.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <code class="ui-method">getIconItem()</code>
+                </td>
+                <td>
+                    Retorna la <code>class</code> de <a class="link-color" href="http://fontawesome.io/" target="_blank">fontawesome</a>.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
