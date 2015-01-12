@@ -7,6 +7,89 @@
 * If you do not own a commercial license, this file shall be governed by the trial license terms.
 */
 
+class DataTable{
+    
+    private element:HTMLElement;
+    private icoLoading:HTMLElement;
+    private action:String;
+    private fields:Array<{}>;
+    private table:HTMLElement;
+    private data:Array<JSON>;
+    
+    constructor(element:HTMLElement,action:String,fields:Array<{}>){
+      this.element= element;
+      this.action = action;
+      this.fields = fields;
+      this.icoLoading = document.createElement('i');
+      this.table = document.createElement('table');
+      this.init();      
+    }
+    
+    public init(){
+       this.icoLoading.className = 'fa fa-spinner fa-spin';
+       this.table.className = 'ui-data-table table table-striped';       
+       this.fillTable();              
+    }
+    
+    private fillTable(){
+      var m = this.fields.length;      
+      if(m > 0){
+      this.fillHeaderTable();      
+         Http.get(this.action,this.runIcoLoading(),(xhr)=>{
+           this.data = JSON.parse(xhr.responseText);
+           var n = this.data.length;
+           if(n > 0){
+               var i = 0;
+               var tbody = document.createElement('tbody');
+                              
+               do{
+                 var tr = document.createElement('tr');
+                 var d:any = this.data[i];                 
+                 for(var j = 0; j < m; j++){
+                   var td = document.createElement('td');
+                   var field:any = this.fields[j];                   
+                   td.textContent = d[field.value];
+                   tr.appendChild(td);
+                 }
+                 tbody.appendChild(tr);
+                 i++;
+               }while(i<n);
+               this.table.appendChild(tbody);
+               this.stopIcoLoading();
+               this.element.appendChild(this.table); 
+           }           
+         });
+      }          
+    }
+    
+    private fillHeaderTable(){
+      var m = this.fields.length;
+      if(m>0){
+        var j = 0;
+        var thead  = document.createElement('thead');
+        var tr = document.createElement('tr');
+        thead.appendChild(tr);
+        do{
+          var th = document.createElement('th');
+          var field:any = this.fields[j];
+          th.textContent= field.name;
+          tr.appendChild(th); 
+          j++;
+        }while(j<m);
+        this.table.appendChild(thead);
+      }
+    }
+    
+    private runIcoLoading(){
+       this.element.appendChild(this.icoLoading);
+    }
+    
+    private stopIcoLoading(){
+      this.element.removeChild(this.icoLoading);
+    } 
+    
+}
+
 class Popup{   
    
    private element:HTMLElement;
@@ -2359,7 +2442,7 @@ enum EReadyStateStatus {
 }
 class Http {    
 
-    static get(action, onBeforeSend, onReady, onError) {
+    static get(action, onBeforeSend, onReady, onError?) {
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (onBeforeSend) onBeforeSend();
@@ -2376,7 +2459,7 @@ class Http {
         xhr.send();
     }
 
-    static post(data, action, onBeforeSend, onReady, onError) {
+    static post(data, action, onBeforeSend, onReady, onError?) {
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (onBeforeSend) onBeforeSend();

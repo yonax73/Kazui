@@ -6,6 +6,81 @@
 * http://www.kazui.io/purchase/license-agreement/kazui-complete
 * If you do not own a commercial license, this file shall be governed by the trial license terms.
 */
+var DataTable = (function () {
+    function DataTable(element, action, fields) {
+        this.element = element;
+        this.action = action;
+        this.fields = fields;
+        this.icoLoading = document.createElement('i');
+        this.table = document.createElement('table');
+        this.init();
+    }
+    DataTable.prototype.init = function () {
+        this.icoLoading.className = 'fa fa-spinner fa-spin';
+        this.table.className = 'ui-data-table table table-striped';
+        this.fillTable();
+    };
+
+    DataTable.prototype.fillTable = function () {
+        var _this = this;
+        var m = this.fields.length;
+        if (m > 0) {
+            this.fillHeaderTable();
+            Http.get(this.action, this.runIcoLoading(), function (xhr) {
+                _this.data = JSON.parse(xhr.responseText);
+                var n = _this.data.length;
+                if (n > 0) {
+                    var i = 0;
+                    var tbody = document.createElement('tbody');
+
+                    do {
+                        var tr = document.createElement('tr');
+                        var d = _this.data[i];
+                        for (var j = 0; j < m; j++) {
+                            var td = document.createElement('td');
+                            var field = _this.fields[j];
+                            td.textContent = d[field.value];
+                            tr.appendChild(td);
+                        }
+                        tbody.appendChild(tr);
+                        i++;
+                    } while(i < n);
+                    _this.table.appendChild(tbody);
+                    _this.stopIcoLoading();
+                    _this.element.appendChild(_this.table);
+                }
+            });
+        }
+    };
+
+    DataTable.prototype.fillHeaderTable = function () {
+        var m = this.fields.length;
+        if (m > 0) {
+            var j = 0;
+            var thead = document.createElement('thead');
+            var tr = document.createElement('tr');
+            thead.appendChild(tr);
+            do {
+                var th = document.createElement('th');
+                var field = this.fields[j];
+                th.textContent = field.name;
+                tr.appendChild(th);
+                j++;
+            } while(j < m);
+            this.table.appendChild(thead);
+        }
+    };
+
+    DataTable.prototype.runIcoLoading = function () {
+        this.element.appendChild(this.icoLoading);
+    };
+
+    DataTable.prototype.stopIcoLoading = function () {
+        this.element.removeChild(this.icoLoading);
+    };
+    return DataTable;
+})();
+
 var Popup = (function () {
     function Popup(element) {
         this.element = element;

@@ -8,8 +8,8 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 import com.fasterxml.jackson.databind.JsonNode;
-
 import com.yonaxtics.entity.ListItem;
+import com.yonaxtics.entity.User;
 
 
 /**
@@ -75,6 +75,19 @@ public class Services extends Controller {
 			}
 			return ok(Json.toJson(products));
 		}
+	}
 
+	public static Result loadUsers(){
+		List<User> users = new ArrayList<User>();
+		for (int i = 0; i < 5; i++) {
+			User user = new User();
+			user.setName("User name "+i);
+			user.setLastName("User last name "+i);
+			user.setEmail("User Email "+i);
+			user.setGender(i%2==0 ? "Female":"Male");
+			user.setAge(18+i);
+			users.add(user);
+		}
+		return ok(Json.toJson(users));
 	}
 }

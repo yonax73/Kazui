@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-md-6">
+    <div id="table-users" class="ui-table table-responsive"></div>
+  </div>
+</div>
+<script>
+ var tableUser 	= new DataTable(document.getElementById('table-users'),
+		 '/loadUsers',
+		 [{
+			 name:'Name',
+			 value:'name'
+	      },{
+	    	  name:'Last Name',
+	    	  value:'lastName'
+	      },{
+	    	  name:'Email',
+	    	  value:'email'
+	      },{
+	    	  name:'Gender',
+	    	  value:'gender'
+	      },{
+	    	  name:'Age',
+	    	  value:'age'
+	      }
+		 ]
+		 );
+
+
+</script>
