@@ -1,0 +1,25 @@
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <button type="button" id="btn-popup-demo" class="btn btn-primary btn-block">Demo</button>        
+    </div>
+</div>
+ <div id="popup-demo"  class="ui-popup-panel">   
+   <h1 class="text-primary">Popup</h1>
+   <h4>Demo popup kazui :)</h4>
+   <br/>
+   <div class="pull-right">
+	   <button type="button"  class="btn btn-primary btn-lg">Aceptar</button>
+	   <button type="button" id="btn-popup-cancel" class="btn btn-primary btn-lg">Cancelar</button>
+   </div>   
+</div>
+<script>
+var popupDemo = new Popup(document.getElementById('popup-demo'));
+ document.getElementById('btn-popup-demo').onclick = function(){
+	 popupDemo.show();
+ }
+ document.getElementById('btn-popup-cancel').onclick = function(){
+	 popupDemo.close();
+ }
+
+
+</script>

@@ -6,6 +6,43 @@
 * http://www.kazui.io/purchase/license-agreement/kazui-complete
 * If you do not own a commercial license, this file shall be governed by the trial license terms.
 */
+var Popup = (function () {
+    function Popup(element) {
+        this.element = element;
+        this.animationShow = new Animation('ui-ease', 'ui-bounce-in-down', 'ui-1s', 1000);
+        this.animationClose = new Animation('ui-ease', 'ui-fade-out', 'ui-1s', 1000);
+        this.mask = document.createElement('div');
+        this.init();
+    }
+    Popup.prototype.init = function () {
+        this.mask.className = 'hidden';
+        var body = document.getElementsByTagName('body')[0];
+        body.appendChild(this.mask);
+        this.element.classList.add('hidden');
+    };
+
+    Popup.prototype.show = function () {
+        this.mask.className = 'show ui-popup-mask';
+        if (this.element.classList.contains('hidden')) {
+            this.element.classList.remove('hidden');
+            this.element.classList.add('show');
+            this.animationShow.run(this.element);
+        }
+    };
+
+    Popup.prototype.close = function () {
+        var _this = this;
+        if (this.element.classList.contains('show')) {
+            this.animationClose.run(this.element, function () {
+                _this.mask.className = 'hidden';
+                _this.element.classList.remove('show');
+                _this.element.classList.add('hidden');
+            });
+        }
+    };
+    return Popup;
+})();
+
 var ETypeClock;
 (function (ETypeClock) {
     ETypeClock[ETypeClock["STANDARD"] = 0] = "STANDARD";

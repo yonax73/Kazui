@@ -7,6 +7,49 @@
 * If you do not own a commercial license, this file shall be governed by the trial license terms.
 */
 
+class Popup{   
+   
+   private element:HTMLElement;
+   private animationShow:Animation;
+   private animationClose:Animation;
+   private mask:HTMLElement;
+   
+   constructor(element:HTMLElement){   
+     this.element = element;
+     this.animationShow = new Animation('ui-ease', 'ui-bounce-in-down', 'ui-1s', 1000);
+     this.animationClose = new Animation('ui-ease', 'ui-fade-out', 'ui-1s', 1000);
+     this.mask = document.createElement('div');
+     this.init();   
+   }
+   
+   private init(){
+     this.mask.className='hidden';
+     var body = document.getElementsByTagName('body')[0];
+     body.appendChild(this.mask);
+     this.element.classList.add('hidden');
+   }
+   
+   public show(){
+     this.mask.className = 'show ui-popup-mask';
+     if(this.element.classList.contains('hidden')){
+        this.element.classList.remove('hidden');
+        this.element.classList.add('show');
+        this.animationShow.run(this.element);
+     }
+   }
+   
+   public close(){     
+     if(this.element.classList.contains('show')){
+        this.animationClose.run(this.element,()=>{
+             this.mask.className = 'hidden';
+             this.element.classList.remove('show');
+             this.element.classList.add('hidden');
+        });
+     }     
+   }   
+   
+}
+
 enum ETypeClock {
     STANDARD,
     MILITARY,
@@ -2443,7 +2486,8 @@ class Utils {
 
 
 window.onload = function () {
-    Toggle.init();
+    Toggle.init();    
+    
 }
 
 document.onclick = function () {
