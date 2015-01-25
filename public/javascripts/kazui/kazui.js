@@ -6,6 +6,642 @@
 * http://www.kazui.io/purchase/license-agreement/kazui-complete
 * If you do not own a commercial license, this file shall be governed by the trial license terms.
 */
+var Form = (function () {
+    function Form(element) {
+        this.inputs = null;
+        this.textAreas = null;
+        this.result = true;
+        this.changed = false;
+        this.hasSuccess = 'has-success';
+        this.hasError = 'has-error';
+        this.element = element;
+        this.init();
+    }
+    Form.prototype.init = function () {
+        var _this = this;
+        if (this.element) {
+            this.inputs = this.element.querySelectorAll('input,textarea');
+            var n = this.inputs.length;
+            for (var i = 0; i < n; i++) {
+                var input = this.inputs[i];
+                if (!input.dataset.option) {
+                    var small = document.createElement('small');
+                    var type = input.type;
+                    small.className = 'hidden';
+                    if (type !== 'checkbox' && type !== 'radio') {
+                        var span = document.createElement('span');
+                        input.parentNode.parentNode.classList.add('has-feedback');
+                        if (input.dataset.date) {
+                            var ico = document.createElement('i');
+                            var calendar = document.createElement('div');
+                            ico.className = 'fa fa-calendar fa-fw';
+                            span.className = 'form-control-feedback';
+                            span.style.cursor = 'default';
+                            span.appendChild(ico);
+                            input.parentNode.appendChild(calendar);
+                            var uiCalendar = new Calendar(calendar, { isInput: true, input: input });
+                            span.onclick = function () {
+                                if (uiCalendar.isOpen())
+                                    uiCalendar.close();
+                                else
+                                    uiCalendar.open();
+                            };
+                        } else {
+                            span.className = 'hidden';
+                        }
+                        input.parentNode.appendChild(span);
+                    }
+                    input.parentNode.appendChild(small);
+                    if (input.dataset.money) {
+                        input.style.textAlign = 'right';
+                    }
+                }
+                if (input.dataset.blur) {
+                    input.onblur = function () {
+                        return _this.validate(_this);
+                    };
+                }
+                if (input.dataset.keyup) {
+                    input.onkeyup = function () {
+                        return _this.validate(_this);
+                    };
+                }
+
+                /*
+                * Add event onchange
+                */
+                input.onchange = function () {
+                    _this.changed = true;
+                };
+            }
+        }
+    };
+
+    Form.prototype.isValid = function () {
+        var n = this.inputs.length;
+        var i = 0;
+        var multiples = new Array();
+        var totalMultiple = 1;
+        while (i < n) {
+            this.validate(this.inputs[i]);
+            multiples.push(this.result ? 1 : 0);
+            i++;
+        }
+        this.validateGroupCheckBox();
+        i = 0;
+        while (i < n) {
+            totalMultiple *= multiples[i++];
+        }
+        return totalMultiple > 0;
+    };
+
+    Form.prototype.hasChanged = function () {
+        var changedAux = this.changed;
+        this.changed = false;
+        return changedAux;
+    };
+
+    Form.prototype.serialize = function () {
+        var elements = this.element.elements;
+        var serialized = [];
+        var i = 0;
+        var n = elements.length;
+        for (i = 0; i < n; i++) {
+            var element = elements[i];
+            var type = element.type;
+            var value = element.value;
+            var name = element.name;
+            if (!name.isEmpty()) {
+                switch (type) {
+                    case 'text':
+                    case 'checkbox':
+                    case 'search':
+                    case 'email':
+                    case 'url':
+                    case 'tel':
+                    case 'number':
+                    case 'range':
+                    case 'date':
+                    case 'month':
+                    case 'week':
+                    case 'time':
+                    case 'datetime':
+                    case 'datetime-local':
+                    case 'color':
+                    case 'textarea':
+                    case 'password':
+                    case 'select':
+                    case 'hidden':
+                        serialized.push(name + '=' + value);
+                        break;
+                    case 'radio':
+                        if (element.checked)
+                            serialized.push(name + '=' + value);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        return serialized.join('&');
+    };
+
+    Form.prototype.toJSON = function () {
+        var elements = this.element.elements;
+        var json = {};
+        var i = 0;
+        var n = elements.length;
+        for (i = 0; i < n; i++) {
+            var element = elements[i];
+            var type = element.type;
+            var value = element.value;
+            var name = element.name;
+            if (!name.isEmpty()) {
+                switch (type) {
+                    case 'text':
+                    case 'checkbox':
+                    case 'search':
+                    case 'email':
+                    case 'url':
+                    case 'tel':
+                    case 'number':
+                    case 'range':
+                    case 'date':
+                    case 'month':
+                    case 'week':
+                    case 'time':
+                    case 'datetime':
+                    case 'datetime-local':
+                    case 'color':
+                    case 'textarea':
+                    case 'password':
+                    case 'select':
+                    case 'hidden':
+                        json[name] = value;
+                        break;
+                    case 'radio':
+                        if (element.checked)
+                            json[name] = value;
+                        break;
+                }
+            }
+        }
+        return json;
+    };
+
+    Form.prototype.validate = function (input) {
+        switch (input.type) {
+            case 'text':
+            case 'search':
+            case 'email':
+            case 'url':
+            case 'tel':
+            case 'number':
+            case 'range':
+            case 'date':
+            case 'month':
+            case 'week':
+            case 'time':
+            case 'datetime':
+            case 'datetime-local':
+            case 'color':
+            case 'textarea':
+            case 'password':
+                /*
+                * Check required
+                */
+                if (input.dataset.required) {
+                    this.result = Form.isEmpty(input.value) ? this.error(input, Form.msgRequired) : this.success(input); //verificar si funciona con el this
+                    if (this.result) {
+                        this.generalValidations(input);
+                    }
+                } else {
+                    this.generalValidations(input);
+                }
+                break;
+            case 'radio':
+                break;
+            case 'checkbox':
+                /*
+                * Check input checked
+                */
+                if (input.dataset.required) {
+                    this.result = Form.isChecked(input);
+                    if (this.result) {
+                        this.hiddeMessage(input);
+                    } else {
+                        this.error(input, Form.msgAccept);
+                    }
+                }
+                break;
+
+            default:
+                this.result = true;
+                break;
+        }
+    };
+
+    Form.prototype.validateGroupCheckBox = function () {
+        var groups = this.element.getElementsByClassName('group-checkbox');
+        var n = groups ? groups.length : 0;
+        if (n > 0) {
+            for (var g = 0; g < n; g++) {
+                var group = groups[g];
+                if (group.dataset.checkmin) {
+                    var min = group.dataset.checkmin;
+                    if (this.countChecks(group) < min) {
+                        var msg = Form.msgCheckMin.replace('{#}', min);
+                        this.showMessageCheckbox(group, msg);
+                    } else {
+                        this.hideMessageCheckbox(group);
+                    }
+                } else if (group.dataset.checkmax) {
+                    var max = group.dataset.checkmax;
+                    if (this.countChecks(group) > max) {
+                        var msg = Form.msgCheckMax.replace('{#}', max);
+                        this.showMessageCheckbox(group, msg);
+                    } else {
+                        this.hideMessageCheckbox(group);
+                    }
+                } else if (group.dataset.checkrange) {
+                    var range = group.dataset.checkrange.split('-');
+                    var min = range[0];
+                    var max = range[1];
+                    var checks = this.countChecks(group);
+                    if (checks >= min && checks <= max) {
+                        this.hideMessageCheckbox(group);
+                    } else {
+                        var msg = Form.msgCheckRange.replace('{#min}', min).replace('{#max}', max);
+                        this.showMessageCheckbox(group, msg);
+                    }
+                }
+            }
+        }
+    };
+
+    Form.prototype.countChecks = function (group) {
+        var checkboxes = group.querySelectorAll('input[type="checkbox"]');
+        var k = checkboxes.length;
+        var checks = 0;
+        for (var c = 0; c < k; c++) {
+            var checkbox = checkboxes[c];
+            if (checkbox.checked)
+                checks++;
+        }
+        return checks;
+    };
+
+    Form.prototype.showMessageCheckbox = function (group, msg) {
+        var small = group.getElementsByClassName('ui-form-msg')[0];
+        small.classList.remove('hidden');
+        small.textContent = msg;
+    };
+
+    Form.prototype.hideMessageCheckbox = function (group) {
+        var small = group.getElementsByClassName('ui-form-msg')[0];
+        small.classList.add('hidden');
+    };
+
+    Form.prototype.showMessage = function (input, message) {
+        var small = null;
+        var type = input.type;
+        if (type !== 'checkbox' && type !== 'radio' && !input.dataset.option && !input.dataset.date) {
+            input.parentNode.getElementsByTagName('span')[0].className = 'fa fa-times form-control-feedback';
+        }
+        if (input.dataset.option) {
+            small = input.parentNode.parentNode.getElementsByTagName('small')[0];
+        } else {
+            small = input.parentNode.getElementsByTagName('small')[0];
+        }
+        small.textContent = message;
+        small.className = 'text-danger';
+    };
+
+    Form.prototype.hiddeMessage = function (input) {
+        var type = input.type;
+        if (type !== 'checkbox' && type !== 'radio' && !input.dataset.option && !input.dataset.date) {
+            input.parentNode.getElementsByTagName('span')[0].className = 'fa fa-check form-control-feedback'; //es mejor manejar clases para los selectores ?
+        }
+        if (input.dataset.option) {
+            input.parentNode.parentNode.getElementsByTagName('small')[0].className = 'hidden';
+        } else {
+            input.parentNode.getElementsByTagName('small')[0].className = 'hidden';
+        }
+    };
+
+    Form.prototype.success = function (input) {
+        if (!input.parentNode.parentNode.classList.contains(this.hasSuccess)) {
+            input.parentNode.parentNode.classList.add(this.hasSuccess);
+        }
+        if (input.parentNode.parentNode.classList.contains(this.hasError)) {
+            input.parentNode.parentNode.classList.remove(this.hasError);
+        }
+        this.hiddeMessage(input);
+        return true;
+    };
+
+    Form.prototype.error = function (input, message) {
+        if (input.parentNode.parentNode.classList.contains(this.hasSuccess)) {
+            input.parentNode.parentNode.classList.remove(this.hasSuccess);
+        }
+        if (!input.parentNode.parentNode.classList.contains(this.hasError)) {
+            input.parentNode.parentNode.classList.add(this.hasError);
+        }
+        this.showMessage(input, message);
+        return false;
+    };
+
+    Form.prototype.generalValidations = function (input) {
+        /*
+        * Check full name
+        */
+        if (input.dataset.fullname) {
+            this.result = Form.isFullName(input.value) ? this.success(input) : this.error(input, Form.msgFullName);
+        } else /*
+        * Check email
+        */
+        if (input.dataset.email) {
+            this.result = Form.isEmail(input.value) ? this.success(input) : this.error(input, Form.msgEmail);
+        } else /*
+        * Check equals to
+        */
+        if (input.dataset.equalsto) {
+            var tmpInp = document.getElementsByName(input.dataset.equalsto)[0];
+            if (Form.isEqualsTo(tmpInp.value, input.value)) {
+                var tmpBool1 = this.success(input);
+                var tmpBool2 = this.success(tmpInp);
+                this.result = tmpBool1 && tmpBool2;
+            } else {
+                var tmpBool1 = this.error(input, Form.msgCheck);
+                var tmpBool2 = this.error(tmpInp, Form.msgEquals);
+                this.result = tmpBool1 && tmpBool2;
+            }
+            if (this.result) {
+                this.generalValidations(tmpInp);
+            }
+        } else /*
+        * Check money
+        */
+        if (input.dataset.money) {
+            this.result = Form.isMoney(input.value) ? this.success(input) : this.error(input, Form.msgMoney);
+        } else /*
+        * Check max length
+        */
+        if (input.dataset.maxlength) {
+            var length = input.dataset.maxlength;
+            this.result = Form.maxLength(input.value, length) ? this.success(input) : this.error(input, Form.msgMaxLength.replace('{#}', length));
+        } else /*
+        * Check min length
+        */
+        if (input.dataset.minlength) {
+            var length = input.dataset.minlength;
+            this.result = Form.minLength(input.value, length) ? this.success(input) : this.error(input, Form.msgMinLength.replace('{#}', length));
+        } else /*
+        * Check range length
+        */
+        if (input.dataset.rangelength) {
+            var data = input.dataset.rangelength.split("-");
+            var min = data[0];
+            var max = data[1];
+            this.result = Form.rangeLength(input.value, min, max) ? this.success(input) : this.error(input, Form.msgRangeLength.replace('{#min}', min).replace('{#max}', max));
+        } else /*
+        * Check max number
+        */
+        if (input.dataset.max) {
+            var max = input.dataset.max;
+            this.result = Form.max(input.value, max) ? this.success(input) : this.error(input, Form.msgMax.replace('{#}', max));
+        } else /*
+        * Check min number
+        */
+        if (input.dataset.min) {
+            var min = input.dataset.min;
+            this.result = Form.min(input.value, min) ? this.success(input) : this.error(input, Form.msgMin.replace('{#}', min));
+        } else /*
+        * Check range number
+        */
+        if (input.dataset.range) {
+            var data = input.dataset.range.split("-");
+            var min = data[0];
+            var max = data[1];
+            this.result = Form.range(input.value, min, max) ? this.success(input) : this.error(input, Form.msgRange.replace('{#min}', min).replace('{#max}', max));
+        } else /*
+        * Check URL
+        */
+        if (input.dataset.url) {
+            this.result = Form.isURL(input.value) ? this.success(input) : this.error(input, Form.msgURL);
+        } else /*
+        * Check date
+        */
+        if (input.dataset.date) {
+            this.result = Form.isDate(input.value) ? this.success(input) : this.error(input, Form.msgDate);
+        } else /*
+        * Check number
+        */
+        if (input.dataset.number) {
+            this.result = Form.isNumber(input.value) ? this.success(input) : this.error(input, Form.msgNumber);
+        } else /*
+        * Check credit card
+        */
+        if (input.dataset.creditcard) {
+            this.result = Form.isCreditCard(input.value) ? this.success(input) : this.error(input, Form.msgCreditCard);
+        } else /*
+        * Check UI-Select Option
+        */
+        if (input.dataset.option) {
+            this.result = Form.isValidOption(input, input.dataset.option) ? this.success(input) : this.error(input, Form.msgValidOption);
+        } else {
+            this.success(input);
+        }
+    };
+
+    /*
+    * @param String value
+    * @returns true if value is fullname
+    */
+    Form.isFullName = function (value) {
+        return value.match(/^[a-zA-Z][a-zA-Z ]+$/);
+    };
+
+    /*
+    * @param String value
+    * @returns true if value is email
+    */
+    Form.isEmail = function (value) {
+        return value.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+    };
+
+    /*
+    * @param String value
+    * @returns true if value is empty
+    */
+    Form.isEmpty = function (value) {
+        return !value.match(/^\S+$|[^\s]+$/);
+    };
+
+    /*
+    * @param String value
+    * @param String value1
+    * @returns true if both values are equals
+    */
+    Form.isEqualsTo = function (value, value1) {
+        return value === value1;
+    };
+
+    /*
+    * @param String value
+    * @returns true if value is money format
+    */
+    Form.isMoney = function (value) {
+        return value.match(/^\d+(,\d{3})*(\.\d*)?$/);
+    };
+
+    /*
+    * @param String value
+    * @param length, number of characters
+    * @returns true if  value  has length characters or less
+    */
+    Form.maxLength = function (value, length) {
+        return !isNaN(length) && value.length <= length;
+    };
+
+    /*
+    * @param String value
+    * @param length, number of characters
+    * @returns true if  value has length characters or more
+    */
+    Form.minLength = function (value, length) {
+        return !isNaN(length) && value.length >= length;
+    };
+
+    /*
+    * @param String value
+    * @param min, number minimum of characters
+    * @param max, number maximum of characters
+    * @returns true if  value is between min and max
+    */
+    Form.rangeLength = function (value, min, max) {
+        var length = value.length;
+        return ((!isNaN(min) && length >= min) && (!isNaN(max) && length <= max));
+    };
+
+    /*
+    * @param String value
+    * @param max, number maximun
+    * @returns true if  value is equals or less that max
+    */
+    Form.max = function (value, max) {
+        return (!isNaN(max) && value <= max);
+    };
+
+    /*
+    * @param String value
+    * @param min, number minimun
+    * @returns true if value is equals or greater that min
+    */
+    Form.min = function (value, min) {
+        return (!isNaN(min) && value >= min);
+    };
+
+    /*
+    * @param String value
+    * @param min, number minimum
+    * @param max, number maximum
+    * @returns true if value is between min and max number
+    */
+    Form.range = function (value, min, max) {
+        return ((!isNaN(min) && value >= min) && (!isNaN(max) && value <= max));
+    };
+
+    /*
+    * @param String value
+    * @returns true if value is URL
+    */
+    Form.isURL = function (value) {
+        return value.match(/https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,}/);
+    };
+
+    /*
+    * @param String value
+    * @returns true if value is Date
+    */
+    Form.isDate = function (value) {
+        var parms = value.split(/[\.\-\/]/);
+        var yyyy = parseInt(parms[2], 10);
+        ;
+        var mm = parseInt(parms[1], 10);
+        var dd = parseInt(parms[0], 10);
+        if (yyyy < 1582) {
+            var tmp = yyyy;
+            yyyy = dd;
+            dd = tmp;
+        }
+        var date = new Date(yyyy, mm - 1, dd);
+        return (mm === (date.getMonth() + 1) && dd === date.getDate() && yyyy === date.getFullYear());
+    };
+
+    /*
+    * @param String value
+    * @returns true if value is Number
+    */
+    Form.isNumber = function (value) {
+        return !isNaN(value);
+    };
+
+    /*
+    * @param String value
+    * @returns true if value is credit card
+    */
+    Form.isCreditCard = function (value) {
+        return value.match(/^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/);
+    };
+
+    /*
+    * @param HtmlElement input
+    * @returns true if input is Checked
+    */
+    Form.isChecked = function (input) {
+        return input.checked;
+    };
+
+    /*
+    * @param HtmlElement input
+    * @param option
+    * @returns true if option is greater than zero
+    */
+    Form.isValidOption = function (input, option) {
+        return (!isNaN(option) && option > 0);
+    };
+
+    Form.prototype.onsubmit = function (callback) {
+        this.element.onsubmit = function (e) {
+            e.preventDefault();
+            callback();
+        };
+    };
+    Form.msgRequired = 'This field is required and can\'t be empty!';
+    Form.msgFullName = 'Please enter a valid name!';
+    Form.msgEmail = 'Please enter a valid e-mail!';
+    Form.msgEquals = 'This field and the field to confirm are not the same!';
+    Form.msgCheck = 'Please check!';
+    Form.msgAccept = 'Please accept!';
+    Form.msgMoney = 'Please enter a valid money format!';
+    Form.msgMaxLength = 'Please enter no more than {#} characters!';
+    Form.msgMinLength = 'Please enter at least {#} characters!';
+    Form.msgRangeLength = 'Please enter a value between {#min} and {#max} characters long!';
+    Form.msgMax = 'Please enter a value less than or equal to {#}!';
+    Form.msgMin = 'Please enter a value greater than or equal to {#}!';
+    Form.msgRange = 'Please enter a value between {#min} and {#max}!';
+    Form.msgURL = 'Please enter a valid URL!';
+    Form.msgDate = 'Please enter a valid date!';
+    Form.msgNumber = 'Please enter a valid number!';
+    Form.msgCreditCard = 'Please enter a valid credit card number!';
+    Form.msgValidOption = 'Please enter a valid option!';
+    Form.msgCheckMin = 'Please choose at least {#} options!';
+    Form.msgCheckMax = 'Please choose no more than {#} options!';
+    Form.msgCheckRange = 'Please choose between {#min} and {#max} options!';
+    return Form;
+})();
+
 var DataTable = (function () {
     function DataTable(element, action, fields) {
         this.element = element;
